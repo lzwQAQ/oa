@@ -14,7 +14,7 @@ public class AfterServiceStarted implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         //连接短信服务器
-        Msgclient.getClient();
+//        Msgclient.getClient();
     }
 
 }

@@ -6,6 +6,7 @@ import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.workflow.runtime.service.PendingTaskService;
 import com.kuyuner.workflow.util.BpmnModelUtils;
 
+import io.swagger.annotations.Api;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.RepositoryService;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author tangzj
  */
+@Api(value = "运行中的流程")
 @Controller
 @RequestMapping("${kuyuner.admin-path}/pendingtask")
 public class PendingTaskController {

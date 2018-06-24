@@ -3,6 +3,7 @@ package com.kuyuner.bg.approval.entity;
 import com.kuyuner.common.persistence.BaseEntity;
 import com.kuyuner.core.common.dict.DictType;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,6 +21,7 @@ public class Leave extends BaseEntity {
     /**
      * 请假类型
      */
+    @ApiModelProperty(value = "请假类型")
     @NotNull(message = "请假类型不能为空")
     @Length(max = 5, message = "请假类型长度不能大于5")
     @DictType("LEAVE_TYPE")
@@ -28,6 +30,7 @@ public class Leave extends BaseEntity {
     /**
      * 请假事由
      */
+    @ApiModelProperty(value = "请假事由")
     @NotNull(message = "请假事由不能为空")
     @Length(max = 100, message = "请假事由长度不能大于100")
     private String reason;
@@ -35,6 +38,7 @@ public class Leave extends BaseEntity {
     /**
      * 开始时间
      */
+    @ApiModelProperty(value = "开始时间")
     @NotNull(message = "开始时间不能为空")
     @Length(max = 20, message = "开始时间长度不能大于20")
     private String startTime;
@@ -42,6 +46,7 @@ public class Leave extends BaseEntity {
     /**
      * 结束时间
      */
+    @ApiModelProperty(value = "结束时间")
     @NotNull(message = "结束时间不能为空")
     @Length(max = 20, message = "结束时间长度不能大于20")
     private String endTime;
@@ -49,37 +54,45 @@ public class Leave extends BaseEntity {
     /**
      * 请假天数
      */
+    @ApiModelProperty(value = "请假天数")
     private Double leaveDay;
 
     /**
      * 当前环节
      */
+    @ApiModelProperty(value = "当前环节")
     @Length(max = 50, message = "当前环节长度不能大于50")
     private String taskName;
 
     /**
      * 申请人ID
      */
+    @ApiModelProperty(value = "申请人ID")
     private String senderId;
 
     /**
      * 审批结果
      */
+    @ApiModelProperty(value = "审批结果")
     private String approvalResult;
 
     /**
      * 发送人
      */
+    @ApiModelProperty(value = "发送人")
     private String senderName;
 
     /**
      * 所属部门
      */
+    @ApiModelProperty(value = "所属部门")
     private String senderDeptName;
 
+    @ApiModelProperty(value = "开始请假时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date beginLeaveTime;
 
+    @ApiModelProperty(value = "请假结束时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endLeaveTime;
 

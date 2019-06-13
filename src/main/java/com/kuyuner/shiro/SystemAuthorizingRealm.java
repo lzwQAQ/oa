@@ -64,7 +64,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
         //是否是验证码登录
         String captcha = (String) UserUtils.getSession().getAttribute(UserUtils.CAPTCHA);
         UserUtils.getSession().setAttribute(UserUtils.CAPTCHA, null);
-        UserUtils.getSession().setAttribute("loginType", token.getLoginType());
+        UserUtils.getSession().setAttribute("channel", token.getChannel());
         String isCaptchaStr = (String) UserUtils.getSession().getAttribute(UserUtils.IS_CAPTCHA);
         if (true || StringUtils.equals(isCaptchaStr, "true")) {
             if (captcha == null || !StringUtils.equalsIgnoreCase(token.getCaptcha(), captcha.toString())) {

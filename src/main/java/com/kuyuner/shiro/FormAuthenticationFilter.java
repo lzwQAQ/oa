@@ -26,11 +26,11 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.FormAuthenticationFilter {
 
-    public static final String DEFAULT_LOGIN_TYPE = "loginType";
+    public static final String DEFAULT_LOGIN_CHANNEL = "channel";
     public static final String DEFAULT_CAPTCHA_PARAM = "captcha";
     public static final String DEFAULT_MESSAGE_PARAM = "errorMessage";
 
-    private String loginParam = DEFAULT_LOGIN_TYPE;
+    private String channelParam = DEFAULT_LOGIN_CHANNEL;
     private String captchaParam = DEFAULT_CAPTCHA_PARAM;
     private String messageParam = DEFAULT_MESSAGE_PARAM;
 
@@ -54,8 +54,8 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
         return captchaParam;
     }
 
-    public String getLoginParam(){
-        return loginParam;
+    public String getChannelParam(){
+        return channelParam;
     }
 
     protected String getCaptcha(ServletRequest request) {
@@ -63,7 +63,7 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
     }
 
     protected String getLoginType(ServletRequest request) {
-        return WebUtils.getCleanParam(request, getLoginParam());
+        return WebUtils.getCleanParam(request, getChannelParam());
     }
 
     public String getMessageParam() {

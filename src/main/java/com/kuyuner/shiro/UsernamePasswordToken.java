@@ -11,27 +11,27 @@ public class UsernamePasswordToken extends org.apache.shiro.authc.UsernamePasswo
 
     private String captcha;
 
-    private String loginType;
+    private String channel = "H5";
 
     public UsernamePasswordToken() {
         super();
     }
 
-    public UsernamePasswordToken(String username, char[] password, boolean rememberMe, String host, String captcha,String loginType) {
+    public UsernamePasswordToken(String username, char[] password, boolean rememberMe, String host, String captcha,String channel) {
         super(username, password, rememberMe, host);
         this.captcha = captcha;
-        this.loginType = loginType;
+        this.channel = channel;
     }
 
     public String getCaptcha() {
         return captcha;
     }
 
-    public String getLoginType() {
-        return loginType;
+    public String getChannel() {
+        return channel;
     }
 
-    public void setLoginType(String loginType) {
-        this.loginType = loginType;
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

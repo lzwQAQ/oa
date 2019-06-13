@@ -1,7 +1,5 @@
 package com.kuyuner.bg.msg.util;
 
-import com.linkage.netmsg.NetMsgclient;
-import com.linkage.netmsg.server.ReceiveMsg;
 import groovy.util.logging.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -16,7 +14,7 @@ public class AfterServiceStarted implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         //连接短信服务器
-        Msgclient.getClient();
+//        Msgclient.getClient();
     }
 
 }

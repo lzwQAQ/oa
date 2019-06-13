@@ -2,6 +2,7 @@ package com.kuyuner.core.sys.controller;
 
 
 import com.kuyuner.common.controller.BaseController;
+import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.core.sys.entity.Menu;
 import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.model.ResultModel;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,9 +62,11 @@ public class LoginController extends BaseController {
 
     @RequestMapping("logininfo")
     @ResponseBody
-    public ResultModel logininfo(ModelMap modelMap) {
+    public ResultModel logininfo(ModelMap modelMap,String errorMessage) {
         if (UserUtils.getPrincipal() == null) {
-            return ResultModel.newErrorModel("登录失败");
+            if (StringUtils.isBlank(errorMessage))
+                return ResultModel.newErrorModel("登录失败");
+            return ResultModel.newErrorModel(errorMessage);
         }
         if (UserUtils.getSession().getAttribute(UserUtils.USER_FLAG) == null) {
             UserUtils.getSession().setAttribute(UserUtils.USER_FLAG,userService.get(UserUtils.getPrincipal().getId()) );
@@ -82,13 +87,18 @@ public class LoginController extends BaseController {
      */
     @RequestMapping("login")
     public String loginFail(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        String message = (String) request.getAttribute("errorMessage");
-        redirectAttributes.addFlashAttribute("errorMessage", message);
-        //更新登录出错次数，账号存在就跟账号绑定，账号不存在就和session绑定
-        UserUtils.updateLoginNum();
-        String loginType = UserUtils.getSession().getAttribute("loginType") == null ? "" : UserUtils.getSession().getAttribute("loginType").toString();
-        if("PC".equals(loginType)){
-            return "redirect:/";
+        try {
+            String message = (String) request.getAttribute("errorMessage");
+            redirectAttributes.addFlashAttribute("errorMessage", message);
+            //更新登录出错次数，账号存在就跟账号绑定，账号不存在就和session绑定
+            UserUtils.updateLoginNum();
+            String channel = UserUtils.getSession().getAttribute("channel") == null ? "" : UserUtils.getSession().getAttribute("channel").toString();
+            if("PC".equals(channel)){
+                return "redirect:/";
+            }
+            return "redirect:/logininfo?errorMessage="+ URLEncoder.encode(message == null ? "" : message,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         return "redirect:/logininfo";
     }

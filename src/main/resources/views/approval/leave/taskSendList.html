@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <link th:replace="common/head" />
+    <title>申请历史</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="content">
+        <div class="clearfix search-toolbar other-items">
+            <div id="search" class="search form-inline">
+                <div class="form-group ">
+                    <label class="control-label">请假类型：</label>
+                    <select class="form-control" id="type">
+                        <option value="">请选择请假类型</option>
+                        <option th:each="dict:${dictHolder.getValues('LEAVE_TYPE')}"
+                                th:value="${dict.dictCode}" th:text="${dict.dictValue}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix btns-div">
+                <div class="form-group-btn center-block">
+                    <a href="javascript:void(0)" id="btn-search" class="btn btn-primary btn-sm">查询</a>
+                    <a href="javascript:void(0)" id="btn-reset" class="btn btn-default btn-sm">重置</a>
+                </div>
+            </div>
+        </div>
+        <table id="table"></table>
+        <div id="page"></div>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/js/approval/leave/taskSendList.js}" type="text/javascript"></script>
+</html>

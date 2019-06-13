@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <title>字典类型表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${dictType.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                字典名称：
+                                <i class="fa fa-question-circle" title="字典名称"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="dictName" th:value="${dictType.dictName}" class="form-control" required='required' maxlength='50' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                字典类型：
+                                <i class="fa fa-question-circle" title="字典类型"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="type" th:value="${dictType.type}" class="form-control" required='required' maxlength='20' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                是否系统：
+                                <i class="fa fa-question-circle" title="是否系统"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline">
+                                    <input th:checked="${'1' eq dictType.isSysData}" type="radio"
+                                           name="isSysData" value="1" required="required"/>
+                                    是
+                                </label>
+                                <label class="radio-inline">
+                                    <input th:checked="${'0' eq dictType.isSysData}" type="radio"
+                                           name="isSysData" value="0" required="required"/>
+                                    否
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                序号：
+                                <i class="fa fa-question-circle" title="序号"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="sort" th:value="${dictType.sort}" class="form-control" maxlength='11' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/js/sys/dictTypeForm.js}" type="text/javascript"></script>
+</html>

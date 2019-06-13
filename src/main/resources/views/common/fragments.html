@@ -1,0 +1,23 @@
+<!--/* 左侧菜单模板，模板一定要单独放在一个文件中，不然会自执行 */-->
+<th:block th:fragment="menu(menus,parentId,lv)">
+    <th:block th:each="m : ${menus}">
+        <th:block th:if="${m.parentId==parentId}" >
+            <li th:if="${m.leaf}">
+                <a class="J_menuItem" th:href="@{/} + ${adminPath} + ${'/' + m.href}">
+                    <i class="menu_icon" th:classappend="${m.menuIcon}"></i>
+                    <span class="nav-label" th:text="${m.name}">末级菜单</span>
+                </a>
+            </li>
+            <li th:unless="${m.leaf}">
+                <a href="javascript:void(0)">
+                    <i class="menu_icon" th:classappend="${m.menuIcon}"></i>
+                    <span class="nav-label" th:text="${m.name}">父级菜单</span>
+                    <span class="fa arrow"></span>
+                </a>
+                <ul class="nav collapse" th:classappend="${lv==1}?'nav-second-level':(${lv==2}?'nav-third-level':'nav-fourth-level')">
+                    <li th:replace="common/fragments::menu(${menus},${m.id},${lv+1})"></li>
+                </ul>
+            </li>
+        </th:block>
+    </th:block>
+</th:block>

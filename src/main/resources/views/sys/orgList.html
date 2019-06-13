@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <link th:replace="common/head" />
+    <title>部门列表</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="content">
+        <div class="clearfix search-toolbar other-items">
+            <div class="btns btn-group btn-group-sm">
+                <button id="btn-refresh" type="button" class="btn btn-outline btn-default">
+                    <i class="fa fa-refresh"></i> 刷新
+                </button>
+                <button shiro:hasPermission="sys:org:edit" id="btn-add" type="button" class="btn btn-outline btn-default">
+                    <i class="glyphicon glyphicon-plus"></i> 新增
+                </button>
+            </div>
+        </div>
+        <table id="table"></table>
+        <div id="page"></div>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script shiro:lacksPermission="sys:org:edit" type="text/javascript">
+    var editAble = false;
+</script>
+<script shiro:hasPermission="sys:org:edit" type="text/javascript">
+    var editAble = true;
+</script>
+<script th:src="@{/static/js/sys/orgList.js}" type="text/javascript"></script>
+</html>

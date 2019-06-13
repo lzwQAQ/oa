@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.email.dao.EmailDao">
+
+    <!--auto generated Code-->
+	<select id="findStarEmailList" resultType="com.kuyuner.bg.email.bean.EmailView">
+		SELECT
+            t.id AS "id",
+            t.title AS "title",
+            t.sender_name AS "senderName",
+            t.sender_acount AS "senderAccount",
+            t.contain_file AS "containFile",
+            t.type AS "type",
+            t.level AS "level",
+            t.create_date AS "createDate",
+            t.EMAIL_TYPE AS "emailType",
+            t.is_read AS "read"
+		FROM V_EMAIL_FAVORITE t
+		<where>
+            <if test="title != null and title != ''">
+                AND t.title LIKE concat('%',#{title},'%')
+            </if>
+            <if test="senderName != null and senderName != ''">
+                AND t.sender_name = #{senderName}
+            </if>
+            <if test="senderAccount != null and senderAccount != ''">
+                AND t.sender_acount = #{senderAccount}
+            </if>
+            <if test="containFile != null and containFile != ''">
+                AND t.contain_file = #{containFile}
+            </if>
+            <if test="type != null and type != ''">
+                AND t.type = #{type}
+            </if>
+            <if test="level != null and level != ''">
+                AND t.level = #{level}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.create_date desc
+	</select>
+
+    <select id="findRecyclebinList" resultType="com.kuyuner.bg.email.bean.EmailView">
+        SELECT
+            t.id AS "id",
+            t.title AS "title",
+            t.sender_name AS "senderName",
+            t.sender_acount AS "senderAccount",
+            t.contain_file AS "containFile",
+            t.type AS "type",
+            t.level AS "level",
+            t.create_date AS "createDate",
+            t.EMAIL_TYPE AS "emailType",
+            t.is_read AS "read"
+        FROM V_EMAIL_RECYCLEBIN t
+        <where>
+            <if test="title != null and title != ''">
+                AND t.title LIKE concat('%',#{title},'%')
+            </if>
+            <if test="senderName != null and senderName != ''">
+                AND t.sender_name = #{senderName}
+            </if>
+            <if test="senderAccount != null and senderAccount != ''">
+                AND t.sender_acount = #{senderAccount}
+            </if>
+            <if test="containFile != null and containFile != ''">
+                AND t.contain_file = #{containFile}
+            </if>
+            <if test="type != null and type != ''">
+                AND t.type = #{type}
+            </if>
+            <if test="level != null and level != ''">
+                AND t.level = #{level}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+        </where>
+        order by t.create_date desc
+    </select>
+
+</mapper>

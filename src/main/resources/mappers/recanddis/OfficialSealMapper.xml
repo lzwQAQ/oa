@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.recanddis.dao.OfficialSealDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.file_name AS "fileName",
+		t.file_size AS "fileSize",
+		t.file_path AS "filePath",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.recanddis.entity.OfficialSeal">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_RELEASE_OFFICIAL_SEAL t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.recanddis.entity.OfficialSeal">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_RELEASE_OFFICIAL_SEAL t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="fileName != null and fileName != ''">
+				AND t.file_name LIKE concat('%',#{fileName},'%')
+            </if>
+            <if test="fileSize != null and fileSize != ''">
+                AND t.file_size = #{fileSize}
+            </if>
+            <if test="filePath != null and filePath != ''">
+                AND t.file_path = #{filePath}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_AP_RELEASE_OFFICIAL_SEAL
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="fileName != null"> file_name, </if>
+        	<if test="fileSize != null"> file_size, </if>
+        	<if test="filePath != null"> file_path, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="fileName != null"> #{fileName}, </if>
+            <if test="fileSize != null"> #{fileSize}, </if>
+            <if test="filePath != null"> #{filePath}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_AP_RELEASE_OFFICIAL_SEAL
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="fileName != null"> file_name = #{fileName}, </if>
+            <if test="fileSize != null"> file_size = #{fileSize}, </if>
+            <if test="filePath != null"> file_path = #{filePath}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_AP_RELEASE_OFFICIAL_SEAL where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

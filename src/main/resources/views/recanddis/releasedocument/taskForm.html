@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <link rel="stylesheet" th:href="@{/static/css/approval/style.css}">
+    <link th:href="@{/static/common/plugins/ztree/css/metroStyle/metroStyle.css}" rel="stylesheet"/>
+    <title>流程表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${releaseDocument.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                拟稿人：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${releaseDocument.senderName}" class="form-control" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                拟稿部门：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${releaseDocument.senderDeptName}" class="form-control" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+
+                                核稿人：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${releaseDocument.examineAuthorName}" class="form-control" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+
+                                核稿部门：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${releaseDocument.examineAuthorDeptName}" class="form-control" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                标题：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="title" th:value="${releaseDocument.title}" class="form-control only-view" required='required' maxlength='200' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                编号：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="numbers" th:value="${releaseDocument.numbers}" class="form-control only-view" required='required' maxlength='20' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                密级：
+                            </label>
+                            <div class="col-sm-8">
+                                <select class="form-control only-view" name="secret" required='required'>
+                                    <option value="">请选择密级</option>
+                                    <option th:selected="${dict.dictCode==releaseDocument.secret}" th:each="dict:${dictHolder.getValues('SECRET_LEVEL')}" th:value="${dict.dictCode}" th:text="${dict.dictValue}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                紧急程度：
+                            </label>
+                            <div class="col-sm-8">
+                                <select class="form-control only-view" name="urgentLevel" required='required'>
+                                    <option value="">请选择紧急程度</option>
+                                    <option th:selected="${dict.dictCode==releaseDocument.urgentLevel}" th:each="dict:${dictHolder.getValues('SEND_DOC_URGENT')}" th:value="${dict.dictCode}" th:text="${dict.dictValue}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                发文文件：
+                            </label>
+                            <div class="col-sm-8 select-files">
+
+                                <a class="btn btn-default" th:if="${editFile}" id="select-file-btn" style="position: relative;overflow: hidden;"
+                                   th:styleappend="'display:'+${approvalFile == null?'inline-block':'none'}">
+                                    选择文件
+                                    <input type="file" name="files" class="form-control select-file" required="required" />
+                                </a>
+
+                                <p class="file-block" id="upload-file-block">
+                                    <span th:if="${approvalFile != null}" class="select-filename" th:attr="data-clz=${approvalFile.id}" th:classappend="${approvalFile.id}">
+                                        <a th:href="@{/} + ${adminPath} + ${'/approval/download/' + approvalFile.id}" target="_blank"
+                                           th:text="${approvalFile.fileName}" th:title="${approvalFile.fileName}"></a>
+                                        <button th:if="${editFile}" type="button" class="close file-delete"><span>×</span></button>
+                                    </span>
+                                    <a th:if="${approvalFile != null}" href="javascript:void(0)" th:attr="filepath=${approvalFile.filePath}" class="file-view"><i class="fa fa-eye"></i></a>
+                                </p>
+                                <p th:if="${editFile}" class="help-block">支持扩展名：.doc .docx .pdf</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6" id="sendTo-div" style="display: none">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                接收人：
+                            </label>
+                            <div class="col-sm-8 select-files">
+                                <input type="hidden" id="sendTo" name="sendTo" class="form-control" />
+                                <input type="text" id="sendToName" name="_sendToName" class="form-control" readonly="readonly" required="required"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--------------审批部分-------------->
+                <div class="row" th:if="${releaseDocument.approvalResult != null && releaseDocument.approvalResult != ''}">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                处理意见：
+                            </label>
+                            <div class="col-sm-10">
+                                <p th:utext="${releaseDocument.approvalResult}" class="form-control" style="height: auto;" ></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="approvalResult-div" style="display: none">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                办理意见：
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea id="approvalResult" name="approvalResult" class="form-control" maxlength="100" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display: none" id="auditResult-div">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" title="">
+                                <span class="red" >*</span>审批结果：</label>
+                            <div class="col-sm-8">
+                                <select id="auditResult" name="_auditResult" class="form-control select2-single" required="required">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer" id="btns-div" style="display: none">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/common/plugins/ztree/js/jquery.ztree.all.min.js}" type="text/javascript"></script>
+<script type="text/javascript" th:inline="javascript">
+    var officeViewEnable = /*[[${env.getBoolean('web365.enable')}]]*/ +'';
+    var officeUrl = /*[[${env.getString('web365.url')}]]*/ +'';
+    var officeAddress = /*[[${env.getString('web365.address')}]]*/ +'';
+</script>
+<script type="text/javascript" th:inline="javascript">
+    (function () {
+        var rootUrl =/*[[@{/}]]*/ +'';
+        var type = Util.getQueryString("type");
+        var firstTask = Util.getQueryString("firstTask");
+        var script;
+        if ((type === 'create') || (type === 'pending' && firstTask === 'true')) {
+            script = '<script type="text/javascript" src="' + rootUrl + 'static/js/recanddis/releasedocument/taskFormCreate.js"><\/script>\n';
+        }else if(type === 'pending'){
+            script = '<script type="text/javascript" src="' + rootUrl + 'static/js/recanddis/releasedocument/taskFormPending.js"><\/script>\n';
+        }else if(type === 'historic'){
+            script = '<script type="text/javascript" src="' + rootUrl + 'static/js/recanddis/releasedocument/taskFormHistoric.js"><\/script>\n';
+        }
+        document.write(script);
+    })();
+</script>
+</html>

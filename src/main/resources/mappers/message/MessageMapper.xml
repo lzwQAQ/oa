@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.msg.dao.MessageDao">
+
+	<sql id="AllColumns">
+		t.ID AS "id",
+		t.CONTENT AS "content",
+		t.SCHEDULE AS "schedule",
+		t.RECEIVER AS "receiver",
+		t.SEND_MSG as "sendMsg",
+		t.CREATE_TIME AS "createTime",
+		t.UPDATE_TIME AS "updateTime",
+		t.SEND_TYPE as "sendType",
+		t.GROUP_ID as "groupId",
+		t.GROUP_NAME as "groupName",
+		t.DEPT_ID as "deptId",
+		t.SCHEDULE_TIME as "scheduleTime",
+		t.DEPT_NAME as "deptName"
+	</sql>
+	<!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO S_MESSAGE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> id, </if>
+        	<if test="content != null"> CONTENT, </if>
+			<if test="sendMsg != null"> SEND_MSG, </if>
+        	<!--<if test="seqId != null"> SEQ_ID, </if>-->
+			<if test="schedule != null"> SCHEDULE, </if>
+			<if test="receiver != null"> RECEIVER, </if>
+			<if test="scheduleTime != null"> SCHEDULE_TIME, </if>
+			<if test="sendType != null"> SEND_TYPE, </if>
+			<if test="groupId != null"> GROUP_ID, </if>
+			<if test="groupName != null"> GROUP_NAME, </if>
+			<if test="deptId != null">DEPT_ID, </if>
+			<if test="deptName != null"> DEPT_NAME, </if>
+            create_time,
+            update_time
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> #{id}, </if>
+            <if test="content != null"> #{content}, </if>
+			<if test="sendMsg != null"> #{sendMsg}, </if>
+            <!--<if test="seqId != null"> #{seqId}, </if>-->
+			<if test="schedule != null"> #{schedule}, </if>
+			<if test="receiver != null"> #{receiver}, </if>
+			<if test="scheduleTime != null"> #{scheduleTime}, </if>
+			<if test="sendType != null"> #{sendType}, </if>
+			<if test="groupId != null"> #{groupId}, </if>
+			<if test="groupName != null"> #{groupName}, </if>
+			<if test="deptId != null"> #{deptId}, </if>
+			<if test="deptName != null"> #{deptName}, </if>
+            SYSDATE(),
+            SYSDATE()
+		</trim>
+	</insert>
+
+	<update id="update">
+		UPDATE S_MESSAGE
+		<set>
+			<if test="id != null"> ID = #{id}, </if>
+			<if test="content != null"> CONTENT = #{content}, </if>
+			<if test="sendMsg != null"> SEND_MSG = #{sendMsg}, </if>
+			<!--<if test="seqId != null"> SEQ_ID = #{seqId}, </if>-->
+			<if test="receiver != null"> RECEIVER = #{receiver}, </if>
+			<if test="scheduleTime != null"> SCHEDULE_TIME = #{scheduleTime}, </if>
+			<if test="sendType != null"> SEND_TYPE = #{sendType}, </if>
+			<if test="groupId != null"> GROUP_ID = #{groupId}, </if>
+			<if test="groupName != null"> GROUP_NAME = #{groupName}, </if>
+			<if test="deptId != null"> DEPT_ID = #{deptId}, </if>
+			<if test="deptName != null"> DEPT_NAME = #{deptName}, </if>
+			UPDATE_TIME = SYSDATE()
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findList" parameterType="com.kuyuner.bg.msg.entity.Message"  resultType="com.kuyuner.bg.msg.entity.Message">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM S_MESSAGE t
+        ORDER BY t.CREATE_TIME desc
+	</select>
+
+	<select id="getById" parameterType="java.lang.String" resultType="com.kuyuner.bg.msg.entity.Message">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM S_MESSAGE t
+		where t.id=#{id}
+	</select>
+
+    <select id="getAllDeptPerson" resultType="java.util.Map">
+        SELECT
+            d.`NAME` AS "deptName",
+            d.SIMPLE_NAME AS "deptSimpleName",
+            d.PARENT_ID AS "deptParentId",
+            d.ID AS "deptId",
+            u.PHONE AS "userPhone",
+            u.`NAME` AS "userName",
+            u.ID as "userId"
+        FROM
+            `T_PT_DEPT` d
+        LEFT JOIN `T_PT_USER` u ON d.ID = u.DEPT_ID
+        ORDER BY
+            d.SORT DESC
+    </select>
+	<select id="getAllDeptPhoneByDeptId" resultType="java.lang.String">
+		SELECT
+		u.PHONE AS "userPhone"
+		FROM
+		`T_PT_DEPT` d
+		LEFT JOIN `T_PT_USER` u ON d.ID = u.DEPT_ID
+	</select>
+</mapper>

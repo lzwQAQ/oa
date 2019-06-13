@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>发送邮件</title>
+    <link th:replace="common/head" />
+    <link th:href="@{/static/common/plugins/umeditor/themes/default/css/umeditor.min.css}" rel="stylesheet"/>
+    <link th:href="@{/static/common/plugins/uploadpreview/css/webuploader.css}" rel="stylesheet"/>
+    <!--<link th:href="@{/static/css/email/email.css}" rel="stylesheet"/>-->
+    <style>
+        #edit-contain {height: 350px;overflow: hidden}
+        .main-box {margin-top: 10px}
+        .email-lable {width: 105px;display: inline-block;float: left;padding-left: 15px;padding-right: 5px}
+        .email-col { width: 100%; padding-left: 105px; padding-right: 32px;}
+        .form-control, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple { border: 1px solid #c6cbd0;}
+
+        .webuploader-pick {
+            width: 80px;
+            height: 30px; line-height: 30px;
+            background-color: #1a7bb9;
+        }
+
+    </style>
+</head>
+
+<body class="bg-email" style="height: auto">
+<div class="wrapper wrapper-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-box" style="margin-top: 20px">
+                <form id="form" class="form-horizontal">
+                    <input type="hidden" id="id" name="id" th:value="${article.id}">
+                    <input type="hidden" id="type" name="type" value="1">
+
+                    <div class="form-group">
+                        <label class="email-lable control-label">标题：</label>
+                        <div class="email-col">
+                            <input th:value="${article.title}" name="title" type="text" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div id="image" class="form-group">
+                        <label class="email-lable control-label">图片：</label>
+                        <div class="email-col" style="padding-top: 6px">
+                            <div id="uploader" class="wu-example">
+                                <div id="choose_file_wraper">
+                                    <div class="choose-file-btn" id="choose_file">选择图片</div>
+                                </div>
+                                <input style="visibility: hidden" type="text" id="content" name="content" th:value="${article.content}" required="required">
+                                <div class="_filelist file-list">
+                                    <img th:if="${article.content}" id="img-content">
+                                </div>
+                                <p class="help-block">支持扩展名：.jpg .png .jpeg .bmp</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        <div class="row">
+                            <div class="email-col">
+                                <a href="javascript:void(0)" id="save" class="btn btn-success btn-sm"><i class="fa fa-pencil"></i> 保存</a>
+                                <a href="javascript:void(0)" id="close" class="btn btn-white btn-sm" title="关闭"><i class="fa fa-times"></i> 关闭</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/common/plugins/umeditor/umeditor.config.js}" type="text/javascript" ></script>
+<script th:src="@{/static/common/plugins/umeditor/umeditor.min.js}" type="text/javascript" ></script>
+<script th:src="@{/static/common/plugins/umeditor/lang/zh-cn/zh-cn.js}" type="text/javascript" ></script>
+<script th:src="@{/static/common/plugins/webuploader/webuploader.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/uploadpreview/UploadPreview.min.js}" type="text/javascript"></script>
+<script th:inline="javascript">
+    var rootUrl = /*[[@{/}]]*/ + '';
+    var type = [[${article.type}]]
+</script>
+<script>
+    var uploader = new UploadPreview({
+        swf: Util.getRootPath() + '/static/common/plugins/webuploader/Uploader.swf',
+        url: Util.getPath() + '/temp/file/upload',
+        previewInfo: {//预览参数配置
+            width: -1, //预览图片的宽度
+            height: -1, //预览图片的高度
+            //errorTipShow: false,
+            toolBtnShowOnUpload: true,
+            viewImgHorizontal: true,//预览图是否水平垂直居中
+            previewClass: "new-preview",//每个预览框的class
+            previewElement: "div",//每个预览框的元素，只能为字符串
+            showToolBtn: true, //当鼠标放在图片上时是否显示工具按钮,
+            onlyDel: false,//是否只生成"删除"按钮
+            previewWrap: ".file-list"//包裹所有预览图片的父级元素
+        },
+        /*drag: {//拖拽上传配置
+          dnd: ".drop-area",// 指定Drag And Drop拖拽的容器，如果不指定，则不启动
+          disableGlobalDnd: true,// 是否禁掉整个页面的拖拽功能，如果不禁用，图片拖进来的时候会默认被浏览器打开。
+          paste: "body"// 指定监听paste事件的容器，如果不指定，不启用此功能。此功能为通过粘贴来添加截屏的图片。建议设置为document.body.
+      },*/
+        // multiple: false,
+        // maxFileSize: (1024 * 1024),
+        auto: true,
+        toolBtnShowOnUpload: true,
+        chooseBtnCanUseOnFinish: true,
+        // maxFileTotalSize: 1024*1024*5,
+        btns: {
+            //uploadBtn: document.getElementById("upload_now"), //开始上传按钮
+            retryBtn: null, //用户自定义"重新上传"按钮
+            chooseBtn: document.getElementById("choose_file"),// 指定选择文件的按钮容器，不指定则不创建按钮。选择器支持 id, class, dom。
+            chooseBtnText: "选择图片",//选择文件按钮显示的文字
+            chooseBtnCanUseOnFinish: false,
+            uploadBtnCanUsOnFinish: false
+        },
+        error: function (errorCode){
+            console.log(errorCode);
+        },
+        maxFileSize: 8388608,
+        pictureOnly: false,
+        ignore: {
+            extensions: ".txt,doc"
+        },
+        beforeFileQueued: function (WuFile){
+            console.log(WuFile)
+            if(WuFile.name.indexOf("uploadpreview需求") != -1){
+                console.log("uploadpreview需求.png是不允许添加进去的！");
+                return false;
+            }
+        },
+        fileQueued: function (WuFile){
+            $('#img-content').remove()
+            $('#choose_file_wraper').css('display', 'none')
+        },
+        onDel: function(){
+            $('#content').val('')
+            $('#choose_file_wraper').css('display', 'block')
+            uploader.refresh()
+        },
+
+        onDelUploaded: function (id, done){
+            $('#choose_file_wraper').css('display', 'block')
+            uploader.refresh()
+            done()
+        },
+        uploadSuccess: function(f, resp){
+            $('#content').val(resp.data[0].url)
+        }
+    });
+</script>
+<script>
+    $(function () {
+        $('#img-content').attr('src', (location.origin+rootUrl+$('#content').val()))
+        $("#save").click(function () {
+            save();
+        });
+
+        $("#close").click(function () {
+            if ($("#id").val()) {
+                Util.ask("关闭之前请注意保存，确定关闭？", function (index) {
+                    Util.closeLayer(index);
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    if (parent.reloadGrid) {
+                        parent.reloadGrid();
+                    }
+                });
+            } else {
+                Util.ask("关闭之后，文章内容将消失，确认关闭？", function (index) {
+                    Util.closeLayer(index);
+                    top.closeCurrentTab();
+                });
+            }
+        });
+
+        function save() {
+            if ($("#form").valid()) {
+                $("#form").ajaxSubmit({
+                    loading: true,
+                    type: "post",
+                    url: Util.getPath() + "/article/save",
+                    success: function (res, statusText, xhr, $form) {
+                        if (res.code === 200) {
+                            Util.msgOk("保存成功！");
+                            if ($("#id").val()) {
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                if (parent.reloadGrid) {
+                                    parent.reloadGrid();
+                                }
+                            } else {
+                                top.closeCurrentTab();
+                            }
+                        } else {
+                            Util.msgError("保存失败！");
+                        }
+                    }
+                });
+            } else {
+                $('#form').validate().focusInvalid();
+            }
+        }
+    });
+</script>
+</html>

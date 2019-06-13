@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.approval.dao.CarDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.car_no AS "carNo",
+		t.color AS "color",
+		t.brand AS "brand",
+		t.seat_num AS "seatNum",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.approval.entity.Car">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_CAR t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.approval.entity.Car">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_CAR t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="carNo != null and carNo != ''">
+                AND t.car_no LIKE concat('%',#{carNo},'%')
+            </if>
+            <if test="color != null and color != ''">
+                AND t.color = #{color}
+            </if>
+            <if test="brand != null and brand != ''">
+                AND t.brand LIKE concat('%',#{brand},'%')
+            </if>
+            <if test="seatNum != null and seatNum != ''">
+                AND t.seat_num = #{seatNum}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_CAR
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="carNo != null"> car_no, </if>
+        	<if test="color != null"> color, </if>
+        	<if test="brand != null"> brand, </if>
+        	<if test="seatNum != null"> seat_num, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="carNo != null"> #{carNo}, </if>
+            <if test="color != null"> #{color}, </if>
+            <if test="brand != null"> #{brand}, </if>
+            <if test="seatNum != null"> #{seatNum}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_CAR
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="carNo != null"> car_no = #{carNo}, </if>
+            <if test="color != null"> color = #{color}, </if>
+            <if test="brand != null"> brand = #{brand}, </if>
+            <if test="seatNum != null"> seat_num = #{seatNum}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE()
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_CAR where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

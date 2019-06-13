@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <title>车辆信息表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${car.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>车牌号：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="carNo" th:value="${car.carNo}" class="form-control" required='required' maxlength='20' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>车辆颜色：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="color" th:value="${car.color}" class="form-control" required='required' maxlength='6' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>品牌型号：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="brand" th:value="${car.brand}" class="form-control" required='required' maxlength='30' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>座位数：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="seatNum" th:value="${car.seatNum}" class="form-control" required='required' maxlength='2' digits="true" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/js/approval/carForm.js}" type="text/javascript"></script>
+</html>

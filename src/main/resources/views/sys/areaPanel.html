@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <title>区划选择</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="content">
+        <div class="clearfix search-toolbar other-items">
+            <div class="form-inline pull-left">
+                <div class="form-group">
+                    <label class="control-label">区划编码</label>
+                    <input id="code" type="text" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">区划名称</label>
+                    <input id="name" type="text" class="form-control"/>
+                </div>
+                <button id="search-btn" type="button" class="btn btn-primary btn-outline">查询</button>
+            </div>
+        </div>
+        <table id="table"></table>
+        <div id="page"></div>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script type="text/javascript">
+    $(function () {
+        var gridTable = $('#table').jqGrid({
+            url: Util.getPath() + "/area/list",
+            colModel: [{
+                hidden: true,
+                name: 'id'
+            }, {
+                label: '区划编码',
+                name: 'code'
+            }, {
+                label: '区划名称',
+                name: 'name'
+            }],
+            pager: "#page"
+        }).enableAutoHeight(".content", ".other-items");
+
+        $("#search-btn").click(function () {
+            gridTable.setGridParam({
+                postData: {
+                    code: $("#code").val(),
+                    name: $("#name").val()
+                }
+            }).trigger("reloadGrid", {
+                page: 1
+            });
+        });
+    });
+
+    /**
+     * 获得已经选中的数据
+     * @returns
+     */
+    function getSelected() {
+        var rowId = $("#table").jqGrid('getGridParam', 'selrow');
+        return rowId ? $("#table").jqGrid('getRowData', rowId) : null;
+    }
+</script>
+</html>

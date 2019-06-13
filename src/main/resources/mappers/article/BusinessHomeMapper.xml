@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.article.dao.BusinessHomeDao">
+
+	<sql id="AllColumns">
+		r.ID AS "taskId",
+		r.PRO_DEF_NAME AS "processName",
+		r.NAME AS "taskName",
+		u.NAME AS "sender",
+		t.CREATE_DATE AS "time",
+		t.business_name AS "businessName", -- 业务名称
+		dept.name AS "detpName" -- 所属部门
+	</sql>
+	<!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+
+	<select id="findData" parameterType="java.lang.String"  resultType="com.kuyuner.bg.article.entity.BusinessHome">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM
+		V_WF_RU_TASK r
+		INNER JOIN T_AP_BUSINESS t ON t.id = r.business_id
+		INNER JOIN T_PT_USER u ON u.id = t.sender_id
+		left join T_PT_DEPT dept on dept.id = u.dept_id
+		WHERE
+		( r.ASSIGNEE = #{userId} OR ( r.ASSIGNEE IS NULL AND r.USER_ID = #{userId} ) )
+		ORDER BY
+		t.CREATE_DATE DESC
+
+	</select>
+
+</mapper>

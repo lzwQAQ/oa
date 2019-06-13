@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <link rel="stylesheet" th:href="@{/static/css/approval/style.css}">
+    <title>流程表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${document.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                
+                                标题：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${document.title}" class="form-control" readonly='readonly' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                
+                                编号：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${document.numbers}" class="form-control" readonly='readonly'/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                
+                                密级：
+                            </label>
+                            <div class="col-sm-8">
+                                <select class="form-control" disabled='disabled'>
+                                    <option value="">请选择密级</option>
+                                    <option th:selected="${dict.dictCode==document.secret}" th:each="dict:${dictHolder.getValues('SECRET_LEVEL')}" th:value="${dict.dictCode}" th:text="${dict.dictValue}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                
+                                紧急程度：
+                            </label>
+                            <div class="col-sm-8">
+                                <select class="form-control" disabled='disabled'>
+                                    <option value="">请选择紧急程度</option>
+                                    <option th:selected="${dict.dictCode==document.urgentLevel}" th:each="dict:${dictHolder.getValues('SEND_DOC_URGENT')}" th:value="${dict.dictCode}" th:text="${dict.dictValue}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                
+                                发文机构：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${document.releaseOrgName}" class="form-control" readonly='readonly' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                
+                                收文文件：
+                            </label>
+                            <div class="col-sm-8 select-files">
+                                <p class="file-block" id="upload-file-block">
+                                    <span class="select-filename">
+                                        <a th:href="@{/} + ${adminPath} + ${'/approval/download/' + approvalFile.id}" target="_blank"
+                                           th:text="${approvalFile.fileName}" th:title="${approvalFile.fileName}"></a>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#btnCancel").click(function () {
+            parent.layer.close(parent.layer.getFrameIndex(window.name));
+        });
+    });
+</script>
+</html>

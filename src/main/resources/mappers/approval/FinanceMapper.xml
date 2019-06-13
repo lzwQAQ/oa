@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.approval.dao.FinanceDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.business AS "business",
+		t.money AS "money",
+		t.purpose AS "purpose",
+		t.task_name AS "taskName",
+		t.approval_result AS "approvalResult",
+		t.sender_id AS "senderId",
+		d.name as "senderDeptName",
+        u.name as "senderName",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+        inner join T_PT_USER u on u.id = t.SENDER_ID
+        left join T_PT_DEPT d on d.id = u.dept_id
+	</sql>
+
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.approval.entity.Finance">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_FINANCE t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.approval.entity.Finance">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_FINANCE t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="business != null and business != ''">
+                AND t.business LIKE concat('%',#{business},'%')
+            </if>
+            <if test="money != null and money != ''">
+                AND t.money = #{money}
+            </if>
+            <if test="purpose != null and purpose != ''">
+                AND t.purpose = #{purpose}
+            </if>
+            <if test="taskName != null and taskName != ''">
+                AND t.task_name = #{taskName}
+            </if>
+            <if test="approvalResult != null and approvalResult != ''">
+                AND t.approval_result = #{approvalResult}
+            </if>
+            <if test="senderId != null and senderId != ''">
+                AND t.sender_id = #{senderId}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+    <select id="getLog" resultType="com.kuyuner.bg.approval.entity.Finance">
+        SELECT
+            t.id AS "id",
+            t.business AS "business",
+		    t.money AS "money",
+		    t.purpose AS "purpose",
+            t.approval_result AS "approvalResult",
+            t.SENDER_ID AS "senderId",
+            d.name as "senderDeptName",
+            u.name as "senderName",
+            t.creater AS "creater",
+            t.create_date AS "createDate",
+            t.update_date AS "updateDate",
+            t.del_flag AS "delFlag"
+        FROM T_AP_FINANCE_LOG t
+        inner join T_PT_USER u on u.id = t.SENDER_ID
+        left join T_PT_DEPT d on d.id = u.dept_id
+        WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+    </select>
+
+    <select id="findPendingList" resultType="com.kuyuner.bg.approval.bean.FinancePendingListView">
+        select
+        r.ID as "taskId",
+        r.PRO_DEF_NAME as "processName",
+        t.business AS "business",
+        t.money AS "money",
+        r.NAME as "taskName",
+        u.name as "sender",
+        t.CREATE_DATE as "time"
+        from V_WF_RU_TASK r
+        inner join T_AP_FINANCE t on t.id = r.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            (r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
+            <if test="finance.business != null and finance.business != ''">
+                AND t.business LIKE concat('%',#{finance.business},'%')
+            </if>
+        </where>
+        order by t.CREATE_DATE desc
+    </select>
+
+    <select id="findHistoricList" resultType="com.kuyuner.bg.approval.bean.FinanceHistoricListView">
+        select
+        t.id as "id",
+        h.PROC_NAME as "processName",
+        h.PROC_INST_ID as "processInstanceId",
+        t.business AS "business",
+        t.money AS "money",
+        t.task_name as "taskName",
+        u.name as "sender",
+        t.CREATE_DATE as "time"
+        from V_WF_HI_TASK h
+        inner join T_AP_FINANCE t on t.id = h.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            (h.ASSIGNEE = #{userId} and h.START_USER_ID <![CDATA[ <> ]]> #{userId})
+            <if test="finance.business != null and finance.business != ''">
+                AND t.business LIKE concat('%',#{finance.business},'%')
+            </if>
+            <if test="finance.senderName != null and finance.senderName != ''">
+                AND u.name LIKE concat('%',#{finance.senderName},'%')
+            </if>
+        </where>
+        order by t.CREATE_DATE desc
+    </select>
+
+    <select id="findSendList" resultType="com.kuyuner.bg.approval.bean.FinanceHistoricListView">
+        select DISTINCT
+        t.id as "id",
+        h.PROC_NAME as "processName",
+        h.PROC_INST_ID as "processInstanceId",
+        t.business AS "business",
+        t.money AS "money",
+        t.task_name as "taskName",
+        t.CREATE_DATE as "time"
+        from V_WF_HI_TASK h
+        inner join T_AP_FINANCE t on t.id = h.business_id
+        <where>
+            h.START_USER_ID = #{userId}
+            <if test="finance.business != null and finance.business != ''">
+                AND t.business LIKE concat('%',#{finance.business},'%')
+            </if>
+        </where>
+        order by t.CREATE_DATE desc
+    </select>
+
+    <select id="getApprovalResult" resultType="java.lang.String">
+        SELECT APPROVAL_RESULT FROM T_AP_FINANCE WHERE ID = #{id}
+    </select>
+
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_AP_FINANCE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="business != null"> business, </if>
+        	<if test="money != null"> money, </if>
+        	<if test="purpose != null"> purpose, </if>
+        	<if test="taskName != null"> task_name, </if>
+        	<if test="approvalResult != null"> approval_result, </if>
+        	<if test="senderId != null"> sender_id, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="business != null"> #{business}, </if>
+            <if test="money != null"> #{money}, </if>
+            <if test="purpose != null"> #{purpose}, </if>
+            <if test="taskName != null"> #{taskName}, </if>
+            <if test="approvalResult != null"> #{approvalResult}, </if>
+            <if test="senderId != null"> #{senderId}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+    <insert id="insertLog">
+        INSERT INTO T_AP_FINANCE_LOG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> id, </if>
+            <if test="business != null"> business, </if>
+            <if test="money != null"> money, </if>
+            <if test="purpose != null"> purpose, </if>
+            <if test="approvalResult != null"> approval_result, </if>
+            <if test="senderId != null"> sender_id, </if>
+            creater,
+            create_date,
+            update_date,
+            <if test="delFlag != null"> del_flag, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="business != null"> #{business}, </if>
+            <if test="money != null"> #{money}, </if>
+            <if test="purpose != null"> #{purpose}, </if>
+            <if test="approvalResult != null"> #{approvalResult}, </if>
+            <if test="senderId != null"> #{senderId}, </if>
+            #{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+        </trim>
+    </insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_AP_FINANCE
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="business != null"> business = #{business}, </if>
+            <if test="money != null"> money = #{money}, </if>
+            <if test="purpose != null"> purpose = #{purpose}, </if>
+            <if test="taskName != null"> task_name = #{taskName}, </if>
+            <if test="approvalResult != null"> approval_result = #{approvalResult}, </if>
+            <if test="senderId != null"> sender_id = #{senderId}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_AP_FINANCE where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?><!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.workflow.api.dao.WorkflowDao">
+
+    <insert id="addCandidateUsers">
+        INSERT INTO ACT_RU_IDENTITYLINK (ID_,REV_,TYPE_,USER_ID_,TASK_ID_)
+        values
+        <foreach collection="users" item="user" separator=",">
+            (replace(uuid(), '-', ''),1,'candidate',#{user},#{taskId})
+        </foreach>
+    </insert>
+
+    <insert id="insertTaskBusinessKey">
+        INSERT INTO T_WF_TASK_BUSINESSKEY
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> id, </if>
+            <if test="businessId != null"> business_id, </if>
+            <if test="businessLogId != null"> business_log_id, </if>
+            <if test="procInstId != null"> proc_inst_id, </if>
+            <if test="taskId != null"> task_id, </if>
+            creater,
+            create_date,
+            update_date,
+            <if test="delFlag != null"> del_flag, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="businessId != null"> #{businessId}, </if>
+            <if test="businessLogId != null"> #{businessLogId}, </if>
+            <if test="procInstId != null"> #{procInstId}, </if>
+            <if test="taskId != null"> #{taskId}, </if>
+            #{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+        </trim>
+    </insert>
+
+    <insert id="insertTaskLog">
+        INSERT INTO T_WF_TASK_LOG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> id, </if>
+            <if test="taskName != null"> task_name, </if>
+            <if test="assignee != null"> assignee, </if>
+            <if test="approvalOpinion != null"> approval_opinion, </if>
+            <if test="taskId != null"> task_id, </if>
+            <if test="eventName != null"> event_name, </if>
+            <if test="approvalDate != null"> approval_date, </if>
+            <if test="proInstId != null"> pro_inst_id, </if>
+            creater,
+            create_date,
+            update_date,
+            <if test="delFlag != null"> del_flag, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="taskName != null"> #{taskName}, </if>
+            <if test="assignee != null"> #{assignee}, </if>
+            <if test="approvalOpinion != null"> #{approvalOpinion}, </if>
+            <if test="taskId != null"> #{taskId}, </if>
+            <if test="eventName != null"> #{eventName}, </if>
+            <if test="approvalDate != null"> #{approvalDate}, </if>
+            <if test="proInstId != null"> #{proInstId}, </if>
+            #{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+        </trim>
+    </insert>
+
+
+    <select id="findAllCandidateUserInfos" resultType="java.util.Map">
+        select t.ID "id",t.USERNAME "username",t.NAME "name",t.DEPTNAME "deptName",t.DEPTCODE "deptCode",t.ORGNAME "orgName",t.ORGCODE "orgCode" from (
+          <include refid="findAllCandidateUserInfosSql" />
+        ) t
+        <where>
+            <if test="searchText != null and searchText != ''">
+                t.DEPTNAME like concat('%',#{searchText},'%')
+                or t.ORGNAME like concat('%',#{searchText},'%')
+                or t.NAME like concat('%',#{searchText},'%')
+                or t.USERNAME like concat('%',#{searchText},'%')
+            </if>
+        </where>
+        order by t.ORGNAME ,t.DEPTNAME ,t.NAME
+    </select>
+
+    <select id="findAllCandidateUsers" resultType="java.lang.String">
+        select t.ID from (
+          <include refid="findAllCandidateUserInfosSql" />
+        ) t
+    </select>
+
+    <select id="getDefaultFormPath" resultType="java.lang.String">
+        select FORM_PATH from T_WF_TASK_FORM where model_key = #{modelKey} and task_key = #{taskKey}
+    </select>
+
+    <sql id="findAllCandidateUserInfosSql">
+        select distinct u.id ID,u.USERNAME USERNAME,u.NAME NAME,dept.name DEPTNAME,dept.code DEPTCODE,org.name ORGNAME,org.code ORGCODE
+        from T_WF_TASK_AUTH au
+        inner join T_PT_DEPT dept on dept.id = au.object_id
+        inner join T_PT_ORG org on org.id = dept.ORG_ID
+        inner join T_PT_USER u on u.DEPT_ID = dept.id
+        where au.object_type = 'dept' and u.DEL_FLAG = '1' and dept.DEL_FLAG = '1' and org.DEL_FLAG = '1' and au.model_key = #{modelKey} and au.task_key = #{taskKey}
+        union
+        select distinct u.id ID,u.USERNAME USERNAME,u.NAME NAME,dept.name DEPTNAME,dept.code DEPTCODE,org.name ORGNAME,org.code ORGCODE
+        from T_WF_TASK_AUTH au
+        inner join T_PT_ORG org on org.id = au.object_id
+        inner join T_PT_DEPT dept on dept.org_id = org.id
+        inner join T_PT_USER u on u.DEPT_ID = dept.id
+        where au.object_type = 'org' and u.DEL_FLAG = '1' and dept.DEL_FLAG = '1' and org.DEL_FLAG = '1' and au.model_key = #{modelKey} and au.task_key = #{taskKey}
+        union
+        select distinct u.id ID,u.USERNAME USERNAME,u.NAME NAME,dept.name DEPTNAME,dept.code DEPTCODE,org.name ORGNAME,org.code ORGCODE
+        from T_WF_TASK_AUTH au
+        inner join T_PT_ROLE r on r.id = au.object_id
+        inner join T_PT_USER_ROLE ru on ru.role_id = r.id
+        inner join T_PT_USER u on u.id = ru.user_id
+        inner join T_PT_DEPT dept on dept.id = u.dept_id
+        inner join T_PT_ORG org on org.id = dept.org_id
+        where au.object_type = 'role' and u.DEL_FLAG = '1' and dept.DEL_FLAG = '1' and org.DEL_FLAG = '1' and au.model_key = #{modelKey} and au.task_key = #{taskKey}
+    </sql>
+</mapper>

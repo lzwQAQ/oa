@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.msg.dao.GroupUserDao">
+	<!--auto generated Code-->
+
+	<sql id="AllColumns">
+		t.ID AS "id",
+		t.PARENT_ID AS "parentId",
+		t.NAME AS "name",
+		t.TREE_LEAF AS "treeLeaf",
+		t.TREE_LEVEL as "treeLevel",
+		t.PHONE as "phone",
+		t.USER_ID as "userId",
+		t.CREATE_TIME AS "createTime",
+		t.UPDATE_TIME AS "updateTime"
+	</sql>
+
+	<insert id="insertGroupUser" parameterType="com.kuyuner.bg.msg.entity.GroupUser">
+		INSERT INTO T_PT_GROUP_USER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> ID, </if>
+			<if test="parentId != null"> PARENT_ID, </if>
+			<if test="name != null"> `NAME`, </if>
+			<if test="treeLeaf != null"> TREE_LEAF, </if>
+			<if test="treeLevel != null"> TREE_LEVEL, </if>
+			<if test="phone != null"> PHONE, </if>
+			<if test="userId != null"> USER_ID, </if>
+			create_time,
+			update_time
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> #{id}, </if>
+			<if test="parentId != null"> #{parentId}, </if>
+			<if test="name != null"> #{name}, </if>
+			<if test="treeLeaf != null"> #{treeLeaf}, </if>
+			<if test="treeLevel != null"> #{treeLevel}, </if>
+			<if test="phone != null"> #{phone}, </if>
+			<if test="userId != null"> #{userId}, </if>
+			SYSDATE(),
+			SYSDATE()
+		</trim>
+	</insert>
+
+	<update id="updateGroupUser" parameterType="com.kuyuner.bg.msg.entity.GroupUser">
+		UPDATE T_PT_GROUP_USER
+		<set>
+			<if test="parentId != null"> PARENT_ID = #{parentId}, </if>
+			<if test="name != null"> `NAME` = #{name}, </if>
+			<if test="treeLeaf != null"> TREE_LEAF = #{treeLeaf}, </if>
+			<if test="treeLevel != null"> TREE_LEVEL = #{treeLevel}, </if>
+			<if test="phone != null"> PHONE = #{phone}, </if>
+			<if test="userId != null"> USER_ID = #{userId}, </if>
+			UPDATE_TIME = SYSDATE()
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="getTreeGroup" parameterType="java.util.Map" resultType="com.kuyuner.bg.msg.entity.GroupUser">
+		SELECT
+			ID as "id",
+			PARENT_ID AS "parentId",
+			`NAME` AS "name",
+			TREE_LEAF AS "treeLeaf",
+			TREE_LEVEL AS "treeLevel",
+			USER_ID as "userId",
+			PHONE AS "phone"
+		FROM
+			T_PT_GROUP_USER
+		WHERE 1=1
+		<if test="groupId == null">
+			AND (PARENT_ID IS NULL OR PARENT_ID = '')
+		</if>
+		<if test="groupId != null">
+			AND PARENT_ID = #{groupId}
+		</if>
+	</select>
+
+	<delete id="deleteUserByGroupId" parameterType="java.lang.String">
+		delete from T_PT_GROUP_USER where PARENT_ID=#{groupId}
+	</delete>
+
+	<delete id="deleteGroupByGroupId" parameterType="java.lang.String">
+		delete from T_PT_GROUP_USER where ID=#{groupId}
+	</delete>
+
+	<delete id="deleteUserById" parameterType="java.lang.String">
+		delete from T_PT_GROUP_USER where ID=#{id}
+	</delete>
+
+	<select id="getGroupUserById" parameterType="java.lang.String" resultType="com.kuyuner.bg.msg.entity.GroupUser">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM T_PT_GROUP_USER t
+		where t.id=#{id}
+	</select>
+
+	<select id="getGroupUserAll" resultType="com.kuyuner.bg.msg.entity.GroupUser">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM T_PT_GROUP_USER t
+	</select>
+
+</mapper>

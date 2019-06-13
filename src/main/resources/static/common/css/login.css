@@ -1,0 +1,95 @@
+html{height: 100%;}
+body.signin {
+    height: auto;
+    background:url("../images/login-background.jpg") no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.signinpanel {
+    width: 350px;
+    padding: 0px 30px;
+    margin: 10% 169px 0 auto;
+    background: white;
+}
+
+.signinpanel .logopanel {
+    float: none;
+    width: auto;
+    padding: 0;
+    background: none;
+}
+
+.signinpanel .signin-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.signinpanel .form-group {
+    margin-top: 20px;
+}
+
+.signinpanel .uname {
+    background: #fff url(../images/user.png) no-repeat 95% center;color:#333;
+}
+
+.signinpanel .pword {
+    background: #fff url(../images/locked.png) no-repeat 95% center;color:#333;
+}
+
+.signinpanel .btn {
+    margin-top: 15px;
+}
+
+.signinpanel form {
+    border: 1px solid rgba(255,255,255,.3);
+    -moz-box-shadow: 0 3px 0 rgba(12, 12, 12, 0.03);
+    -webkit-box-shadow: 0 3px 0 rgba(12, 12, 12, 0.03);
+    box-shadow: 0 3px 0 rgba(12, 12, 12, 0.03);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    padding: 30px;
+}
+
+.signup-footer{border-top: solid 1px #3d4d5d;margin:20px 0;padding-top: 15px;position: fixed;bottom: 20px;width: 100%;color: #3d4d5d}
+
+@media screen and (max-width: 768px) {
+    .signinpanel,
+    .signuppanel {
+        margin: 0 auto;
+        width: 420px!important;
+        padding: 20px;
+    }
+    .signinpanel form {
+        margin-top: 20px;
+    }
+    .signuppanel .form-control {
+        margin-bottom: 10px;
+    }
+    .signinpanel .signin-info ul {
+        display: none;
+    }
+}
+@media screen and (max-width: 320px) {
+    .signinpanel,
+    .signuppanel {
+        margin:0 20px;
+        width:auto;
+    }
+}
+
+.login-title{font-size: 30px;color: #3B4C95;font-weight: bolder}
+.login-title-little{font-size: 15px;}
+
+.btn-login {background-color: #5A77FF;border-color: #5A77FF;color: #FFFFFF;}
+.btn-login:hover, .btn-login:focus, .btn-login:active, .btn-login.active, .open .dropdown-toggle.btn-login {background-color: #625AFF;border-color: #625AFF;color: #FFFFFF;}
+.btn-login:active, .btn-login.active, .open .dropdown-toggle.btn-login {background-image: none;}
+.btn-login.disabled, .btn-login.disabled:hover, .btn-login.disabled:focus, .btn-login.disabled:active, .btn-login.disabled.active, .btn-login[disabled], .btn-login[disabled]:hover, .btn-login[disabled]:focus, .btn-login[disabled]:active, .btn-login.active[disabled], fieldset[disabled] .btn-login, fieldset[disabled] .btn-login:hover, fieldset[disabled] .btn-login:focus, fieldset[disabled] .btn-login:active, fieldset[disabled] .btn-login.active {background-color: #90BCFC;border-color: #90BCFC;}
+
+.captcha-container {width: 100%;margin-left: -105px;}
+.captcha-inner {margin-left: 105px}
+.captcha-img {margin-top: 3px;cursor: pointer}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head"/>
+    <title>机构选择</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="content">
+        <div class="clearfix search-toolbar other-items">
+            <div class="form-inline">
+                <div class="form-group" style="width: 365px;margin-bottom: 0px">
+                    <label class="control-label">请输入列表项进行查询</label>
+                    <input id="searchText" type="text" class="form-control" placeholder="请输入列表项进行查询"
+                           autocomplete="off"/>
+                </div>
+                <button id="search-btn" type="button" class="btn btn-primary btn-outline">查询
+                </button>
+            </div>
+            <span>已选人数：<i id="selected-count">0</i>人 <a href="javascript:void(0)"
+                                                        id="selected-empty">清空</a></span>
+        </div>
+        <table id="table"></table>
+        <div id="page"></div>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script type="text/javascript">
+    $(function () {
+        var selected = [];
+        var url1 = Util.getPath() + '/createtask/findNextTaskCandidateInfos?processDefinitionId=' + Util.getQueryString('processDefinitionId') + '&sequenceFlowName=' + Util.getQueryString('sequenceFlowName');
+        var url2 = Util.getPath() + '/pendingtask/findNextTaskCandidateInfos?taskId=' + Util.getQueryString('taskId') + '&sequenceFlowName=' + Util.getQueryString('sequenceFlowName');
+        var url = Util.getQueryString("taskId") ? url2 : url1;
+        var gridTable = $('#table').jqGrid({
+            url: encodeURI(url),
+            multiselect: true,
+            height: 180,
+            colModel: [{
+                name: 'username',
+                label: '用户名'
+            }, {
+                name: 'name',
+                label: '姓名'
+            }, {
+                name: 'deptName',
+                label: '所属部门'
+            }, {
+                name: 'orgName',
+                label: '所属机构'
+            }],
+            gridComplete: function () {
+                var data = $("#table").jqGrid('getDataIDs');
+                if (data) {
+                    for (var i = 0; i < selected.length; i++) {
+                        var id = selected[i];
+                        for (var j = 0; j < data.length; j++) {
+                            if (id === data[j]) {
+                                $("#table").jqGrid('setSelection', id, true);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#table").on("jqGridSelectRow", function (event, id, orgEvent) {
+            checkChange([id], orgEvent);
+        }).on("jqGridSelectAll", function (event, id, orgEvent) {
+            checkChange(id, orgEvent);
+        });
+
+        $("#search-btn").click(function () {
+            gridTable.setGridParam({
+                postData: {
+                    searchText: $("#searchText").val(),
+                }
+            }).trigger("reloadGrid", {
+                page: 1
+            });
+        });
+
+        $("#selected-empty").unbind("click").click(function () {
+            selected = [];
+            $("#table").jqGrid('resetSelection');
+            $("#selected-count").text(selected.length);
+        });
+
+        /**
+         * 勾选状态发生变化时，修改记录的数据和界面显示的数量
+         * @param rows
+         * @param flag
+         */
+        function checkChange(rows, flag) {
+            $.each(rows, function (i, v) {
+                if (flag) {
+                    if ($.inArray(v, selected) === -1) {
+                        selected.push(v);
+                    }
+                } else {
+                    removeFromArray(selected, v.id);
+                }
+            });
+            $("#selected-count").text(selected.length > 99 ? '99+' : selected.length);
+        }
+
+        /**
+         * 从数组中删除指定对象
+         * @param array
+         * @param obj
+         */
+        function removeFromArray(array, obj) {
+            var arrayTemp = [];
+            $.each(array, function (i, v) {
+                if (v === obj) {
+                    return;
+                }
+                arrayTemp.push(v);
+            });
+            array.splice(0, array.length);
+            $.each(arrayTemp, function (i, v) {
+                array.push(v);
+            });
+        }
+    });
+
+    /**
+     * 获得已经选中的数据
+     * @returns
+     */
+    function getSelected() {
+        return $("#table").jqGrid('getGridParam', 'selarrrow');
+    }
+</script>
+</html>

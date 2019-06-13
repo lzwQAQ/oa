@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.article.dao.EmailHomeDao">
+
+	<select id="findData" parameterType="java.lang.String"  resultType="com.kuyuner.bg.article.entity.EmailHome">
+		SELECT
+			t.id AS "id",
+			t.title AS "title",
+			t.sender_name AS "senderName",
+			t.sender_acount AS "senderAccount",
+			t.receiver_name AS "receiverName",
+			t.receiver_account AS "receiverAccount",
+			t.copy_sender_name AS "copySenderName",
+			t.copy_sender_account AS "copySenderAccount",
+			t.contain_file AS "containFile",
+			t.star AS "star",
+			t.type AS "type",
+			t.LEVEL AS "level",
+			t.IS_READ AS "read",
+			t.IS_SECRET AS "isSecret",
+			t.creater AS "creater",
+			t.create_date AS "createDate",
+			t.update_date AS "updateDate",
+			t.del_flag AS "delFlag"
+		FROM
+			T_EMAIL_RECEIVE t
+		WHERE
+			t.DEL_FLAG = '1'
+			AND (t.IS_READ='0' or t.IS_READ is null)
+			AND t.creater =#{userId}
+		ORDER BY
+			t.create_date DESC
+	</select>
+
+</mapper>

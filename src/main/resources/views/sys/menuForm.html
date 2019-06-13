@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <link th:href="@{/static/common/plugins/ztree/css/metroStyle/metroStyle.css}" rel="stylesheet"/>
+    <title>菜单表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${menu.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                上级菜单：
+                                <i class="fa fa-question-circle" title="上级菜单"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="hidden" id="parentId" name="parent.id" class="isReset" th:value="${menu.parent?.id}" />
+                                <input id="parentName" type="text" th:value="${menu.parent?.name}" class="form-control" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                菜单名称：
+                                <i class="fa fa-question-circle" title="菜单名称"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="name" th:value="${menu.name}" class="form-control" required='required' maxlength='50' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                菜单类型：
+                                <i class="fa fa-question-circle" title="菜单类型"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline">
+                                    <input th:checked="${'1' eq menu.type}" type="radio"
+                                           name="type" value="1"
+                                           required="required"/>
+                                    权限
+                                </label>
+                                <label class="radio-inline">
+                                    <input th:checked="${'0' eq menu.type}" type="radio"
+                                           name="type" value="0"
+                                           required="required"/>
+                                    菜单
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row menu-items">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                图标：
+                                <i class="fa fa-question-circle" title="图标"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="menuIcon" th:value="${menu.menuIcon}" class="form-control" maxlength='100' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                菜单链接：
+                                <i class="fa fa-question-circle" title="菜单链接"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="href" th:value="${menu.href}" class="form-control" maxlength='50' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 49px">
+                    <div class="col-xs-6" id="permissions-div" th:styleappend="${'0' eq menu.type} ? 'display:none':''">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                权限标识：
+                                <i class="fa fa-question-circle" title="权限标识"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="permissions" th:value="${menu.permissions}" class="form-control" required='required' maxlength='100' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 menu-items">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                是否显示：
+                                <i class="fa fa-question-circle" title="是否显示"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline">
+                                    <input id="menu-show" th:checked="${'1' eq menu.menuStatus}" type="radio" name="menuStatus" value="1" required="required"/>
+                                    显示
+                                </label>
+                                <label class="radio-inline">
+                                    <input th:checked="${'0' eq menu.menuStatus}" type="radio" name="menuStatus" value="0" required="required"/>
+                                    隐藏
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                序号：
+                                <i class="fa fa-question-circle" title="序号"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="sort" th:value="${menu.sort}" class="form-control" maxlength='11' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/common/plugins/ztree/js/jquery.ztree.all.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/js/sys/menuForm.js}" type="text/javascript"></script>
+</html>

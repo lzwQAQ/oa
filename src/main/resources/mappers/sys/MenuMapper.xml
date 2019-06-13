@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.core.sys.dao.MenuDao">
+
+    <select id="findAllListBySort" resultType="com.kuyuner.core.sys.entity.Menu">
+        SELECT
+            t.id AS "id",
+            t.parent_id AS "parent.id",
+            t.name AS "name",
+            t.href AS "href",
+            t.menu_icon AS "menuIcon",
+            (select COUNT(*) > 0 from T_PT_MENU c where c.del_flag = "1" and c.TYPE = "0" and c.PARENT_ID = t.ID) AS "treeLeaf",
+		    t.tree_level AS "treeLevel"
+        FROM T_PT_MENU t
+        where t.MENU_STATUS = "1" and t.del_flag = "1" and t.TYPE = "0"
+        and t.id in
+        (
+          select rm.MENU_ID from T_PT_ROLE_MENU rm where rm.ROLE_ID in (select ROLE_ID from T_PT_USER_ROLE where USER_ID = #{userId})
+        )
+        order by t.SORT asc
+    </select>
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+	    t.parent_id AS "parent.id",
+		t1.NAME AS "parent.name",
+		t.name AS "name",
+		t.href AS "href",
+		t.menu_icon AS "menuIcon",
+		t.MENU_STATUS AS "menuStatus",
+		t.TYPE AS "type",
+		t.PERMISSIONS AS "permissions",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag",
+		t.tree_leaf AS "treeLeaf",
+		t.tree_level AS "treeLevel",
+		t.sort AS "sort"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+        LEFT JOIN T_PT_MENU t1 on t1.ID = t.parent_id
+	</sql>
+
+	<!--auto generated Code-->
+    <select id="findAllChildren" resultType="com.kuyuner.core.sys.entity.Menu">
+        select
+            <include refid="AllColumns"/>
+        from T_PT_MENU t
+            <include refid="AllJoins"/>
+        where t.parent_id = #{parentId}
+    </select>
+
+    <!--auto generated Code-->
+    <select id="findChildrenCount" resultType="java.lang.Integer">
+        select count(*)
+        from T_PT_MENU
+        where parent_id = #{parentId}
+    </select>
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.core.sys.entity.Menu">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_MENU t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.core.sys.entity.Menu">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_MENU t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+		    <if test="parent != null">
+		        <if test="parent.id != null and parent.id != ''">
+                    AND t.parent_id = #{parent.id}
+		        </if>
+                <if test="parent.name != null and parent.name != ''">
+		            AND t1.NAME LIKE concat('%',#{parent.name},'%')
+		        </if>
+            </if>
+            <if test="name != null and name != ''">
+                AND t.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+            <if test="treeLeaf != null and treeLeaf != ''">
+                AND t.tree_leaf = #{treeLeaf}
+            </if>
+            <if test="treeLevel != null and treeLevel != ''">
+                AND t.tree_level = #{treeLevel}
+            </if>
+            <if test="sort != null and sort != ''">
+                AND t.sort = #{sort}
+            </if>
+		</where>
+        order by t.sort asc
+	</select>
+
+    <select id="findMenuAll" resultType="java.util.Map">
+        select ID as "id", PARENT_ID as "pId", NAME as "name" from T_PT_MENU
+        where MENU_STATUS = "1" and del_flag = "1" and TYPE = "0"
+        order by SORT asc
+    </select>
+
+    <!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_PT_MENU
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+            <if test="parent != null and parent.id != null"> parent_id, </if>
+        	<if test="name != null"> name, </if>
+        	<if test="href != null"> href, </if>
+        	<if test="menuIcon != null"> menu_icon, </if>
+            <if test="menuStatus != null"> MENU_STATUS, </if>
+            <if test="type != null"> TYPE, </if>
+            <if test="permissions != null"> PERMISSIONS, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+        	<if test="treeLeaf != null"> tree_leaf, </if>
+        	<if test="treeLevel != null"> tree_level, </if>
+        	<if test="sort != null"> sort, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+		    <if test="parent != null and parent.id != null"> #{parent.id}, </if>
+            <if test="name != null"> #{name}, </if>
+            <if test="href != null"> #{href}, </if>
+            <if test="menuIcon != null"> #{menuIcon}, </if>
+            <if test="menuStatus != null"> #{menuStatus}, </if>
+            <if test="type != null"> #{type}, </if>
+            <if test="permissions != null"> #{permissions}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+            <if test="treeLeaf != null"> #{treeLeaf}, </if>
+            <if test="treeLevel != null"> #{treeLevel}, </if>
+            <if test="sort != null"> #{sort}, </if>
+		</trim>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_PT_MENU
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+        	<if test="parent != null and parent.id != null"> parent_id = #{parent.id}, </if>
+            <if test="name != null"> name = #{name}, </if>
+            <if test="href != null"> href = #{href}, </if>
+            <if test="menuIcon != null"> menu_icon = #{menuIcon}, </if>
+            <if test="menuStatus != null"> MENU_STATUS = #{menuStatus}, </if>
+            <if test="type != null"> TYPE = #{type}, </if>
+            <if test="permissions != null"> PERMISSIONS = #{permissions}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+            <if test="treeLeaf != null"> tree_leaf = #{treeLeaf}, </if>
+            <if test="treeLevel != null"> tree_level = #{treeLevel}, </if>
+            <if test="sort != null"> sort = #{sort}, </if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_PT_MENU where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

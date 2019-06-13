@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.approval.dao.AccountsDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.name AS "name",
+		d.name as "senderDeptName",
+		u.name as "senderName",
+		t.TOTAL_PRICE as "totalPrice",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+		inner join T_PT_USER u on u.id = t.SENDER_ID
+		left join T_PT_DEPT d on d.id = u.dept_id
+	</sql>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.approval.entity.Accounts">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_RECORD_ACCOUNTS t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="name != null and name != ''">
+                AND t.name LIKE concat('%',#{name},'%')
+            </if>
+			<if test="senderName != null and senderName != ''">
+				AND u.name LIKE concat('%',#{senderName},'%')
+			</if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+			<if test="beginSendTime != null and endSendTime != null">
+				AND t.CREATE_DATE between #{beginSendTime} and #{endSendTime}
+			</if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+    <select id="get" resultType="com.kuyuner.bg.approval.entity.Accounts">
+        SELECT
+        <include refid="AllColumns"/>
+        FROM T_RECORD_ACCOUNTS t
+        <include refid="AllJoins"/>
+        <where>
+            t.DEL_FLAG = #{delFlag} and t.id = #{id}
+        </where>
+    </select>
+
+    <!--auto generated Code-->
+    <insert id="insert">
+        INSERT INTO T_RECORD_ACCOUNTS
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> id, </if>
+            <if test="name != null"> name, </if>
+            <if test="senderId != null"> SENDER_ID, </if>
+            <if test="totalPrice != null"> TOTAL_PRICE, </if>
+            creater,
+            create_date,
+            update_date,
+            <if test="delFlag != null"> del_flag, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="name != null"> #{name}, </if>
+            <if test="senderId != null"> #{senderId}, </if>
+            <if test="totalPrice != null"> #{totalPrice}, </if>
+            #{creater},
+            #{createDate},
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+        </trim>
+    </insert>
+
+</mapper>

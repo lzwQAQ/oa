@@ -1,0 +1,20 @@
+<script th:src="@{/static/common/plugins/jquery/jquery-1.12.4.min.js}"></script>
+<script th:src="@{/static/common/plugins/layer/layer.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/jquery-form/jquery.form.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/validate/js/jquery.validate.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/jqGrid/src/jquery.jqGrid.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/jqGrid/js/i18n/grid.locale-cn.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/select2/js/select2.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/select2/js/i18n/zh-CN.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/iCheck/icheck.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/daterangepicker/js/moment.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/daterangepicker/js/daterangepicker.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/js/Init.js}" type="text/javascript"></script>
+
+<!--/*  根路径设置  */-->
+<script type="text/javascript" th:inline="javascript">
+    var rootUrl = /*[[@{/}]]*/ + '';
+    var adminPath = [[${adminPath}]];
+    Util._path = rootUrl + adminPath;
+    Util._rootpath = rootUrl.substring(0,rootUrl.length-1);
+</script>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <link rel="stylesheet" th:href="@{/static/css/approval/style.css}">
+    <title>合同管理表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${contract.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>合同名称：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="name" th:value="${contract.name}" class="form-control" required='required' maxlength='100' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>签约公司：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="signingCompany" th:value="${contract.signingCompany}" class="form-control" maxlength='100' required="required" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>签约时间：
+                            </label>
+                            <div class="col-sm-8 has-feedback">
+                                <input type="text" name="signingDate" class="form-control datetime" readonly="readonly" required="required"
+                                       th:value="${#dates.format(contract.signingDate,'yyyy-MM-dd')}"/>
+                                <span class="glyphicon glyphicon-calendar form-control-feedback"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                合同文件：
+                            </label>
+                            <div class="col-sm-8 select-files">
+                                <a class="btn btn-default" id="select-file-btn" style="position: relative;overflow: hidden;"
+                                   th:styleappend="'display:'+${contract.id == null?'inline-block':'none'}">
+                                    选择文件
+                                    <input type="file" name="files" class="form-control select-file" required="required" />
+                                </a>
+                                <p class="file-block" id="upload-file-block">
+                                    <span th:if="${contract.id != null}" class="select-filename" th:attr="data-clz=${contract.id}" th:classappend="${contract.id}">
+                                        <a th:href="@{/} + ${adminPath} + ${'/contract/download/' + contract.id}" target="_blank"
+                                           th:text="${contract.fileName}" th:title="${contract.fileName}"></a>
+                                        <button type="button" class="close file-delete"><span>×</span></button>
+                                    </span>
+                                </p>
+                                <p class="help-block">支持扩展名：.doc .docx .pdf</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/js/work/contractForm.js}" type="text/javascript"></script>
+</html>

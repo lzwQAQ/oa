@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.core.sys.dao.RoleDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.name AS "name",
+		t.code AS "code",
+		t.is_sys AS "isSys",
+		t.mark AS "mark",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.core.sys.entity.Role">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_ROLE t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.core.sys.entity.Role">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_ROLE t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND t.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="code != null and code != ''">
+                AND t.code LIKE concat('%',#{code},'%')
+            </if>
+            <if test="isSys != null and isSys != ''">
+                AND t.is_sys = #{isSys}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+    <select id="findAllPermissions" resultType="java.util.Map">
+		select MENU_ID as "menuId" from T_PT_ROLE_MENU where ROLE_ID = #{roleId}
+	</select>
+
+    <select id="findAllMenus" resultType="java.util.Map">
+		SELECT
+            t.id AS "id",
+            t.parent_id AS "pId",
+            t.name AS "name"
+        FROM T_PT_MENU t
+        where t.MENU_STATUS = "1" and t.del_flag = "1"
+        order by t.SORT asc
+	</select>
+
+    <!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_PT_ROLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="name != null"> name, </if>
+        	<if test="code != null"> code, </if>
+        	<if test="isSys != null"> is_sys, </if>
+        	<if test="mark != null"> mark, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="name != null"> #{name}, </if>
+            <if test="code != null"> #{code}, </if>
+            <if test="isSys != null"> #{isSys}, </if>
+            <if test="mark != null"> #{mark}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+	<insert id="savePermissions">
+		INSERT INTO T_PT_ROLE_MENU (ID,ROLE_ID,MENU_ID,CREATE_DATE,UPDATE_DATE,DEL_FLAG)
+		values
+		<foreach collection="menuIds" separator="," item="menu" >
+			(REPLACE(uuid(),'-',''),#{roleId},#{menu},SYSDATE(),SYSDATE(),"1")
+		</foreach>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_PT_ROLE
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="name != null"> name = #{name}, </if>
+            <if test="code != null"> code = #{code}, </if>
+            <if test="isSys != null"> is_sys = #{isSys}, </if>
+            <if test="mark != null"> mark = #{mark}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE()
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_PT_ROLE where id in
+		<foreach collection="ids" item="id" separator="," open="(" close=")">
+			#{id}
+		</foreach>
+    </delete>
+
+	<delete id="deleteByRoleId">
+		DELETE FROM T_PT_ROLE_MENU where ROLE_ID = #{roleId}
+	</delete>
+
+</mapper>

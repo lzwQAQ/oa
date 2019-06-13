@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <link th:replace="common/head" />
+    <title>菜单列表</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="content">
+        <div class="clearfix search-toolbar other-items">
+            <div class="btns btn-group btn-group-sm">
+                <button id="btn-refresh" type="button" class="btn btn-outline btn-default">
+                    <i class="fa fa-refresh"></i> 刷新
+                </button>
+                <button id="btn-add" type="button" class="btn btn-outline btn-default">
+                    <i class="glyphicon glyphicon-plus"></i> 新增
+                </button>
+            </div>
+        </div>
+        <table id="table"></table>
+        <div id="page"></div>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script>
+    $(function () {
+        var gridTable = $('#table').jqGrid({
+            url: Util.getPath() + "/message/userGroupList",
+            treeGrid: true,
+            colModel: [{
+                label: '分组/用户',
+                name: 'name'
+            }, {
+                label: '手机号',
+                name: 'phone'
+            }, {
+                label: "操作",
+                name: "id",
+                width: 100,
+                fixed: true,
+                formatter: function (value, options, row) {
+                    if(row.treeLevel == 2){
+                        return ''
+                    }
+                    var actions = [];
+                    actions.push('<a href="javascript:void(0)" class="actions edit-item" data-id="' + row.id + '" title="编辑" ><i class="fa fa-pencil"></i></a>');
+                    actions.push('<a href="javascript:void(0)" class="actions delete-item" data-id="' + row.id + '" title="删除"><i class="fa fa-trash-o"></i></a>');
+                    return actions.join("");
+                }
+            }]
+        }).enableAutoHeight(".content", ".other-items");
+
+        // 编辑
+        $("#table").on("click", ".edit-item", function () {
+            var id = $(this).attr("data-id");
+            Util.innerIframe(Util.getPath() + "/message/group/form/" + id);
+        });
+
+        // 删除
+        $("#table").on("click", ".delete-item", function () {
+            deletes($(this).attr("data-id"));
+        });
+
+        // 新增下级菜单
+        $("#table").on("click", ".add-child-item", function () {
+            var id = $(this).attr("data-id");
+            Util.innerIframe(Util.getPath() + "/menu/child/create/" + id);
+        });
+
+        //刷新
+        $("#btn-refresh").click(function () {
+            gridTable.trigger("reloadGrid");
+        });
+
+        //新增
+        $("#btn-add").click(function () {
+            Util.innerIframe(Util.getPath() + "/message/group/form");
+        });
+
+
+        function deletes(ids) {
+            Util.ask("确定删除？", function (index) {
+                Util.closeLayer(index);
+                Util.postLoading(Util.getPath() + "/message/deleteGroup", {ids: ids}, function (res) {
+                    if (res.code === 200) {
+                        Util.msgOk("删除成功！");
+                        location.reload()
+                    } else {
+                        Util.msgError("删除失败！");
+                    }
+                });
+            });
+        }
+
+    });
+
+    function reloadGrid() {
+        $('#table').trigger("reloadGrid");
+    }
+</script>
+</html>

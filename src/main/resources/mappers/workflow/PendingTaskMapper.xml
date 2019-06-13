@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.workflow.runtime.dao.PendingTaskDao">
+
+
+    <select id="findTask" resultType="com.kuyuner.common.controller.PageJson">
+        select distinct RES.ID "taskId",RES.EXECUTION_ID "executionId",RES.PROC_INST_ID "processInstanceId",RES.PROC_DEF_ID "processDefinitionId",
+            RES.NAME "taskName",RES.BUSINESS_ID "businessId",RES.PRO_DEF_NAME "processDefinitionName",RES.CREATE_TIME "createTime",
+            RES.PROC_DEF_KEY "processDefinitionKey"
+        from V_WF_RU_TASK RES
+        <where>
+            (RES.ASSIGNEE = #{userId} or (RES.ASSIGNEE is null and RES.USER_ID = #{userId}))
+            <if test="processDefinitionName != null and processDefinitionName != ''">
+                and PRO_DEF_NAME like concat('%',#{processDefinitionName},'%')
+            </if>
+            <if test="taskName != null and taskName != ''">
+                and NAME like concat('%',#{taskName},'%')
+            </if>
+            <if test="modelKey != null and modelKey != ''">
+                and PROC_DEF_KEY = concat('%',#{modelKey},'%')
+            </if>
+        </where>
+        order by CREATE_TIME desc
+    </select>
+
+    <select id="getTaskBusinessKey" resultType="com.kuyuner.workflow.api.bean.BusinessKey">
+        select distinct BUSINESS_ID as "id" from T_WF_TASK_BUSINESSKEY where PROC_INST_ID = #{processInstanceId}
+    </select>
+</mapper>

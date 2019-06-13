@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.msg.dao.MessageSendDao">
+
+	<sql id="AllColumns">
+		t.ID AS "id",
+		t.RECEIVER AS "receiver",
+		t.STATUS AS "status",
+		t.SEQ_ID AS "seqId",
+		t.MSG_ID AS "msgId",
+		t.CREATE_TIME AS "createTime",
+		t.UPDATE_TIME AS "updateTime"
+	</sql>
+	<!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO S_MESSAGE_SEND
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> id, </if>
+        	<if test="receiver != null"> RECEIVER, </if>
+        	<if test="status != null"> STATUS, </if>
+			<if test="msgId != null"> MSG_ID, </if>
+			<if test="seqId != null"> SEQ_ID, </if>
+            create_time,
+            update_time
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> #{id}, </if>
+            <if test="receiver != null"> #{receiver}, </if>
+            <if test="status != null"> #{status}, </if>
+			<if test="msgId != null"> #{msgId}, </if>
+			<if test="seqId != null"> #{seqId}, </if>
+            SYSDATE(),
+            SYSDATE()
+		</trim>
+	</insert>
+
+	<update id="updateBySeqId" parameterType="com.kuyuner.bg.msg.entity.MessageSend">
+		UPDATE S_MESSAGE_SEND
+		<set>
+			<if test="receiver != null"> RECEIVER = #{receiver}, </if>
+			<if test="seqId != null"> SEQ_ID = #{seqId}, </if>
+			<if test="msgId != null"> MSG_ID = #{msgId}, </if>
+			<if test="status != null"> STATUS = #{status}, </if>
+			UPDATE_TIME = SYSDATE()
+		</set>
+		WHERE SEQ_ID = #{seqId}
+	</update>
+
+	<update id="updateByMsgId" parameterType="com.kuyuner.bg.msg.entity.MessageSend">
+		UPDATE S_MESSAGE_SEND
+		<set>
+			<if test="receiver != null"> RECEIVER = #{receiver}, </if>
+			<if test="seqId != null"> SEQ_ID = #{seqId}, </if>
+			<if test="msgId != null"> MSG_ID = #{msgId}, </if>
+			<if test="status != null"> STATUS = #{status}, </if>
+			UPDATE_TIME = SYSDATE()
+		</set>
+		WHERE MSG_ID = #{msgId}
+	</update>
+
+	<select id="findList" parameterType="com.kuyuner.bg.msg.entity.MessageSend"  resultType="com.kuyuner.bg.msg.entity.MessageSend">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM S_MESSAGE_SEND t
+	</select>
+
+	<update id="saveOrUpdateReportByDuplicateKey" parameterType="com.kuyuner.bg.msg.entity.MessageSend">
+		INSERT INTO S_MESSAGE_SEND
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> id, </if>
+			<if test="receiver != null"> RECEIVER, </if>
+			<if test="status != null"> STATUS, </if>
+			<if test="msgId != null"> MSG_ID, </if>
+			<if test="seqId != null"> SEQ_ID, </if>
+			create_time,
+			update_time
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> #{id}, </if>
+			<if test="receiver != null"> #{receiver}, </if>
+			<if test="status != null"> #{status}, </if>
+			<if test="msgId != null"> #{msgId}, </if>
+			<if test="seqId != null"> #{seqId}, </if>
+			SYSDATE(),
+			SYSDATE()
+		</trim>
+		ON DUPLICATE KEY
+		UPDATE
+		<if test="receiver != null"> RECEIVER = #{receiver}, </if>
+		<if test="seqId != null"> SEQ_ID = #{seqId}, </if>
+		<if test="msgId != null"> MSG_ID = #{msgId}, </if>
+		<if test="status != null"> STATUS = #{status}, </if>
+		UPDATE_TIME = SYSDATE()
+	</update>
+
+	<update id="deleteByMsgId" parameterType="com.kuyuner.bg.msg.entity.MessageSend">
+		delete from S_MESSAGE_SEND where MSG_ID = #{msgId}
+	</update>
+	<update id="updateSeqIdByMsgIdAndReceiver" parameterType="com.kuyuner.bg.msg.entity.MessageSend">
+		UPDATE S_MESSAGE_SEND SET SEQ_ID=#{seqId} where MSG_ID=#{msgId} AND RECEIVER=#{receiver}
+	</update>
+</mapper>

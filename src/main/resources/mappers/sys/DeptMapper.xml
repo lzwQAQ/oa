@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.core.sys.dao.DeptDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+	    t.parent_id AS "parent.id",
+		t1.SIMPLE_NAME AS "parent.simpleName",
+		t1.NAME AS "parent.name",
+		t1.CODE AS "parent.code",
+		t.code AS "code",
+		t.name AS "name",
+		t.simple_name AS "simpleName",
+	    t.org_id AS "org.id",
+		t2.SIMPLE_NAME AS "org.simpleName",
+		t2.NAME AS "org.name",
+		t2.CODE AS "org.code",
+		t.master AS "master",
+		t.phone AS "phone",
+		t.fax AS "fax",
+		t.email AS "email",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag",
+		t.tree_leaf AS "treeLeaf",
+		t.tree_level AS "treeLevel",
+		t.sort AS "sort"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+        LEFT JOIN T_PT_DEPT t1 on t1.ID = t.parent_id
+        LEFT JOIN T_PT_ORG t2 on t2.ID = t.org_id
+	</sql>
+
+	<!--auto generated Code-->
+    <select id="findAllChildren" resultType="com.kuyuner.core.sys.entity.Dept">
+        select
+            <include refid="AllColumns"/>
+        from T_PT_DEPT t
+            <include refid="AllJoins"/>
+        where t.parent_id = #{parentId}
+    </select>
+
+    <!--auto generated Code-->
+    <select id="findChildrenCount" resultType="java.lang.Integer">
+        select count(*)
+        from T_PT_DEPT
+        where parent_id = #{parentId}
+    </select>
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.core.sys.entity.Dept">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_DEPT t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.core.sys.entity.Dept">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_DEPT t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+		    <if test="parent != null">
+		        <if test="parent.id != null and parent.id != ''">
+                    AND t.parent_id = #{parent.id}
+		        </if>
+                <if test="parent.simpleName != null and parent.simpleName != ''">
+		            AND t1.SIMPLE_NAME LIKE concat('%',#{parent.simpleName},'%')
+		        </if>
+                <if test="parent.name != null and parent.name != ''">
+		            AND t1.NAME = #{parent.name}
+		        </if>
+                <if test="parent.code != null and parent.code != ''">
+		            AND t1.CODE = #{parent.code}
+		        </if>
+            </if>
+            <if test="code != null and code != ''">
+                AND t.code LIKE concat('%',#{code},'%')
+            </if>
+            <if test="name != null and name != ''">
+                AND t.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="simpleName != null and simpleName != ''">
+                AND t.simple_name LIKE concat('%',#{simpleName},'%')
+            </if>
+		    <if test="org != null">
+		        <if test="org.id != null and org.id != ''">
+                    AND t.org_id = #{org.id}
+		        </if>
+                <if test="org.simpleName != null and org.simpleName != ''">
+		            AND t2.SIMPLE_NAME LIKE concat('%',#{org.simpleName},'%')
+		        </if>
+                <if test="org.name != null and org.name != ''">
+		            AND t2.NAME = #{org.name}
+		        </if>
+                <if test="org.code != null and org.code != ''">
+		            AND t2.CODE = #{org.code}
+		        </if>
+            </if>
+            <if test="master != null and master != ''">
+                AND t.master = #{master}
+            </if>
+            <if test="phone != null and phone != ''">
+                AND t.phone = #{phone}
+            </if>
+            <if test="fax != null and fax != ''">
+                AND t.fax = #{fax}
+            </if>
+            <if test="email != null and email != ''">
+                AND t.email = #{email}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+            <if test="treeLeaf != null and treeLeaf != ''">
+                AND t.tree_leaf = #{treeLeaf}
+            </if>
+            <if test="treeLevel != null and treeLevel != ''">
+                AND t.tree_level = #{treeLevel}
+            </if>
+            <if test="sort != null and sort != ''">
+                AND t.sort = #{sort}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+    <select id="findDeptTreeList" resultType="java.util.Map">
+        select ID as "id", PARENT_ID as "pId", NAME as "name" , 'org' as "type"
+        from T_PT_ORG
+        where del_flag = "1"
+        union
+        select
+        ID as "id",
+        (CASE PARENT_ID
+            WHEN '' THEN ORG_ID
+            WHEN null THEN ORG_ID
+            ELSE PARENT_ID END) as "pId",
+        NAME as "name",
+        'dept' as "type"
+        from T_PT_DEPT
+        where del_flag = "1"
+    </select>
+
+    <!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_PT_DEPT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+            <if test="parent != null and parent.id != null"> parent_id, </if>
+        	<if test="code != null"> code, </if>
+        	<if test="name != null"> name, </if>
+        	<if test="simpleName != null"> simple_name, </if>
+            <if test="org != null and org.id != null"> org_id, </if>
+        	<if test="master != null"> master, </if>
+        	<if test="phone != null"> phone, </if>
+        	<if test="fax != null"> fax, </if>
+        	<if test="email != null"> email, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+        	<if test="treeLeaf != null"> tree_leaf, </if>
+        	<if test="treeLevel != null"> tree_level, </if>
+        	<if test="sort != null"> sort, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+		    <if test="parent != null and parent.id != null"> #{parent.id}, </if>
+            <if test="code != null"> #{code}, </if>
+            <if test="name != null"> #{name}, </if>
+            <if test="simpleName != null"> #{simpleName}, </if>
+		    <if test="org != null and org.id != null"> #{org.id}, </if>
+            <if test="master != null"> #{master}, </if>
+            <if test="phone != null"> #{phone}, </if>
+            <if test="fax != null"> #{fax}, </if>
+            <if test="email != null"> #{email}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+            <if test="treeLeaf != null"> #{treeLeaf}, </if>
+            <if test="treeLevel != null"> #{treeLevel}, </if>
+            <if test="sort != null"> #{sort}, </if>
+		</trim>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_PT_DEPT
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+        	<if test="parent != null and parent.id != null"> parent_id = #{parent.id}, </if>
+            <if test="code != null"> code = #{code}, </if>
+            <if test="name != null"> name = #{name}, </if>
+            <if test="simpleName != null"> simple_name = #{simpleName}, </if>
+        	<if test="org != null and org.id != null"> org_id = #{org.id}, </if>
+            <if test="master != null"> master = #{master}, </if>
+            <if test="phone != null"> phone = #{phone}, </if>
+            <if test="fax != null"> fax = #{fax}, </if>
+            <if test="email != null"> email = #{email}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+            <if test="treeLeaf != null"> tree_leaf = #{treeLeaf}, </if>
+            <if test="treeLevel != null"> tree_level = #{treeLevel}, </if>
+            <if test="sort != null"> sort = #{sort}, </if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_PT_DEPT where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

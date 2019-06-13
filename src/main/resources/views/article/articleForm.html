@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>发送邮件</title>
+    <link th:replace="common/head" />
+    <link th:href="@{/static/common/plugins/umeditor/themes/default/css/umeditor.min.css}" rel="stylesheet"/>
+    <style>
+        #edit-contain {height: 350px;overflow: hidden}
+        .main-box {margin-top: 10px}
+        .email-lable {width: 105px;display: inline-block;float: left;padding-left: 15px;padding-right: 5px}
+        .email-col { width: 100%; padding-left: 105px; padding-right: 32px;}
+        .form-control, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple { border: 1px solid #c6cbd0;}
+    </style>
+</head>
+
+<body class="bg-email" style="height: auto">
+<div class="wrapper wrapper-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-box" style="margin-top: 20px">
+                <form id="form" class="form-horizontal">
+                    <input type="hidden" id="id" name="id" th:value="${article.id}">
+
+                    <div class="form-group">
+                        <label class="email-lable control-label">标题：</label>
+                        <div class="email-col">
+                            <input th:value="${article.title}" name="title" type="text" class="form-control" required="required">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="email-lable control-label">栏目：</label>
+                        <div class="email-col">
+                            <select id="type" name="type" class="form-control select2-single">
+                                <option th:selected="${article.type eq 2}" value="2">单位公告</option>
+                                <option th:selected="${article.type eq 3}" value="3">重点专题</option>
+                                <option th:selected="${article.type eq 4}" value="4">期刊分享</option>
+                                <option th:selected="${article.type eq 5}" value="5">两学一做</option>
+                                <option th:selected="${article.type eq 6}" value="6">共建和谐</option>
+                                <option th:selected="${article.type eq 7}" value="7">党务文献</option>
+                                <option th:selected="${article.type eq 8}" value="8">专业知识</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="rich-text" class="form-group">
+                        <label class="email-lable control-label">正文：</label>
+                        <div class="email-col">
+                            <div id="edit-contain">
+                                <script id="editor" type="text/plain" th:utext="${article.content}" ></script>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        <div class="row">
+                            <div class="email-col">
+                                <a href="javascript:void(0)" id="save" class="btn btn-success btn-sm"><i class="fa fa-pencil"></i> 保存</a>
+                                <a href="javascript:void(0)" id="close" class="btn btn-white btn-sm" title="关闭"><i class="fa fa-times"></i> 关闭</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/common/plugins/umeditor/umeditor.config.js}" type="text/javascript" ></script>
+<script th:src="@{/static/common/plugins/umeditor/umeditor.min.js}" type="text/javascript" ></script>
+<script th:src="@{/static/common/plugins/umeditor/lang/zh-cn/zh-cn.js}" type="text/javascript" ></script>
+<script th:inline="javascript">
+    var type = [[${article.type}]]
+</script>
+
+<script>
+    $(function () {
+        var extraHeight = 40;
+        var editor = UM.getEditor('editor', {
+            imageUrl: Util.getPath() + "/umeditor/uploadimage",
+            imagePath: Util.getRootPath() + "/",
+            toolbar: [
+                'undo redo | bold italic underline strikethrough | superscript subscript | forecolor backcolor | removeformat |',
+                'insertorderedlist insertunorderedlist | fontfamily fontsize',
+                '| justifyleft justifycenter justifyright justifyjustify |', 'link unlink | image',
+                '| horizontal'
+            ],
+            initialFrameHeight: $("#edit-contain").height() - extraHeight,
+            initialFrameWidth: '100%',
+            autoHeightEnabled: false
+        });
+
+        $("#save").click(function () {
+            save();
+        });
+
+
+        // 关闭
+        $("#close").click(function () {
+            if ($("#id").val()) {
+                Util.ask("关闭之前请注意保存，确定关闭？", function (index) {
+                    Util.closeLayer(index);
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    if (parent.reloadGrid) {
+                        parent.reloadGrid();
+                    }
+                });
+            } else {
+                Util.ask("关闭之后，文章内容将消失，确认关闭？", function (index) {
+                    Util.closeLayer(index);
+                    top.closeCurrentTab();
+                });
+            }
+        });
+
+        function save() {
+            if ($("#form").valid()) {
+                $("#form").ajaxSubmit({
+                    loading: true,
+                    type: "post",
+                    url: Util.getPath() + "/article/save",
+                    success: function (res, statusText, xhr, $form) {
+                        if (res.code === 200) {
+                            Util.msgOk("文章保存成功！");
+                            if ($("#id").val()) {
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                if (parent.reloadGrid) {
+                                    parent.reloadGrid();
+                                }
+                            } else {
+                                top.closeCurrentTab();
+                            }
+                        } else {
+                            Util.msgError("文章保存失败！");
+                        }
+                    }
+                });
+            } else {
+                $('#form').validate().focusInvalid();
+            }
+        }
+    });
+</script>
+</html>

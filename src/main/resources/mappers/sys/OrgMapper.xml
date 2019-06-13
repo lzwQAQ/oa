@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.core.sys.dao.OrgDao">
+
+
+    <select id="findAllChildren" resultMap="AllColumnMap">
+        select <include refid="all_column"/> from T_PT_ORG where parent_id = #{parentId}
+    </select>
+    <select id="findChildrenCount" resultType="java.lang.Integer">
+        select count(*) from T_PT_ORG where parent_id = #{parentId}
+    </select>
+
+    <!--auto generated Code-->
+    <resultMap id="AllColumnMap" type="com.kuyuner.core.sys.entity.Org">
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="simple_name" property="simpleName"/>
+        <result column="address" property="address"/>
+        <result column="postal_code" property="postalCode"/>
+        <result column="master" property="master"/>
+        <result column="phone" property="phone"/>
+        <result column="fax" property="fax"/>
+        <result column="email" property="email"/>
+        <result column="tree_level" property="treeLevel"/>
+        <result column="tree_leaf" property="treeLeaf"/>
+        <result column="sort" property="sort"/>
+        <result column="id" property="id"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="PARENT_ID" property="parent.id"/>
+    </resultMap>
+
+    <!--auto generated Code-->
+    <sql id="all_column">
+        code,
+        name,
+        simple_name,
+        address,
+        postal_code,
+        master,
+        phone,
+        fax,
+        email,
+        tree_level,
+        tree_leaf,
+        sort,
+        id,
+        create_date,
+        update_date,
+        del_flag,
+        PARENT_ID
+    </sql>
+
+    <!--auto generated Code-->
+    <insert id="insert">
+        INSERT INTO T_PT_ORG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null"> code, </if>
+            <if test="name != null"> name, </if>
+            <if test="simpleName != null"> simple_name, </if>
+            <if test="address != null"> address, </if>
+            <if test="postalCode != null"> postal_code, </if>
+            <if test="master != null"> master, </if>
+            <if test="phone != null"> phone, </if>
+            <if test="fax != null"> fax, </if>
+            <if test="email != null"> email, </if>
+            <if test="treeLevel != null"> tree_level, </if>
+            <if test="treeLeaf != null"> tree_leaf, </if>
+            <if test="sort != null"> sort, </if>
+            <if test="id != null"> id, </if>
+            create_date,
+            update_date,
+            <if test="delFlag != null"> del_flag, </if>
+            <if test="creater != null"> CREATER, </if>
+            <if test="parentId != null"> PARENT_ID, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null"> #{code}, </if>
+            <if test="name != null"> #{name}, </if>
+            <if test="simpleName != null"> #{simpleName}, </if>
+            <if test="address != null"> #{address}, </if>
+            <if test="postalCode != null"> #{postalCode}, </if>
+            <if test="master != null"> #{master}, </if>
+            <if test="phone != null"> #{phone}, </if>
+            <if test="fax != null"> #{fax}, </if>
+            <if test="email != null"> #{email}, </if>
+            <if test="treeLevel != null"> #{treeLevel}, </if>
+            <if test="treeLeaf != null"> #{treeLeaf}, </if>
+            <if test="sort != null"> #{sort}, </if>
+            <if test="id != null"> #{id}, </if>
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+            <if test="creater != null">  #{creater}, </if>
+            <if test="parentId != null"> #{parentId}, </if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+    <update id="update">
+        UPDATE T_PT_ORG
+        <set>
+            <if test="code != null"> code = #{code}, </if>
+            <if test="name != null"> name = #{name}, </if>
+            <if test="simpleName != null"> simple_name = #{simpleName}, </if>
+            <if test="address != null"> address = #{address}, </if>
+            <if test="postalCode != null"> postal_code = #{postalCode}, </if>
+            <if test="master != null"> master = #{master}, </if>
+            <if test="phone != null"> phone = #{phone}, </if>
+            <if test="fax != null"> fax = #{fax}, </if>
+            <if test="email != null"> email = #{email}, </if>
+            <if test="treeLevel != null"> tree_level = #{treeLevel}, </if>
+            <if test="treeLeaf != null"> tree_leaf = #{treeLeaf}, </if>
+            <if test="sort != null"> sort = #{sort}, </if>
+            <if test="id != null"> id = #{id}, </if>
+            update_date = SYSDATE(),
+            <if test="parentId != null"> parent_id = #{parentId}, </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--auto generated Code-->
+    <select id="findList" resultMap="AllColumnMap">
+        SELECT <include refid="all_column"/>
+        FROM T_PT_ORG
+        <where>
+            del_flag = #{delFlag}
+            <if test="code != null and code != ''"> AND code = #{code} </if>
+            <if test="name != null and name != ''"> AND name like CONCAT('%',#{name},'%') </if>
+            <if test="simpleName != null and simpleName != ''"> AND simple_name = #{simpleName} </if>
+            <if test="address != null and address != ''"> AND address = #{address} </if>
+            <if test="postalCode != null and postalCode != ''"> AND postal_code = #{postalCode} </if>
+            <if test="master != null and master != ''"> AND master = #{master} </if>
+            <if test="phone != null and phone != ''"> AND phone = #{phone} </if>
+            <if test="fax != null and fax != ''"> AND fax = #{fax} </if>
+            <if test="email != null and email != ''"> AND email = #{email} </if>
+            <if test="treeLevel != null and treeLevel != ''"> AND tree_level = #{treeLevel} </if>
+            <if test="treeLeaf != null and treeLeaf != ''"> AND tree_leaf = #{treeLeaf} </if>
+            <if test="sort != null and sort != ''"> AND sort = #{sort} </if>
+            <if test="id != null and id != ''"> AND id = #{id} </if>
+            <if test="createDate != null and createDate != ''"> AND create_date = #{createDate} </if>
+            <if test="updateDate != null and updateDate != ''"> AND update_date = #{updateDate} </if>
+            <if test="parent !=null and parent.id !=null and parent.id != ''">
+                AND PARENT_ID = #{parent.id}
+            </if>
+        </where>
+    </select>
+
+    <!--auto generated Code-->
+    <select id="get" resultType="com.kuyuner.core.sys.entity.Org">
+        SELECT
+        t.code as "code",
+        t.name as "name",
+        t.simple_name as "simpleName",
+        t.address as "address",
+        t.postal_code as "postalCode",
+        t.master as "master",
+        t.phone as "phone",
+        t.fax as "fax",
+        t.email as "email",
+        t.tree_level as "treeLevel",
+        t.tree_leaf as "treeLeaf",
+        t.sort as "sort",
+        t.id as "id",
+        t.create_date as "createDate",
+        t.update_date as "updateDate",
+        t.del_flag as "delFlag",
+        t.parent_id as "parent.id",
+        p.name as "parent.name"
+        FROM T_PT_ORG t
+        left join T_PT_ORG p on p.id = t.parent_id
+        <where>
+            <if test="code != null"> AND t.code = #{code} </if>
+            <if test="name != null and name != ''"> AND t.name like CONCAT('%',#{name},'%') </if>
+            <if test="simpleName != null"> AND t.simple_name = #{simpleName} </if>
+            <if test="address != null"> AND t.address = #{address} </if>
+            <if test="postalCode != null"> AND t.postal_code = #{postalCode} </if>
+            <if test="master != null"> AND t.master = #{master} </if>
+            <if test="phone != null"> AND t.phone = #{phone} </if>
+            <if test="fax != null"> AND t.fax = #{fax} </if>
+            <if test="email != null"> AND t.email = #{email} </if>
+            <if test="treeLevel != null"> AND t.tree_level = #{treeLevel} </if>
+            <if test="treeLeaf != null"> AND t.tree_leaf = #{treeLeaf} </if>
+            <if test="sort != null"> AND t.sort = #{sort} </if>
+            <if test="id != null"> AND t.id = #{id} </if>
+            <if test="createDate != null"> AND t.create_date = #{createDate} </if>
+            <if test="updateDate != null"> AND t.update_date = #{updateDate} </if>
+            <if test="parent !=null and parent.id !=null and parent.id != ''">
+                AND t.PARENT_ID = #{parent.id}
+            </if>
+        </where>
+    </select>
+
+    <!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_PT_ORG where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,69 @@
+#email_notice .newmailNotify {display: none}
+.newmailNotify {
+    position: absolute;
+    right: 30px;
+    bottom: 20px;
+    height: 70px;
+    background: #F7FDFF;
+    cursor: pointer;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -webkit-box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
+    box-shadow: 1px 1px 50px rgba(0, 0, 0, .3);
+}
+.newmailNotify .notify_close {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    background: url(../images/mail.png) no-repeat -115px -239px transparent;
+}
+.newmailNotify .notify_type span {
+    display: inline-block;
+    width: 32px;
+    height: 34px;
+    margin: 16px 0 0 16px;
+    background: url(../images/notify_letter.png) no-repeat;
+}
+.newmailNotify .notify_type {
+    position: relative;
+    float: left;
+    width: 60px;
+    height: 100%;
+    border-right: 1px solid #CBDAE1;
+    background: #EEF6F9;
+    border-radius: 5px 0 0 5px;
+    -webkit-border-radius: 5px 0 0 5px;
+}
+.newmailNotify .notify_content {
+    margin-left: 66px;
+    overflow: hidden;
+    width: 230px;
+    height: 100%;
+    padding-right: 15px;
+}
+
+.newmailNotify .notify_account {
+    padding: 4px 0 1px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.newmailNotify p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0px;
+}
+
+.newmailNotify .notify_account .notify_accountmail {
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.addrtitle {
+    color: #798699;
+    font-size: 13px;
+}

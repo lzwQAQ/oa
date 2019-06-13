@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <title>流程表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${finance.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                申请人：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${finance.senderName}" class="form-control" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                申请部门：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${finance.senderDeptName}" class="form-control" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>业务名称：
+                            </label>
+                            <div class="col-sm-8">
+                                <input name="business" th:value="${finance.business}" type="text" class="form-control only-view" required="required" maxlength="50"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>申请金额/元：
+                            </label>
+                            <div class="col-sm-8">
+                                <input name="money" th:value="${finance.money}" type="text" class="form-control only-view" required="required" maxlength="11"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                <span class="red" >*</span>资金用途：
+                            </label>
+                            <div class="col-sm-10">
+                            <textarea name="purpose" th:text="${finance.purpose}" class="form-control only-view" required='required'
+                                      maxlength='200' cols="15" rows="5"></textarea>
+                                <p class="help-block">请输入小于200字的资金用途</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--------------审批部分-------------->
+                <div class="row" th:if="${finance.approvalResult != null && finance.approvalResult != ''}">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                处理意见：
+                            </label>
+                            <div class="col-sm-10">
+                                <p th:utext="${finance.approvalResult}" class="form-control" style="height: auto;" ></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="approvalResult-div" style="display: none">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                办理意见：
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea id="approvalResult" name="approvalResult" class="form-control" maxlength="100" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display: none" id="auditResult-div">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" title="">
+                                <span class="red" >*</span>审批结果：</label>
+                            <div class="col-sm-8">
+                                <select id="auditResult" name="_auditResult" class="form-control select2-single" required="required">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer" id="btns-div" style="display: none">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script type="text/javascript" th:inline="javascript">
+    (function () {
+        var rootUrl =/*[[@{/}]]*/ +'';
+        var type = Util.getQueryString("type");
+        var firstTask = Util.getQueryString("firstTask");
+        var script;
+        if ((type === 'create') || (type === 'pending' && firstTask === 'true')) {
+            script = '<script type="text/javascript" src="' + rootUrl + 'static/js/approval/finance/taskFormCreate.js"><\/script>\n';
+        }else if(type === 'pending'){
+            script = '<script type="text/javascript" src="' + rootUrl + 'static/js/approval/finance/taskFormPending.js"><\/script>\n';
+        }else if(type === 'historic'){
+            script = '<script type="text/javascript" src="' + rootUrl + 'static/js/approval/finance/taskFormHistoric.js"><\/script>\n';
+        }
+        document.write(script);
+    })();
+</script>
+</html>

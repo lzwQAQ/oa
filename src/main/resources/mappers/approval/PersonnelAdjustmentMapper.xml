@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.approval.dao.PersonnelAdjustmentDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.task_name AS "taskName",
+		t.approval_result AS "approvalResult",
+		t.sex AS "sex",
+		t.is_marry AS "isMarry",
+		t.school AS "school",
+		t.is_party AS "isParty",
+		t.birthday AS "birthday",
+		t.entry_date AS "entryDate",
+		t.home_place AS "homePlace",
+		t.old_position AS "oldPosition",
+		t.new_dept_id AS "newDeptId",
+		t.new_position AS "newPosition",
+        t.SENDER_ID AS "senderId",
+        d.name as "senderDeptName",
+        u.name as "senderName",
+        todept.name as "newDeptName",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+        inner join T_PT_USER u on u.id = t.SENDER_ID
+        left join T_PT_DEPT d on d.id = u.dept_id
+        left join T_PT_DEPT todept on todept.id = t.new_dept_id
+	</sql>
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.approval.entity.PersonnelAdjustment">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_PERSONNEL_ADJUSTMENT t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.approval.entity.PersonnelAdjustment">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_PERSONNEL_ADJUSTMENT t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="taskName != null and taskName != ''">
+                AND t.task_name = #{taskName}
+            </if>
+            <if test="approvalResult != null and approvalResult != ''">
+                AND t.approval_result = #{approvalResult}
+            </if>
+            <if test="sex != null and sex != ''">
+                AND t.sex = #{sex}
+            </if>
+            <if test="isMarry != null and isMarry != ''">
+                AND t.is_marry = #{isMarry}
+            </if>
+            <if test="school != null and school != ''">
+                AND t.school = #{school}
+            </if>
+            <if test="isParty != null and isParty != ''">
+                AND t.is_party = #{isParty}
+            </if>
+            <if test="birthday != null and birthday != ''">
+                AND t.birthday = #{birthday}
+            </if>
+            <if test="entryDate != null and entryDate != ''">
+                AND t.entry_date = #{entryDate}
+            </if>
+            <if test="homePlace != null and homePlace != ''">
+                AND t.home_place = #{homePlace}
+            </if>
+            <if test="oldPosition != null and oldPosition != ''">
+                AND t.old_position = #{oldPosition}
+            </if>
+            <if test="newPosition != null and newPosition != ''">
+                AND t.new_position = #{newPosition}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+
+    <select id="getLog" resultType="com.kuyuner.bg.approval.entity.PersonnelAdjustment">
+        SELECT
+            t.id AS "id",
+            t.approval_result AS "approvalResult",
+            t.sex AS "sex",
+            t.is_marry AS "isMarry",
+            t.school AS "school",
+            t.is_party AS "isParty",
+            t.birthday AS "birthday",
+            t.entry_date AS "entryDate",
+            t.home_place AS "homePlace",
+            t.old_position AS "oldPosition",
+            t.new_dept_id AS "newDeptId",
+            t.new_position AS "newPosition",
+            t.SENDER_ID AS "senderId",
+            todept.name as "newDeptName",
+            d.name as "senderDeptName",
+            u.name as "senderName",
+            t.creater AS "creater",
+            t.create_date AS "createDate",
+            t.update_date AS "updateDate",
+            t.del_flag AS "delFlag"
+        FROM T_AP_PERSONNEL_ADJUSTMENT_LOG t
+         inner join T_PT_USER u on u.id = t.SENDER_ID
+         left join T_PT_DEPT d on d.id = u.dept_id
+         left join T_PT_DEPT todept on todept.id = t.new_dept_id
+        WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+    </select>
+
+    <select id="findPendingList" resultType="com.kuyuner.bg.approval.bean.AdjustmentPendingListView">
+        select
+        r.ID as "taskId",
+        r.PRO_DEF_NAME as "processName",
+        r.NAME as "taskName",
+        u.name as "sender",
+        t.CREATE_DATE as "time"
+        from V_WF_RU_TASK r
+        inner join T_AP_PERSONNEL_ADJUSTMENT t on t.id = r.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            (r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
+            <if test="personnelAdjustment.senderName != null and personnelAdjustment.senderName != ''">
+                AND u.name LIKE concat('%',#{personnelAdjustment.senderName},'%')
+            </if>
+        </where>
+        order by t.CREATE_DATE desc
+    </select>
+
+    <select id="findHistoricList" resultType="com.kuyuner.bg.approval.bean.AdjustmentHistoricListView">
+        select
+        t.id as "id",
+        h.PROC_NAME as "processName",
+        h.PROC_INST_ID as "processInstanceId",
+        u.name as "sender",
+        t.CREATE_DATE as "time",
+        t.task_name as "taskName"
+        from V_WF_HI_TASK h
+        inner join T_AP_PERSONNEL_ADJUSTMENT t on t.id = h.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            (h.ASSIGNEE = #{userId} and h.START_USER_ID <![CDATA[ <> ]]> #{userId})
+            <if test="personnelAdjustment.senderName != null and personnelAdjustment.senderName != ''">
+                AND u.name LIKE concat('%',#{personnelAdjustment.senderName},'%')
+            </if>
+        </where>
+        order by t.CREATE_DATE desc
+    </select>
+
+    <select id="findSendList" resultType="com.kuyuner.bg.approval.bean.AdjustmentHistoricListView">
+        select DISTINCT
+        t.id as "id",
+        h.PROC_NAME as "processName",
+        h.PROC_INST_ID as "processInstanceId",
+        t.CREATE_DATE as "time",
+        u.name as "sender",
+        t.task_name as "taskName"
+        from V_WF_HI_TASK h
+        inner join T_AP_PERSONNEL_ADJUSTMENT t on t.id = h.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            h.START_USER_ID = #{userId}
+            <if test="personnelAdjustment.senderName != null and personnelAdjustment.senderName != ''">
+                AND u.name LIKE concat('%',#{personnelAdjustment.senderName},'%')
+            </if>
+        </where>
+        order by t.CREATE_DATE desc
+    </select>
+
+    <select id="getApprovalResult" resultType="java.lang.String">
+        SELECT APPROVAL_RESULT FROM T_AP_PERSONNEL_ADJUSTMENT WHERE ID = #{id}
+    </select>
+
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_AP_PERSONNEL_ADJUSTMENT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="taskName != null"> task_name, </if>
+        	<if test="approvalResult != null"> approval_result, </if>
+        	<if test="sex != null"> sex, </if>
+        	<if test="isMarry != null"> is_marry, </if>
+        	<if test="school != null"> school, </if>
+        	<if test="isParty != null"> is_party, </if>
+        	<if test="birthday != null"> birthday, </if>
+        	<if test="entryDate != null"> entry_date, </if>
+        	<if test="homePlace != null"> home_place, </if>
+        	<if test="oldPosition != null"> old_position, </if>
+        	<if test="newDeptId != null"> new_dept_id, </if>
+        	<if test="newPosition != null"> new_position, </if>
+            <if test="senderId != null"> SENDER_ID, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="taskName != null"> #{taskName}, </if>
+            <if test="approvalResult != null"> #{approvalResult}, </if>
+            <if test="sex != null"> #{sex}, </if>
+            <if test="isMarry != null"> #{isMarry}, </if>
+            <if test="school != null"> #{school}, </if>
+            <if test="isParty != null"> #{isParty}, </if>
+            <if test="birthday != null"> #{birthday}, </if>
+            <if test="entryDate != null"> #{entryDate}, </if>
+            <if test="homePlace != null"> #{homePlace}, </if>
+            <if test="oldPosition != null"> #{oldPosition}, </if>
+            <if test="newDeptId != null"> #{newDeptId}, </if>
+            <if test="newPosition != null"> #{newPosition}, </if>
+            <if test="senderId != null"> #{senderId}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+    <insert id="insertLog">
+        INSERT INTO T_AP_PERSONNEL_ADJUSTMENT_LOG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> id, </if>
+            <if test="approvalResult != null"> approval_result, </if>
+            <if test="sex != null"> sex, </if>
+            <if test="isMarry != null"> is_marry, </if>
+            <if test="school != null"> school, </if>
+            <if test="isParty != null"> is_party, </if>
+            <if test="birthday != null"> birthday, </if>
+            <if test="entryDate != null"> entry_date, </if>
+            <if test="homePlace != null"> home_place, </if>
+            <if test="oldPosition != null"> old_position, </if>
+            <if test="newDeptId != null"> new_dept_id, </if>
+            <if test="newPosition != null"> new_position, </if>
+            <if test="senderId != null"> SENDER_ID, </if>
+            creater,
+            create_date,
+            update_date,
+            <if test="delFlag != null"> del_flag, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="approvalResult != null"> #{approvalResult}, </if>
+            <if test="sex != null"> #{sex}, </if>
+            <if test="isMarry != null"> #{isMarry}, </if>
+            <if test="school != null"> #{school}, </if>
+            <if test="isParty != null"> #{isParty}, </if>
+            <if test="birthday != null"> #{birthday}, </if>
+            <if test="entryDate != null"> #{entryDate}, </if>
+            <if test="homePlace != null"> #{homePlace}, </if>
+            <if test="oldPosition != null"> #{oldPosition}, </if>
+            <if test="newDeptId != null"> #{newDeptId}, </if>
+            <if test="newPosition != null"> #{newPosition}, </if>
+            <if test="senderId != null"> #{senderId}, </if>
+            #{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+	<update id="update">
+		UPDATE T_AP_PERSONNEL_ADJUSTMENT
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="taskName != null"> task_name = #{taskName}, </if>
+            <if test="approvalResult != null"> approval_result = #{approvalResult}, </if>
+            <if test="sex != null"> sex = #{sex}, </if>
+            <if test="isMarry != null"> is_marry = #{isMarry}, </if>
+            <if test="school != null"> school = #{school}, </if>
+            <if test="isParty != null"> is_party = #{isParty}, </if>
+            <if test="birthday != null"> birthday = #{birthday}, </if>
+            <if test="entryDate != null"> entry_date = #{entryDate}, </if>
+            <if test="homePlace != null"> home_place = #{homePlace}, </if>
+            <if test="oldPosition != null"> old_position = #{oldPosition}, </if>
+            <if test="newDeptId != null"> new_dept_id = #{newDeptId}, </if>
+            <if test="newPosition != null"> new_position = #{newPosition}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_AP_PERSONNEL_ADJUSTMENT where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

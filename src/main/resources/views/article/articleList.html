@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <link th:replace="common/head"/>
+    <title>图文列表</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="content">
+        <div class="clearfix search-toolbar other-items">
+            <div id="search" class="search form-inline">
+                <div class="form-group ">
+                    <label class="control-label">栏目：</label>
+                    <select id="type" class="form-control">
+                        <option value="">请选择图文栏目</option>
+                        <option value="1">轮播图</option>
+                        <option value="2">单位公告</option>
+                        <option value="3">重点专题</option>
+                        <option value="4">期刊分享</option>
+                        <option value="5">两学一做</option>
+                        <option value="6">共建和谐</option>
+                        <option value="7">党务文献</option>
+                        <option value="8">专业知识</option>
+                    </select>
+                </div>
+            </div>
+            <div class="clearfix btns-div">
+                <div class="form-group-btn center-block">
+                    <a href="javascript:void(0)" id="btn-search" class="btn btn-primary btn-sm">查询</a>
+                    <a href="javascript:void(0)" id="btn-reset" class="btn btn-default btn-sm">重置</a>
+                </div>
+                <div class="btns btn-group btn-group-sm">
+                    <button shiro:hasPermission="sys:dict:edit" data-type="slideshow" type="button"
+                            class="btn-add btn btn-outline btn-default">
+                        <i class="glyphicon glyphicon-plus"></i> 新增轮播图
+                    </button>
+                    <button shiro:hasPermission="sys:dict:edit" data-type="article" type="button"
+                            class="btn-add btn btn-outline btn-default">
+                        <i class="glyphicon glyphicon-plus"></i> 新增文章
+                    </button>
+                    <button shiro:hasPermission="sys:dict:edit" id="btn-delete" type="button"
+                            class="btn btn-outline btn-default">
+                        <i class="glyphicon glyphicon-trash"></i> 删除
+                    </button>
+                </div>
+            </div>
+        </div>
+        <table id="table"></table>
+        <div id="page"></div>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script shiro:lacksPermission="sys:dict:edit" type="text/javascript">
+    var editAble = false;
+</script>
+<script shiro:hasPermission="sys:dict:edit" type="text/javascript">
+    var editAble = true;
+</script>
+<script>
+    function getDate(ts, showTime) {
+        var date = new Date(ts);
+        var year = date.getFullYear();
+        var month = parseInt(date.getMonth()) + 1;
+        var day = parseInt(date.getDate());
+
+        var hours = parseInt(date.getHours());
+        var minutes = parseInt(date.getMinutes());
+        var ss = date.getTime() % 60000;
+        ss = parseInt((ss - (ss % 1000)) / 1000);
+        var date = year + '-' + String(month <= 9 ? '0' + month : month) + '-' + String(day <= 9 ? '0' + day : day);
+        var time = String(hours <= 9 ? '0' + hours : hours) + ':' + String(minutes <= 9 ? '0' + minutes : minutes) + ':' + String(ss <= 9 ? '0' + ss : ss);
+        return showTime ? date + ' ' + time : date
+    }
+    $(function () {
+        var types = ['轮播图', '单位公告', '重点专题', '期刊分享', '两学一做', '共建和谐', '党务文献', '专业知识']
+        var status = ["已发布", "未发布"];
+        var gridTable = $('#table').jqGrid({
+            url: Util.getPath() + "/article/articleList",
+            multiselect: true,
+            colModel: [{
+                label: '标题',
+                name: 'title',
+                formatter: function (value, options, row) {
+                    if(row.type == 1)
+                        return value;
+                    else
+                        return editAble ? ('<a href="javascript:void(0)" class="edit-view" data-type="' + row.type + '" data-id="' + row.id + '">' + value + '</a>') : value;
+                }
+            }, {
+                label: '所属栏目',
+                name: 'type',
+                formatter: function (value, options, row) {
+                    return types[row.type-1];
+                }
+            }, {
+                label: '状态',
+                name: 'status',
+                formatter: function (value, options, row) {
+                    return status[row.status];
+                }
+            }, {
+                label: '更新时间',
+                name: 'updateTime',
+                formatter: function (value, options, row) {
+                    return getDate(row.updateTime, true);
+                }
+            }, {
+                label: "操作",
+                name: "id",
+                width: 100,
+                fixed: true,
+                hidden: editAble ? false : true,
+                formatter: function (value, options, row) {
+                    var actions = [];
+                    actions.push('<a href="javascript:void(0)" class="actions edit-item" data-type="' + row.type + '" data-id="' + row.id + '" title="编辑" ><i class="fa fa-pencil"></i></a>');
+                    actions.push('<a href="javascript:void(0)" class="actions delete-item" data-id="' + row.id + '" title="删除"><i class="fa fa-trash-o"></i></a>');
+                    return actions.join("");
+                }
+            }]
+        }).enableAutoHeight(".content", ".other-items");
+
+        // 编辑
+        $("#table").on("click", ".edit-item", function () {
+            var id = $(this).attr("data-id");
+            var type = $(this).attr("data-type");
+            Util.innerIframe(Util.getPath() + "/article/form/" + id + '?type=' + (type == 1?"slideshow":"article"));
+        });
+
+        // 预览
+        $("#table").on("click", ".edit-view", function () {
+            var id = $(this).attr("data-id");
+            Util.innerIframe(Util.getPath() + "/article/view/" + id);
+        });
+
+        // 删除
+        $("#table").on("click", ".delete-item", function () {
+            deletes($(this).attr("data-id"));
+        });
+
+        //查询
+        $("#btn-search").click(function () {
+            gridTable.setGridParam({
+                postData: {
+                    type: $("#type").val()
+                }
+            }).trigger("reloadGrid", {
+                page: 1
+            });
+        });
+
+        //重置
+        $("#btn-reset").click(function () {
+            $("#search input").val("");
+            $("#btn-search").click();
+        });
+
+        //新增
+        $(".btn-add").click(function () {
+            var type = $(this).data('type')
+            Util.innerIframe(Util.getPath() + "/article/form?type="+type);
+        });
+
+        //批量删除
+        $("#btn-delete").click(function () {
+            var selectedRow = $("#table").jqGrid('getGridParam', 'selarrrow');
+            if (selectedRow.length === 0) {
+                Util.msgWarning("请选择需要删除的数据！");
+                return;
+            }
+            deletes(selectedRow.join(","));
+        });
+
+        function deletes(ids) {
+            Util.ask("确定删除？", function (index) {
+                Util.closeLayer(index);
+                Util.postLoading(Util.getPath() + "/article/deletes", {ids: ids}, function (res) {
+                    if (res.code === 200) {
+                        Util.msgOk("删除成功！");
+                        gridTable.trigger("reloadGrid");
+                    } else {
+                        Util.msgError("删除失败！");
+                    }
+                });
+            });
+        }
+    });
+
+    function reloadGrid() {
+        $('#table').trigger("reloadGrid");
+    }
+</script>
+</html>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.article.dao.LeaveHomeDao">
+
+	<sql id="AllColumns">
+		r.ID AS "taskId", -- 任务ID
+		r.PRO_DEF_NAME AS "processName", -- 流程名称
+		t.type AS "type", -- 请假类型
+		r.NAME AS "taskName", -- 任务名称
+		u.NAME AS "sender", -- 请假人
+		dept.name AS "detpName", -- 所属部门
+		t.CREATE_DATE AS "time" -- 日期
+	</sql>
+	<!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+
+	<select id="findData" parameterType="java.lang.String"  resultType="com.kuyuner.bg.article.entity.LeaveHome">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM V_WF_RU_TASK r
+		INNER JOIN T_AP_LEAVE t ON t.id = r.business_id
+		INNER JOIN T_PT_USER u ON u.id = t.sender_id
+		left join T_PT_DEPT dept on dept.id = u.dept_id
+		WHERE
+		( r.ASSIGNEE = #{userId} OR ( r.ASSIGNEE IS NULL AND r.USER_ID = #{userId} ) )
+		ORDER BY
+		t.CREATE_DATE DESC
+	</select>
+
+</mapper>

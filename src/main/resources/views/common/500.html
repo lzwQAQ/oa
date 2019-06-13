@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>500服务器内部出错</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <style th:inline="text">
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            -ms-behavior: url([[@{/static/common/css/backgroundsize.min.htc}]]);
+            behavior:url([[@{/static/common/css/backgroundsize.min.htc}]]);
+            background: #ffffff url([[@{/static/common/images/500.png}]]) no-repeat center center;
+            background-size: 550px;
+        }
+    </style>
+</head>
+
+<body>
+</body>
+
+</html>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.workflow.manage.dao.EstablishDao">
+
+    <insert id="insertTaskAuth">
+        INSERT INTO T_WF_TASK_AUTH
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> id, </if>
+            <if test="objectId != null"> object_id, </if>
+            <if test="objectType != null"> object_type, </if>
+            <if test="taskKey != null"> task_key, </if>
+            <if test="modelKey != null"> model_key, </if>
+            creater,
+            create_date,
+            update_date,
+            <if test="delFlag != null"> del_flag, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="objectId != null"> #{objectId}, </if>
+            <if test="objectType != null"> #{objectType}, </if>
+            <if test="taskKey != null"> #{taskKey}, </if>
+            <if test="modelKey != null"> #{modelKey}, </if>
+            #{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+        </trim>
+    </insert>
+    <insert id="insertForm">
+        INSERT INTO T_WF_TASK_FORM
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> id, </if>
+            <if test="formName != null"> form_name, </if>
+            <if test="formPath != null"> form_path, </if>
+            <if test="taskKey != null"> task_key, </if>
+            <if test="modelKey != null"> model_key, </if>
+            creater,
+            create_date,
+            update_date,
+            <if test="delFlag != null"> del_flag, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="formName != null"> #{formName}, </if>
+            <if test="formPath != null"> #{formPath}, </if>
+            <if test="taskKey != null"> #{taskKey}, </if>
+            <if test="modelKey != null"> #{modelKey}, </if>
+            #{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+        </trim>
+    </insert>
+
+    <update id="updateForm">
+        UPDATE T_WF_TASK_FORM
+        <set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="formName != null"> form_name = #{formName}, </if>
+            <if test="formPath != null"> form_path = #{formPath}, </if>
+            <if test="taskKey != null"> task_key = #{taskKey}, </if>
+            <if test="modelKey != null"> model_key = #{modelKey}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE()
+        </set>
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="deleteFormAuth">
+        delete from T_WF_TASK_AUTH where MODEL_KEY = #{modelKey} and TASK_KEY = #{taskKey}
+    </delete>
+
+    <select id="findWorkFlowModel" resultType="com.kuyuner.workflow.manage.bean.ModelInfo">
+        select M.ID_ as "modelId",M.KEY_ as "modelKey",M.NAME_ as "modelName",M.CREATE_TIME_ as "modelCreateTime",M.LAST_UPDATE_TIME_ as "modelLastUpdateTime"
+        from ACT_RE_MODEL M
+        <where>
+            <if test="modelKey != null and modelKey != ''">
+                AND M.KEY_ LIKE concat('%',#{modelKey},'%')
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND M.NAME_ LIKE concat('%',#{modelName},'%')
+            </if>
+        </where>
+        ORDER BY M.CREATE_TIME_ DESC
+    </select>
+    <select id="checkWorkFlowModelKey1" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM ACT_RE_MODEL WHERE KEY_= #{modelKey}
+    </select>
+
+    <select id="checkWorkFlowModelKey2" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM ACT_RE_MODEL WHERE ID_ <![CDATA[ <> ]]> #{modelId} AND KEY_= #{modelKey}
+    </select>
+
+    <select id="findModelEditorSource" resultType="com.kuyuner.workflow.manage.bean.EditorSource">
+        select ACT_MODEL.Name_ as "name",ACT_MODEL.Key_ as "key",GR_BYTES.Bytes_ as "content"
+        from ACT_RE_MODEL ACT_MODEL
+        inner join ACT_GE_BYTEARRAY GR_BYTES on ACT_MODEL.Editor_Source_Value_Id_ = GR_BYTES.Id_
+        where ACT_MODEL.Id_ in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="findRole" resultType="java.util.Map">
+        select r.id "id",r.name "roleName",r.MARK "roleDes"
+        from T_PT_ROLE r
+        <where>
+            <if test="searchText != null and searchText != ''">
+                r.name like concat('%',#{searchText},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findDept" resultType="java.util.Map">
+        select dept.id "id", dept.code "deptCode",dept.name "deptName",org.name "orgName"
+        from T_PT_DEPT dept
+        inner join T_PT_ORG org on org.id = dept.ORG_ID
+        <where>
+            dept.del_flag = '1' and org.del_flag = '1'
+            <if test="searchText != null and searchText != '' ">
+                AND (dept.code like concat('%',#{searchText},'%') or dept.name like concat('%',#{searchText},'%') or org.name like concat('%',#{searchText},'%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="findOrg" resultType="java.util.Map">
+        select id "id",code "orgCode",name "orgName" from T_PT_ORG
+        <where>
+            del_flag = '1'
+            <if test="searchText != null and searchText != ''">
+                and (name like concat('%',#{searchText},'%') or code like concat('%',#{searchText},'%'))
+            </if>
+        </where>
+    </select>
+
+    <select id="findTaskAuth" resultType="java.util.Map">
+        select OBJECT_ID "id",OBJECT_TYPE "type" from T_WF_TASK_AUTH where MODEL_KEY = #{modelKey} and TASK_KEY = #{taskKey}
+    </select>
+
+    <select id="findFormPath" resultType="java.util.Map">
+        select ID "id" ,FORM_NAME "formName",FORM_PATH "formPath" from T_WF_TASK_FORM where MODEL_KEY = #{modelKey} and TASK_KEY = #{taskKey}
+    </select>
+</mapper>

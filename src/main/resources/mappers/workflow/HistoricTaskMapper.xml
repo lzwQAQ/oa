@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.workflow.historic.dao.HistoricTaskDao">
+
+
+    <select id="findHistoricTask" resultType="java.util.Map">
+        select t.PROC_INST_ID "processInstanceId",t.BUSINESS_ID "businessId",t.PROC_NAME "processDefinitionName",
+            t.ASSIGNEE "assignee",P.NAME "name",t.PROC_DEF_KEY "processDefinitionKey",t.END_TIME "endTime"
+        from V_WF_HI_TASK t
+        inner join T_PT_USER P on P.ID = t.START_USER_ID
+        <where>
+            <if test="'submit' == taskType">
+                t.ASSIGNEE = #{userId} and t.START_USER_ID = #{userId}
+            </if>
+            <if test="'submit' != taskType">
+                t.ASSIGNEE = #{userId} and t.START_USER_ID <![CDATA[ <> ]]> #{userId}
+            </if>
+            <if test="processDefinitionName != null and processDefinitionName != ''">
+                and t.PROC_NAME like concat('%',#{processDefinitionName},'%')
+            </if>
+            <if test="name != null and name != ''">
+                and P.NAME like concat('%',#{name},'%')
+            </if>
+            <if test="modelKey != null and modelKey != ''">
+                and t.PROC_DEF_KEY = #{modelKey}
+            </if>
+        </where>
+        order by t.PROC_NAME, P.NAME
+    </select>
+
+    <select id="findHistoricTrackInfo" resultType="java.util.Map">
+        select t.TASK_ID "taskId",t.TASK_NAME "taskName",t.APPROVAL_DATE "approvalDate",
+            t.APPROVAL_OPINION "approvalOpinion",t.EVENT_NAME "eventName",p.name "name",p.id "userId"
+        from T_WF_TASK_LOG t
+        left join T_PT_USER p on p.id = t.ASSIGNEE
+        where t.PRO_INST_ID = #{processInstanceId}
+        order by t.APPROVAL_DATE asc
+    </select>
+
+    <select id="getHistoricTaskBusinessKey" resultType="com.kuyuner.workflow.api.bean.BusinessKey">
+        select BUSINESS_ID as "id",BUSINESS_LOG_ID as "logId" from T_WF_TASK_BUSINESSKEY where TASK_ID = #{historicTaskId}
+    </select>
+
+    <select id="getLastTaskTime" resultType="java.util.Date">
+        select max(END_TIME_) END_TIME from ACT_HI_TASKINST where PROC_INST_ID_ = #{processInstanceId} and END_TIME_ is not null
+    </select>
+
+    <select id="getHistoricProcessInstanceInfo" resultType="java.util.Map">
+        select PROC_DEF_ID_ as "PROC_DEF_ID",END_TIME_ as "END_TIME"  from ACT_HI_PROCINST where PROC_INST_ID_ = #{processInstanceId}
+    </select>
+</mapper>

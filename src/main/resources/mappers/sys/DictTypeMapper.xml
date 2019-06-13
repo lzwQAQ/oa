@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.core.sys.dao.DictTypeDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.dict_name AS "dictName",
+		t.type AS "type",
+		t.IS_SYS_DATA AS "isSysData",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag",
+		t.sort AS "sort"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.core.sys.entity.DictType">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_DICT_TYPE t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.core.sys.entity.DictType">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_DICT_TYPE t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="dictName != null and dictName != ''">
+                AND t.dict_name LIKE concat('%',#{dictName},'%')
+            </if>
+            <if test="type != null and type != ''">
+                AND t.type LIKE concat('%',#{type},'%')
+            </if>
+			<if test="isSysData != null and isSysData != ''">
+				AND t.IS_SYS_DATA = #{isSysData}
+			</if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.sort asc
+	</select>
+
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_PT_DICT_TYPE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="dictName != null"> dict_name, </if>
+        	<if test="type != null"> type, </if>
+			<if test="isSysData != null"> IS_SYS_DATA, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+        	<if test="sort != null"> sort, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="dictName != null"> #{dictName}, </if>
+            <if test="type != null"> #{type}, </if>
+			<if test="isSysData != null"> #{isSysData}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+            <if test="sort != null"> #{sort}, </if>
+		</trim>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_PT_DICT_TYPE
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="dictName != null"> dict_name = #{dictName}, </if>
+            <if test="type != null"> type = #{type}, </if>
+			<if test="isSysData != null"> IS_SYS_DATA = #{isSysData}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+            <if test="sort != null"> sort = #{sort}, </if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_PT_DICT_TYPE where id in
+		<foreach collection="ids" item="id" separator="," open="(" close=")">
+			#{id}
+		</foreach>
+    </delete>
+
+</mapper>

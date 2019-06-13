@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <title>角色表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${role.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                角色名称：
+                                <i class="fa fa-question-circle" title="角色名称"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="name" th:value="${role.name}" class="form-control" required='required' maxlength='20' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                角色代码：
+                                <i class="fa fa-question-circle" title="角色代码"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="code" th:value="${role.code}" class="form-control" required='required' maxlength='100' en="true" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="height: 49px">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>
+                                系统内置：
+                                <i class="fa fa-question-circle" title="系统内置"></i>
+                            </label>
+                            <div class="col-sm-8">
+                                <label class="radio-inline">
+                                    <input id="menu-show" th:checked="${'1' eq role.isSys}" type="radio" name="isSys" value="1" required="required"/>
+                                    是
+                                </label>
+                                <label class="radio-inline">
+                                    <input th:checked="${'0' eq role.isSys}" type="radio" name="isSys" value="0" required="required"/>
+                                    否
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                
+                                备注：
+                                <i class="fa fa-question-circle" title="备注"></i>
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea type="text" name="mark" th:text="${role.mark}" class="form-control" maxlength='50'
+                                rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/js/sys/roleForm.js}" type="text/javascript"></script>
+</html>

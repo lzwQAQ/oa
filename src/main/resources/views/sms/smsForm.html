@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>发送邮件</title>
+    <link th:replace="common/head" />
+    <link th:href="@{/static/common/plugins/layui/css/layui.css}" rel="stylesheet"/>
+    <link th:href="@{/static/common/plugins/dtree/dtree.css}" rel="stylesheet"/>
+    <link th:href="@{/static/common/plugins/dtree/font/dtreefont.css}" rel="stylesheet"/>
+    <style>
+        .control-label {width: 105px;display: inline-block;float: left;padding-left: 15px;padding-right: 5px}
+        .form-col { width: 100%; padding-left: 105px; padding-right: 32px;}
+        .form-control, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple { border: 1px solid #c6cbd0;}
+        .btn-select {margin: 8px; margin-left: 0; float: left;}
+    </style>
+</head>
+
+<body class="bg-email" style="height: auto">
+<div class="wrapper wrapper-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="main-box" style="margin-top: 20px">
+                <form id="form" class="form-horizontal">
+                    <input type="hidden" id="schedule" name="schedule" value="0">
+                    <input type="hidden" id="scheduleTime" name="scheduleTime" value="0">
+
+                    <div class="form-group">
+                        <label class="control-label">收件人：</label>
+                        <div class="form-col">
+                            <select id="receiver" required="required" class="form-control select2-multiple" multiple="multiple"></select>
+                            <div>
+                                <button id="btnOpenTree" class="btn btn-success btn-sm btn-select" type="button">选择收信人</button>
+                                <button id="btnOpenGroup" class="btn btn-success btn-sm btn-select" type="button">选择群组</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="content" class="form-group">
+                        <label class="control-label">正文：</label>
+                        <div class="form-col">
+                            <textarea name="content" style="width: 100%; padding: 8px;" rows="10"></textarea>
+                            <p class="help-block">请输入小于250字的短信内容</p>
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        <div id="schedule-time" style="display: none; width: 450px;padding: 20px 20px 0px 20px">
+                            发送时间：
+                            <select id="year">
+                                <option th:value="${#dates.year(#dates.createNow())}" th:text="${#dates.year(#dates.createNow())}"></option>
+                                <option th:value="${#dates.year(#dates.createNow())+1}" th:text="${#dates.year(#dates.createNow())+1}"></option>
+                            </select>
+                            年
+                            <select id="month">
+                            </select>
+                            月
+                            <select id="day">
+                            </select>
+                            日
+                            <select id="hour">
+                            </select>
+                            时
+                            <select id="minute">
+                            </select>
+                            分
+                        </div>
+                        <div class="row">
+                            <div class="form-col">
+                                <a href="javascript:void(0)" id="send" class="btn btn-success btn-sm"><i class="fa fa-pencil"></i> 发送</a>
+                                <a href="javascript:void(0)" id="schedule-send" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 定时发送</a>
+                                <a href="javascript:void(0)" id="close" class="btn btn-white btn-sm" title="关闭"><i class="fa fa-times"></i> 关闭</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/common/plugins/layui/layui.all.js}" type="text/javascript" ></script>
+<script th:src="@{/static/common/plugins/dtree/dtree.js}" type="text/javascript" ></script>
+
+<script>
+    var treeData = null
+    var groupData = null
+    var userAdded = {}
+    var id2numMap = {}
+    var selecter = $(".select2-multiple").select2({
+        tags: true,
+        createTag: function (params) {
+            if(!(/^1(3|4|5|7|8)\d{9}$/.test(params.term))){
+                return null;
+            }
+            var result = {
+                id: params.term,
+                text: params.term
+            }
+            userAdded[params.term] = null
+            return result
+        },
+        data: []
+    });
+    selecter.on('select2:unselecting', function (e) {
+        var id = e.params.args.data.id;
+        delete userAdded[id]
+    })
+    $(function () {
+        $.ajax({
+            type: "POST",
+            url: Util.getPath() + "/message/getAllDeptPerson",
+            success: function(res){
+                if(res.code == 200){
+                    for(var i = 0; i < res.total; i++){
+                        res.data[i].checkArr = [{"type": "0", "isChecked": "0"}]
+                        if(res.data[i].userPhone){
+                            id2numMap[res.data[i].userId] = res.data[i].userPhone
+                            res.data[i].title = res.data[i].userName + "<"+res.data[i].userPhone+">"
+                        }else{
+                            res.data[i].userId = res.data[i].deptId
+                            res.data[i].isLast = false
+                            res.data[i].title = res.data[i].deptName
+                        }
+
+                    }
+                    treeData = res.data
+                }
+
+            }
+        });
+        $.ajax({
+            type: "POST",
+            url: Util.getPath() + "/message/groupAll",
+            success: function(res){
+                if(res.code == 200){
+                    for(var i = 0; i < res.total; i++){
+                        res.data[i].checkArr = [{"type": "0", "isChecked": "0"}]
+                        if(res.data[i].phone){
+                            id2numMap[res.data[i].userId] = res.data[i].phone
+                            res.data[i].title = res.data[i].name + "<"+res.data[i].phone+">"
+                        }else{
+                            res.data[i].userId = res.data[i].id
+                            res.data[i].isLast = false
+                            res.data[i].title = res.data[i].name
+                        }
+                    }
+                    groupData = res.data
+                }
+
+            }
+        });
+        $("#btnOpenTree").click(function(){
+            layer.open({
+                type: 1, //type:0 也行
+                title: "选择树",
+                area: ["400px", "80%"],
+                content: '<ul id="openTree" class="dtree" data-id=""></ul>',
+                btn: ['确认选择'],
+                success: function(layero, index){
+                    var DTree = layui.dtree.render({
+                        obj: $(layero).find("#openTree"),
+                        data: treeData,
+                        record: true,
+                        type: "all",
+                        dataStyle: "layuiStyle",  //使用layui风格的数据格式
+                        dataFormat: "list",  //配置data的风格为list
+                        response: {code: 0, treeId:"userId", parentId:"deptParentId"}, // 这里指定了返回的数据格式，组件会根据这些值来替换返回JSON中的指定格式，从而读取信息
+                        checkbar: true,
+                        checkbarType: "p-casc", // 默认就是all，其他的值为： no-all  p-casc   self  only
+                        done: function(data, obj){  //使用异步加载回调
+                            var val = selecter.val()
+                            if(val == null) return
+                            var reportId = val.join(',');
+                            layui.dtree.chooseDataInit("openTree", reportId); // 初始化复选框的值
+                        }
+                    });
+                },
+                yes: function(index, layero) {
+                    var flag = true;
+                    var params = layui.dtree.getCheckbarNodesParam("openTree"); // 获取选中值
+                    if(params.length == 0){
+                        layer.msg("请至少选择一个节点",{icon:2});
+                        flag = false;
+                    }
+                    var selected = []
+                    selecter.val(null).change()
+                    Object.keys(userAdded).forEach(function (value) {
+                        selected.push(value)
+                    })
+
+                    for(var key in params){
+                        var param = params[key];
+                        if(param.isLeaf){
+                            // var phone = param.context.match(/^.*<([0-9]*)>$/)[1];
+                            if (selecter.find("option[value='" + param.nodeId + "']").length) {
+                                selected.push(param.nodeId)
+                            } else {
+                                var newOption = new Option(param.context, param.nodeId, false, true);
+                                selecter.append(newOption)
+                            }
+                        }
+                    }
+                    var val = selecter.val() || []
+                    val = val.concat(selected)
+                    selecter.val(null).trigger('change')
+                    selecter.val(val).trigger('change')
+                    if(flag){
+                        layer.close(index);
+                    }
+                }
+            });
+        });
+        $("#btnOpenGroup").click(function(){
+            layer.open({
+                type: 1, //type:0 也行
+                title: "选择树",
+                area: ["400px", "80%"],
+                content: '<ul id="openTree2" class="dtree" data-id=""></ul>',
+                btn: ['确认选择'],
+                success: function(layero, index){
+                    var DTree = layui.dtree.render({
+                        obj: $(layero).find("#openTree2"),
+                        data: groupData,
+                        record: true,
+                        type: "all",
+                        dataStyle: "layuiStyle",  //使用layui风格的数据格式
+                        dataFormat: "list",  //配置data的风格为list
+                        response: {code: 0, treeId:"userId"}, // 这里指定了返回的数据格式，组件会根据这些值来替换返回JSON中的指定格式，从而读取信息
+                        checkbar: true,
+                        checkbarType: "p-casc", // 默认就是all，其他的值为： no-all  p-casc   self  only
+                        done: function(data, obj){  //使用异步加载回调
+                            var val = selecter.val()
+                            if(val == null) return
+                            var reportId = val.join(',');
+                            layui.dtree.chooseDataInit("openTree", reportId); // 初始化复选框的值
+                        }
+                    });
+                },
+                yes: function(index, layero) {
+                    var flag = true;
+                    var params = layui.dtree.getCheckbarNodesParam("openTree"); // 获取选中值
+                    if(params.length == 0){
+                        layer.msg("请至少选择一个节点",{icon:2});
+                        flag = false;
+                    }
+                    var selected = []
+                    selecter.val(null).change()
+                    Object.keys(userAdded).forEach(function (value) {
+                        selected.push(value)
+                    })
+
+                    for(var key in params){
+                        var param = params[key];
+                        if(param.isLeaf){
+                            // var phone = param.context.match(/^.*<([0-9]*)>$/)[1];
+                            if (selecter.find("option[value='" + param.nodeId + "']").length) {
+                                selected.push(param.nodeId)
+                            } else {
+                                var newOption = new Option(param.context, param.nodeId, false, true);
+                                selecter.append(newOption)
+                            }
+                        }
+                    }
+                    var val = selecter.val() || []
+                    val = val.concat(selected)
+                    selecter.val(null).trigger('change')
+                    selecter.val(val).trigger('change')
+                    if(flag){
+                        layer.close(index);
+                    }
+                }
+            });
+        });
+        $("#send").click(function () {
+            save();
+        });
+
+        // 关闭
+        $("#close").click(function () {
+            if ($("#id").val()) {
+                Util.ask("关闭之前请注意保存，确定关闭？", function (index) {
+                    Util.closeLayer(index);
+                    parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    if (parent.reloadGrid) {
+                        parent.reloadGrid();
+                    }
+                });
+            } else {
+                Util.ask("关闭之后，短信内容将消失，确认关闭？", function (index) {
+                    Util.closeLayer(index);
+                    top.closeCurrentTab();
+                });
+            }
+        });
+
+        function save(schedule) {
+            if(!schedule){
+                $("#schedule").val("0");
+            }
+            var phoneNumbers = selecter.val().map(function (value) {
+                return id2numMap[value] || value
+            }).join(',')
+            if ($("#form").valid()) {
+                $("#form").ajaxSubmit({
+                    loading: true,
+                    type: "post",
+                    data: {receiver: phoneNumbers},
+                    url: Util.getPath() + "/message/saveOrUpdate",
+                    success: function (res, statusText, xhr, $form) {
+                        if (res.code === 200) {
+                            Util.msgOk("短信发送成功！");
+                            if ($("#id").val()) {
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                if (parent.reloadGrid) {
+                                    parent.reloadGrid();
+                                }
+                            } else {
+                                top.closeCurrentTab();
+                            }
+                        } else {
+                            Util.msgError("短信发送失败！");
+                        }
+                    }
+                });
+            } else {
+                $('#form').validate().focusInvalid();
+            }
+        }
+
+        // 定时发送
+        $("#schedule-send").click(function () {
+            //初始化选择时间，选择一个小时之后
+            var nextDate = new Date(new Date().getTime() + 60 * 60 * 1000);
+            $("#year").find('option[value="' + parseNum(nextDate.getFullYear()) + '"]').attr("selected", true);
+            $("#month").find('option[value="' + parseNum(nextDate.getMonth() + 1) + '"]').attr("selected", true);
+            $("#day").find('option[value="' + parseNum(nextDate.getDate()) + '"]').attr("selected", true);
+            $("#hour").find('option[value="' + parseNum(nextDate.getHours()) + '"]').attr("selected", true);
+            $("#minute").find('option[value="' + parseNum(nextDate.getMinutes()) + '"]').attr("selected", true);
+
+            layer.open({
+                type: 1,
+                title: false,
+                area: ['450px'],
+                scrollbar: false,
+                resize: false,
+                content: $("#schedule-time"),
+                btn: ['确定', '取消'],
+                yes: function (index) {
+                    var date = new Date(getScheduleTime().replace(/-/g, "/"));
+                    if (date.getTime() < new Date().getTime()) {
+                        Util.msgError("选择的时间，不能小于当前时间！");
+                        return;
+                    }
+                    if ((date.getTime() - new Date().getTime()) < 1000 * 60 * 10) {
+                        Util.msgError("距离当前时间小于10分钟！");
+                        return;
+                    }
+
+                    $("#schedule").val("1");
+                    $("#scheduleTime").val(getScheduleTime());
+                    save(true);
+                    layer.close(index);
+                }
+            });
+        });
+
+        (function initDateSelect() {
+            for (var i = 1; i <= 12; i++) {
+                $("#month").append('<option value="' + parseNum(i) + '">' + i + '</option>');
+            }
+            initDay();
+            for (var i = 0; i <= 23; i++) {
+                $("#hour").append('<option value="' + parseNum(i) + '">' + i + '</option>');
+            }
+            for (var i = 0; i <= 59; i++) {
+                $("#minute").append('<option value="' + parseNum(i) + '">' + i + '</option>');
+            }
+            $("#month").change(function () {
+                initDay();
+            });
+
+            function initDay() {
+                var days = 12;
+                if ($.inArray($("#month").val(), ['01', '03', '05', '07', '08', '10', '12']) > -1) {
+                    days = 31;
+                } else if ($.inArray($("#month").val(), ['04', '06', '09', '11']) > -1) {
+                    days = 30;
+                } else if ($.inArray($("#month").val(), ['02']) > -1) {
+                    days = isLeapYear($("#year").val()) ? 29 : 28;
+                }
+                $("#day").empty();
+                for (var i = 1; i <= days; i++) {
+                    $("#day").append('<option value="' + parseNum(i) + '">' + i + '</option>');
+                }
+            }
+        })();
+
+        function parseNum(num) {
+            return num < 10 ? ("0" + num) : num;
+        }
+
+        function isLeapYear(Year) {
+            if (((Year % 4) == 0) && ((Year % 100) != 0) || ((Year % 400) == 0)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function getScheduleTime() {
+            return $("#year").val() + "-" + $("#month").val() + "-" + $("#day").val() + " " + $("#hour").val() + ":" + $("#minute").val() + ":00";
+        }
+    });
+</script>
+</html>

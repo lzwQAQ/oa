@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.core.sys.dao.AreaDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+	    t.parent_id AS "parent.id",
+		t1.CODE AS "parent.code",
+		t1.NAME AS "parent.name",
+		t.code AS "code",
+		t.name AS "name",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag",
+		t.tree_leaf AS "treeLeaf",
+		t.tree_level AS "treeLevel",
+		t.sort AS "sort"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+        LEFT JOIN T_PT_AREA t1 on t1.ID = t.parent_id
+	</sql>
+
+	<!--auto generated Code-->
+    <select id="findAllChildren" resultType="com.kuyuner.core.sys.entity.Area">
+        select
+            <include refid="AllColumns"/>
+        from T_PT_AREA t
+            <include refid="AllJoins"/>
+        where t.parent_id = #{parentId}
+    </select>
+
+    <!--auto generated Code-->
+    <select id="findChildrenCount" resultType="java.lang.Integer">
+        select count(*)
+        from T_PT_AREA
+        where parent_id = #{parentId}
+    </select>
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.core.sys.entity.Area">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_AREA t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.core.sys.entity.Area">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PT_AREA t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+		    <if test="parent != null">
+		        <if test="parent.id != null and parent.id != ''">
+                    AND t.parent_id = #{parent.id}
+		        </if>
+                <if test="parent.code != null and parent.code != ''">
+		            AND t1.CODE LIKE concat('%',#{parent.code},'%')
+		        </if>
+                <if test="parent.name != null and parent.name != ''">
+		            AND t1.NAME LIKE concat('%',#{parent.name},'%')
+		        </if>
+            </if>
+            <if test="code != null and code != ''">
+                AND t.code LIKE concat('%',#{code},'%')
+            </if>
+            <if test="name != null and name != ''">
+                AND t.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+            <if test="treeLeaf != null and treeLeaf != ''">
+                AND t.tree_leaf = #{treeLeaf}
+            </if>
+            <if test="treeLevel != null and treeLevel != ''">
+                AND t.tree_level = #{treeLevel}
+            </if>
+            <if test="sort != null and sort != ''">
+                AND t.sort = #{sort}
+            </if>
+		</where>
+	</select>
+
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_PT_AREA
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+            <if test="parent != null and parent.id != null"> parent_id, </if>
+        	<if test="code != null"> code, </if>
+        	<if test="name != null"> name, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+        	<if test="treeLeaf != null"> tree_leaf, </if>
+        	<if test="treeLevel != null"> tree_level, </if>
+        	<if test="sort != null"> sort, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+		    <if test="parent != null and parent.id != null"> #{parent.id}, </if>
+            <if test="code != null"> #{code}, </if>
+            <if test="name != null"> #{name}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+            <if test="treeLeaf != null"> #{treeLeaf}, </if>
+            <if test="treeLevel != null"> #{treeLevel}, </if>
+            <if test="sort != null"> #{sort}, </if>
+		</trim>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_PT_AREA
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+        	<if test="parent != null and parent.id != null"> parent_id = #{parent.id}, </if>
+            <if test="code != null"> code = #{code}, </if>
+            <if test="name != null"> name = #{name}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+            <if test="treeLeaf != null"> tree_leaf = #{treeLeaf}, </if>
+            <if test="treeLevel != null"> tree_level = #{treeLevel}, </if>
+            <if test="sort != null"> sort = #{sort}, </if>
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_PT_AREA where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

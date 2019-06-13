@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.workflow.manage.dao.ReleasedDao">
+
+
+    <select id="findReleasedWorkFlow" resultType="com.kuyuner.workflow.manage.bean.Deployment">
+        SELECT
+            RES.ID_ as "deploymentId",
+            RES.Deploy_Time_ as "time",
+            PROCDEF.ID_ as "procdefId",
+            PROCDEF.NAME_ as "name",
+            PROCDEF.VERSION_ as "version",
+            PROCDEF.KEY_ as "key",
+            PROCDEF.Resource_Name_ as "resourceName",
+            PROCDEF.Dgrm_Resource_Name_ as "dgrmResourceName"
+        FROM ACT_RE_DEPLOYMENT RES
+        INNER JOIN ACT_RE_PROCDEF PROCDEF ON RES.ID_ = PROCDEF.DEPLOYMENT_ID_
+        <where>
+            <if test="modelKey != null and modelKey != ''">
+                and PROCDEF.KEY_ LIKE concat('%',#{modelKey},'%')
+            </if>
+            <if test="modelName != null and modelName != ''">
+                and PROCDEF.NAME_ LIKE concat('%',#{modelName},'%')
+            </if>
+        </where>
+        order by RES.Deploy_Time_ desc
+    </select>
+</mapper>

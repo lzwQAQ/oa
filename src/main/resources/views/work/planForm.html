@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <link th:href="@{/static/common/plugins/ztree/css/metroStyle/metroStyle.css}" rel="stylesheet"/>
+    <title>任务计划表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${plan.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>发布人：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" readonly="readonly" th:value="${plan.sender}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>任务名称：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="name" th:value="${plan.name}" class="form-control" required='required' maxlength='200' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>开始时间：
+                            </label>
+                            <div class="col-sm-8 has-feedback">
+                                <input type="text" id="beginTime" name="beginTime" class="form-control datetime"
+                                       th:value="${#dates.format(plan.beginTime,'yyyy-MM-dd HH:mm:ss')}"
+                                       readonly="readonly" required='required' />
+                                <span class="glyphicon glyphicon-calendar form-control-feedback"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>结束时间：
+                            </label>
+                            <div class="col-sm-8 has-feedback">
+                                <input type="text" id="endTime" name="endTime" class="form-control datetime"
+                                       th:value="${#dates.format(plan.endTime,'yyyy-MM-dd HH:mm:ss')}"
+                                       readonly="readonly" required='required' />
+                                <span class="glyphicon glyphicon-calendar form-control-feedback"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>任务状态：
+                            </label>
+                            <div class="col-sm-8">
+                                <select class="form-control select2" name="state" required='required'>
+                                    <option value="">请选择任务状态</option>
+                                    <option th:selected="${dict.dictCode==plan.state}" th:each="dict:${dictHolder.getValues('PLAN_STATE')}" th:value="${dict.dictCode}" th:text="${dict.dictValue}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>进度：
+                            </label>
+                            <div class="col-sm-8">
+                                <select name="process" class="form-control select2" required='required'>
+                                    <option value="">请选择进度</option>
+                                    <option th:selected="${0==plan.process}" value="0">0%</option>
+                                    <option th:selected="${25==plan.process}" value="25">25%</option>
+                                    <option th:selected="${50==plan.process}" value="50">50%</option>
+                                    <option th:selected="${75==plan.process}" value="75">75%</option>
+                                    <option th:selected="${100==plan.process}" value="100">100%</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                参与人员：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="hidden" id="joinPeople" name="joinPeople" class="form-control" />
+                                <input type="text" id="joinPeopleName" class="form-control" readonly="readonly"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>负责人：
+                            </label>
+                            <div class="col-sm-8">
+                                <select name="chargePeoples" id="chargePeoples" class="form-control" required='required'>
+                                    <option th:each="user:${userList}" th:value="${user.id}" th:text="${user.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                <span class="red" >*</span>任务内容：
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea name="content" cols="15" rows="5" th:text="${plan.content}" class="form-control" required='required' maxlength='2000'></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                备注：
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea name="marks" cols="15" rows="5" th:text="${plan.marks}" class="form-control" maxlength='2000'></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/common/plugins/ztree/js/jquery.ztree.all.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/js/work/planForm.js}" type="text/javascript"></script>
+</html>

@@ -1,0 +1,34 @@
+#edit-contain {height: 350px;overflow: hidden}
+.main-box {margin-top: 10px}
+
+/*上传控件------开始*/
+.webuploader-container { position: relative;position: relative; overflow: hidden; width: 70px;background-color: #00a0e9;color: white;padding: 3px;margin-bottom: 10px}
+.webuploader-element-invisible { position: absolute !important; clip: rect(1px 1px 1px 1px); /* IE6, IE7 */ clip: rect(1px, 1px, 1px, 1px);}
+/*.webuploader-pick { position: relative; display: inline; cursor: pointer; background: #00b7ee; padding: 10px 15px; color: #fff; text-align: center; border-radius: 3px; overflow: hidden;}*/
+/*.webuploader-pick-hover { background: #00a2d4;}*/
+/*.webuploader-pick-disable { opacity: 0.6; pointer-events: none;}*/
+.webuploader-pick {margin-left: 4px}
+.uploader-list .file-item {width: 220px;height: 60px;background-color: #E3EAF4;margin-right: 10px;margin-bottom: 10px;position: relative}
+.uploader-list .file-item .info {width: 170px;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.uploader-list .file-delete {position: absolute; right: 6px; top: 5px; font-size: 12px;}
+.uploader-list .progress, .uploader-list .state {margin-bottom: 0px}
+.uploader-list .state {display: block;margin-top: 10px}
+/*上传控件------结束*/
+
+/*邮箱列表------开始*/
+.email-state { width: 18px; height: 16px; overflow: hidden;display: inline-block}
+.email-level {margin-right: 7px;font-size: 12px}
+.bg-email {background-color: #F5F7FA}
+.email-text-info {padding: 5px 10px; margin-bottom: 0px; background-color: #FFF1B4;}
+.ru { background: url(../../images/mail.png) -48px 2px no-repeat;}
+.rr { background: url(../../images/mail.png) -48px -14px no-repeat;}
+.rt {background: url(../../images/mail.png) 1px -80px no-repeat;}
+.rc { background: url(../../images/mail.png) -48px -64px no-repeat;}
+.ti { background: url(../../images/mail.png) -48px -80px no-repeat;}
+/*邮箱列表------结束*/
+
+/*邮箱表单------开始*/
+.email-lable {width: 105px;display: inline-block;float: left;padding-left: 15px;padding-right: 5px}
+.email-col { width: 100%; padding-left: 105px; padding-right: 32px;}
+.form-control, .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple { border: 1px solid #c6cbd0;}
+/*邮箱表单------结束*/

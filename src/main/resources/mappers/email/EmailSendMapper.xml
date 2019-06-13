@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.email.dao.EmailSendDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.title AS "title",
+		t.content AS "content",
+		t.sender_name AS "senderName",
+		t.sender_acount AS "senderAccount",
+		t.receiver_name AS "receiverName",
+		t.receiver_account AS "receiverAccount",
+		t.copy_sender_name AS "copySenderName",
+		t.copy_sender_account AS "copySenderAccount",
+		t.secret_sender_name AS "secretSenderName",
+		t.secret_sender_account AS "secretSenderAccount",
+		t.contain_file AS "containFile",
+		t.star AS "star",
+		t.level AS "level",
+		t.type AS "type",
+		t.to_message AS "toMessage",
+		t.draft AS "draft",
+		t.is_schedule AS "isSchedule",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.email.entity.EmailSend">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_EMAIL_SEND t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.email.entity.EmailSend">
+		SELECT
+            t.id AS "id",
+            t.title AS "title",
+            t.sender_name AS "senderName",
+            t.sender_acount AS "senderAccount",
+            t.receiver_name AS "receiverName",
+            t.receiver_account AS "receiverAccount",
+            t.copy_sender_name AS "copySenderName",
+            t.copy_sender_account AS "copySenderAccount",
+            t.secret_sender_name AS "secretSenderName",
+            t.secret_sender_account AS "secretSenderAccount",
+            t.contain_file AS "containFile",
+            t.star AS "star",
+            t.level AS "level",
+            t.type AS "type",
+            t.to_message AS "toMessage",
+            t.draft AS "draft",
+            t.is_schedule AS "isSchedule",
+            t.create_date AS "createDate",
+            t.update_date AS "updateDate"
+		FROM T_EMAIL_SEND t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                AND t.title LIKE concat('%',#{title},'%')
+            </if>
+            <if test="senderName != null and senderName != ''">
+                AND t.sender_name = #{senderName}
+            </if>
+            <if test="senderAccount != null and senderAccount != ''">
+                AND t.sender_acount = #{senderAccount}
+            </if>
+            <if test="receiverName != null and receiverName != ''">
+                AND t.receiver_name LIKE concat('%',#{receiverName},'%')
+            </if>
+            <if test="receiverAccount != null and receiverAccount != ''">
+                AND t.receiver_account LIKE concat('%',#{receiverAccount},'%')
+            </if>
+            <if test="copySenderName != null and copySenderName != ''">
+                AND t.copy_sender_name LIKE concat('%',#{copySenderName},'%')
+            </if>
+            <if test="copySenderAccount != null and copySenderAccount != ''">
+                AND t.copy_sender_account LIKE concat('%',#{copySenderAccount},'%')
+            </if>
+            <if test="secretSenderName != null and secretSenderName != ''">
+                AND t.secret_sender_name LIKE concat('%',#{secretSenderName},'%')
+            </if>
+            <if test="secretSenderAccount != null and secretSenderAccount != ''">
+                AND t.secret_sender_account LIKE concat('%',#{secretSenderAccount},'%')
+            </if>
+            <if test="containFile != null and containFile != ''">
+                AND t.contain_file = #{containFile}
+            </if>
+            <if test="star != null and star != ''">
+                AND t.star = #{star}
+            </if>
+            <if test="level != null and level != ''">
+                AND t.level = #{level}
+            </if>
+            <if test="type != null and type != ''">
+                AND t.type = #{type}
+            </if>
+            <if test="toMessage != null and toMessage != ''">
+                AND t.to_message = #{toMessage}
+            </if>
+            <if test="draft != null and draft != ''">
+                AND t.draft = #{draft}
+            </if>
+            <if test="isSchedule != null and isSchedule != ''">
+                AND t.is_schedule = #{isSchedule}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.create_date desc
+	</select>
+
+    <select id="findReceivers" resultType="java.util.Map">
+        select NAME as "name",EMAIL as "email" from T_PT_USER
+    </select>
+
+    <select id="findUsersByAccounts" resultType="com.kuyuner.core.sys.entity.User">
+        select id as "id",email as "email" from T_PT_USER where EMAIL in
+        <foreach collection="list" open="(" close=")" separator="," item="email">
+            #{email}
+        </foreach>
+    </select>
+
+    <select id="getEmailContent" resultType="java.lang.String">
+        select content from T_EMAIL_SEND where id = #{id}
+    </select>
+
+    <select id="getEmail" resultType="com.kuyuner.bg.email.entity.EmailSend">
+        SELECT
+        <include refid="AllColumns"/>
+        FROM T_EMAIL_SEND t
+        <include refid="AllJoins"/>
+        WHERE t.ID = #{id}
+    </select>
+
+    <select id="findSelectedUsers" resultType="com.kuyuner.bg.email.entity.EmailSend">
+        select
+            t.sender_name AS "senderName",
+            t.sender_acount AS "senderAccount",
+            t.receiver_name AS "receiverName",
+            t.receiver_account AS "receiverAccount",
+            t.copy_sender_name AS "copySenderName",
+            t.copy_sender_account AS "copySenderAccount",
+            t.secret_sender_name AS "secretSenderName",
+            t.secret_sender_account AS "secretSenderAccount"
+        from T_EMAIL_SEND t where t.id = #{emailId}
+    </select>
+
+    <select id="getScheduleTime" resultType="java.lang.String">
+        select CRON from T_TASK_SCHEDULE where DATA = #{emailId}
+    </select>
+
+    <select id="findSchedules" resultType="java.lang.String">
+        select id from T_TASK_SCHEDULE where DATA in
+        <foreach collection="emailIds" open="(" close=")" separator="," item="emailId">
+            #{emailId}
+        </foreach>
+    </select>
+
+    <!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_EMAIL_SEND
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="title != null"> title, </if>
+        	<if test="content != null"> content, </if>
+        	<if test="senderName != null"> sender_name, </if>
+        	<if test="senderAccount != null"> sender_acount, </if>
+        	<if test="receiverName != null"> receiver_name, </if>
+        	<if test="receiverAccount != null"> receiver_account, </if>
+        	<if test="copySenderName != null"> copy_sender_name, </if>
+        	<if test="copySenderAccount != null"> copy_sender_account, </if>
+        	<if test="secretSenderName != null"> secret_sender_name, </if>
+        	<if test="secretSenderAccount != null"> secret_sender_account, </if>
+        	<if test="containFile != null"> contain_file, </if>
+        	<if test="star != null"> star, </if>
+        	<if test="level != null"> level, </if>
+        	<if test="type != null"> type, </if>
+        	<if test="toMessage != null"> to_message, </if>
+        	<if test="draft != null"> draft, </if>
+        	<if test="isSchedule != null"> is_schedule, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="title != null"> #{title}, </if>
+            <if test="content != null"> #{content}, </if>
+            <if test="senderName != null"> #{senderName}, </if>
+            <if test="senderAccount != null"> #{senderAccount}, </if>
+            <if test="receiverName != null"> #{receiverName}, </if>
+            <if test="receiverAccount != null"> #{receiverAccount}, </if>
+            <if test="copySenderName != null"> #{copySenderName}, </if>
+            <if test="copySenderAccount != null"> #{copySenderAccount}, </if>
+            <if test="secretSenderName != null"> #{secretSenderName}, </if>
+            <if test="secretSenderAccount != null"> #{secretSenderAccount}, </if>
+            <if test="containFile != null"> #{containFile}, </if>
+            <if test="star != null"> #{star}, </if>
+            <if test="level != null"> #{level}, </if>
+            <if test="type != null"> #{type}, </if>
+            <if test="toMessage != null"> #{toMessage}, </if>
+            <if test="draft != null"> #{draft}, </if>
+            <if test="isSchedule != null"> #{isSchedule}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+    <insert id="saveReceiverEmail">
+        INSERT INTO T_EMAIL_RECEIVE (ID,TITLE,CONTENT,SENDER_NAME,SENDER_ACOUNT,RECEIVER_NAME,
+            RECEIVER_ACCOUNT,COPY_SENDER_NAME,COPY_SENDER_ACCOUNT,CONTAIN_FILE,STAR,TYPE,LEVEL,IS_SECRET,CREATER,
+            CREATE_DATE,UPDATE_DATE,DEL_FLAG)
+        values
+        <foreach collection="emails" separator="," item="email" >
+            (#{email.id},#{email.title},#{email.content},#{email.senderName},#{email.senderAccount},
+            #{email.receiverName},#{email.receiverAccount},#{email.copySenderName},#{email.copySenderAccount},
+            #{email.containFile},#{email.star},#{email.type},#{email.level},#{email.isSecret},#{email.creater},SYSDATE(),SYSDATE(),"1")
+        </foreach>
+    </insert>
+
+    <insert id="saveReceiveEmailFiles">
+        INSERT INTO T_EMAIL_FILE (ID,email_id,FILE_NAME,FILE_SIZE,FILE_PATH,CREATE_DATE,UPDATE_DATE,DEL_FLAG)
+        values
+        <foreach collection="files" separator="," item="file" >
+            (#{file.id},#{file.emailId},#{file.fileName},#{file.fileSize},#{file.filePath},SYSDATE(),SYSDATE(),'1')
+        </foreach>
+    </insert>
+
+    <insert id="saveSendEmailFiles">
+        INSERT INTO T_EMAIL_FILE (ID,email_id,FILE_NAME,FILE_SIZE,FILE_PATH,CREATE_DATE,UPDATE_DATE,DEL_FLAG)
+        values
+        <foreach collection="files" separator="," item="file" >
+            (REPLACE(uuid(),'-',''),#{email.id},#{file.name},#{file.size},#{file.url},SYSDATE(),SYSDATE(),'1')
+        </foreach>
+    </insert>
+
+    <!--auto generated Code-->
+	<update id="update">
+		UPDATE T_EMAIL_SEND
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="title != null"> title = #{title}, </if>
+            <if test="content != null"> content = #{content}, </if>
+            <if test="senderName != null"> sender_name = #{senderName}, </if>
+            <if test="senderAccount != null"> sender_acount = #{senderAccount}, </if>
+            <if test="receiverName != null"> receiver_name = #{receiverName}, </if>
+            <if test="receiverAccount != null"> receiver_account = #{receiverAccount}, </if>
+            <if test="copySenderName != null"> copy_sender_name = #{copySenderName}, </if>
+            <if test="copySenderAccount != null"> copy_sender_account = #{copySenderAccount}, </if>
+            <if test="secretSenderName != null"> secret_sender_name = #{secretSenderName}, </if>
+            <if test="secretSenderAccount != null"> secret_sender_account = #{secretSenderAccount}, </if>
+            <if test="containFile != null"> contain_file = #{containFile}, </if>
+            <if test="star != null"> star = #{star}, </if>
+            <if test="level != null"> level = #{level}, </if>
+            <if test="type != null"> type = #{type}, </if>
+            <if test="toMessage != null"> to_message = #{toMessage}, </if>
+            <if test="draft != null"> draft = #{draft}, </if>
+            <if test="isSchedule != null"> is_schedule = #{isSchedule}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            <if test="createDate != null"> create_date = #{createDate}, </if>
+            update_date = SYSDATE()
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+    <!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_EMAIL_SEND where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteFiles">
+        delete from T_EMAIL_FILE where email_id = #{emailId}
+    </delete>
+
+    <delete id="deleteSchedules">
+        DELETE FROM T_TASK_SCHEDULE where data in
+        <foreach collection="emailIds" item="emailId" separator="," open="(" close=")">
+            #{emailId}
+        </foreach>
+    </delete>
+
+    <update id="updateDeletes">
+        update T_EMAIL_SEND set DEL_FLAG = '0' where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="recoverys">
+        update T_EMAIL_SEND set DEL_FLAG = '1' where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>

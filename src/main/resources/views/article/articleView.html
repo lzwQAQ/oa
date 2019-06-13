@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:href="@{/static/common/plugins/ueditor/themes/iframe.css}" rel="stylesheet"/>
+    <style>
+        .content {max-width: 1000px; margin: 30px auto; padding: 30px; background-color: white;}
+    </style>
+</head>
+
+<body>
+<h1 style="text-align: center" th:text="${article.title}"></h1>
+<p id="info" style="text-align: center;"></p>
+<div class="content" th:utext="${article.content}"></div>
+<script>
+    var time = '[[${article.createTime}]]'
+    function getDate(ts, showTime) {
+        var date = new Date(ts);
+        var year = date.getFullYear();
+        var month = parseInt(date.getMonth()) + 1;
+        var day = parseInt(date.getDate());
+
+        var hours = parseInt(date.getHours());
+        var minutes = parseInt(date.getMinutes());
+        var ss = date.getTime() % 60000;
+        ss = parseInt((ss - (ss % 1000)) / 1000);
+        var date = year + '-' + String(month <= 9 ? '0' + month : month) + '-' + String(day <= 9 ? '0' + day : day);
+        var time = String(hours <= 9 ? '0' + hours : hours) + ':' + String(minutes <= 9 ? '0' + minutes : minutes) + ':' + String(ss <= 9 ? '0' + ss : ss);
+        return showTime ? date + ' ' + time : date
+    }
+    document.getElementById('info').innerHTML='发布时间：' + getDate(time, true)
+</script>
+</body>
+</html>

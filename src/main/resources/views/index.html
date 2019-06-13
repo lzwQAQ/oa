@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${env.getString('page.title')+' - 主页'}">主页</title>
+    <link th:replace="common/head" />
+    <link th:href="@{/static/common/plugins/ztree/css/metroStyle/metroStyle.css}" rel="stylesheet"/>
+    <link th:href="@{/static/css/welcome.css}" rel="stylesheet"/>
+    <style type="text/css">
+        body{min-width: 1024px;overflow-y: hidden;}
+    </style>
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location;
+        }
+    </script>
+</head>
+
+<body class="fixed-sidebar full-height-layout">
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <div class="navbar-default navbar-static-side">
+        <div class="nav-close"><i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse">
+            <ul class="nav side-menu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <span><img alt="image" class="img-circle" th:src="@{/static/common/images/profile_small_man.png}"/></span>
+                        <a id="user-dropdown-toggle" class="dropdown-toggle" href="javascript:void(0)" style="display: block">
+                            <span class="clear">
+                               <span class="block m-t-xs"><strong class="font-bold" th:text="${session.UserBean.username}">用户名</strong></span>
+                                <span class="text-muted text-xs block" >
+                                    <span th:text="${session.UserBean.name}">姓名</span><b class="caret"></b>
+                                </span>
+                            </span>
+                        </a>
+                        <ul id="user-dropdown-menu" class="dropdown-menu m-t-xs" style="margin-top: 0px">
+                            <li><a href="javascript:void(0)" id="btn-personalinfo">个人信息</a></li>
+                            <li><a href="javascript:void(0)" id="btn-changepassword">修改密码</a></li>
+                            <li><a th:href="@{/logout}">安全退出</a></li>
+                        </ul>
+                    </div>
+                    <div class="logo-element">K+
+                    </div>
+                </li>
+                <li th:replace="common/fragments::menu(${menus},'',1)"></li>
+            </ul>
+        </div>
+    </div>
+    <!--左侧导航结束-->
+
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom head-content">
+            <div class="navbar navbar-static-top" style="margin-bottom: 0;height: 60px;">
+                <div class="navbar-header">
+                    <!--<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="javascript:void(0)">
+                        <i class="fa fa-bars"></i>
+                    </a>-->
+                    <h1 style="line-height: 20px;padding-left: 20px;" th:text="${env.getString('page.titleMsg')}">系统名称</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row content-tabs head-content">
+            <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i></button>
+            <div class="page-tabs J_menuTabs">
+                <div class="page-tabs-content">
+                    <a href="javascript:void(0);" class="active J_menuTab" data-id="welcome.html">首页</a>
+                </div>
+            </div>
+            <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i></button>
+            <div class="btn-group roll-nav roll-right">
+                <button class="dropdown J_tabClose" id="J_tabClose">关闭操作<span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right" id="dropdown-menu-right" style="margin-top: 0px">
+                    <li class="J_tabShowActive"><a>定位当前选项卡</a></li>
+                    <li class="divider"></li>
+                    <li class="J_tabCloseAll"><a>关闭全部选项卡</a></li>
+                    <li class="J_tabCloseOther"><a>关闭其他选项卡</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row J_mainContent" id="content-main">
+            <iframe class="J_iframe" name="iframe0" width="100%" height="100%"
+                    th:src="@{/welcome}" frameborder="0" data-id="welcome.html"></iframe>
+        </div>
+        <div class="footer footer-content">
+            <div class="text-center">&copy; 2018-2019</div>
+        </div>
+    </div>
+    <!--右侧部分结束-->
+</div>
+
+<div style="width: 0px;height: 0px;overflow: hidden">
+    <div id="changepasswoprd">
+        <form id="form-changepasswoprd" class="form-horizontal" style="padding: 15px 20px 0px 15px">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>原始密码：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="password" id="oldPassword" name="oldPassword" class="form-control" required='required' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>新密码：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="password" id="password" name="password" class="form-control"
+                                       required='required' minlength="6" maxlength='32' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>确认密码：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="password" name="confirmpassword" id="confirmpassword" class="form-control"
+                                       required='required' equalTo="#password" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<!-- 三方插件 -->
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/common/plugins/slimscroll/js/jquery.slimscroll.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/metisMenu/js/metisMenu.min.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/plugins/pace/js/pace.min.js}"></script>
+
+<!-- 自定义js -->
+<script th:src="@{/static/common/js/index/hplus.js}" type="text/javascript"></script>
+<script th:src="@{/static/common/js/index/contabs.js}" type="text/javascript" ></script>
+</html>

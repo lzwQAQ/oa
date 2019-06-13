@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.work.dao.TrainDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.title AS "title",
+		t.BEGIN_TIME AS "beginTime",
+		t.end_time AS "endTime",
+		t.duration AS "duration",
+		t.place AS "place",
+		t.trainer AS "trainer.id",
+		u.name AS "trainer.name",
+		t.join_people AS "joinPeople",
+		t.content AS "content",
+		t.marks AS "marks",
+		t.train_type AS "trainType",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+        inner join T_PT_USER u on u.id = t.trainer
+	</sql>
+
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.work.entity.Train">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_TRAIN t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.work.entity.Train">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_TRAIN t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                AND t.title LIKE concat('%',#{title},'%')
+            </if>
+            <if test="trainer != null and trainer.name != null and trainer.name != ''">
+                AND u.name LIKE concat('%',#{trainer.name},'%')
+            </if>
+            <if test="duration != null and duration != ''">
+                AND t.duration = #{duration}
+            </if>
+            <if test="place != null and place != ''">
+                AND t.place = #{place}
+            </if>
+            <if test="joinPeople != null and joinPeople != ''">
+                AND t.join_people = #{joinPeople}
+            </if>
+            <if test="content != null and content != ''">
+                AND t.content = #{content}
+            </if>
+            <if test="marks != null and marks != ''">
+                AND t.marks = #{marks}
+            </if>
+            <if test="trainType != null and trainType != ''">
+                AND t.train_type = #{trainType}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+    <select id="findUserTree" resultType="java.util.Map">
+        select id as "id",name as "name",dept_id as "pId",'user' as "type",'false' as "isParent" from T_PT_USER
+        union
+        select id as "id",name as "name",case when PARENT_ID is null or PARENT_ID = '' then ORG_ID else PARENT_ID end as "pId",'dept' as "type",'true' as "isParent" from T_PT_DEPT
+        union
+        select id as "id",name as "name",PARENT_ID as "pId",'org' as "type",'true' as "isParent" from T_PT_ORG
+    </select>
+
+    <select id="findJoinPeoples" resultType="com.kuyuner.core.sys.entity.User">
+        select
+          t.name as "name",
+          t.sex as "sex",
+          dept.name as "dept.name"
+        from T_PT_USER t
+        left join T_PT_DEPT dept on dept.id = t.DEPT_ID
+        where t.id in
+        <foreach collection="joinPeoples" item="userId" open="(" close=")" separator=",">
+            #{userId}
+        </foreach>
+    </select>
+
+    <!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_TRAIN
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="title != null"> title, </if>
+        	<if test="beginTime != null"> BEGIN_TIME, </if>
+        	<if test="endTime != null"> end_time, </if>
+        	<if test="duration != null"> duration, </if>
+        	<if test="place != null"> place, </if>
+        	<if test="trainer != null and trainer.id != null"> trainer, </if>
+        	<if test="joinPeople != null"> join_people, </if>
+        	<if test="content != null"> content, </if>
+        	<if test="marks != null"> marks, </if>
+        	<if test="trainType != null"> train_type, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="title != null"> #{title}, </if>
+            <if test="beginTime != null"> #{beginTime}, </if>
+            <if test="endTime != null"> #{endTime}, </if>
+            <if test="duration != null"> #{duration}, </if>
+            <if test="place != null"> #{place}, </if>
+            <if test="trainer != null and trainer.id != null"> #{trainer.id}, </if>
+            <if test="joinPeople != null"> #{joinPeople}, </if>
+            <if test="content != null"> #{content}, </if>
+            <if test="marks != null"> #{marks}, </if>
+            <if test="trainType != null"> #{trainType}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_TRAIN
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="title != null"> title = #{title}, </if>
+            <if test="beginTime != null"> BEGIN_TIME = #{beginTime}, </if>
+            <if test="endTime != null"> end_time = #{endTime}, </if>
+            <if test="duration != null"> duration = #{duration}, </if>
+            <if test="place != null"> place = #{place}, </if>
+            <if test="trainer != null and trainer.id != null"> trainer = #{trainer.id}, </if>
+            <if test="joinPeople != null"> join_people = #{joinPeople}, </if>
+            <if test="content != null"> content = #{content}, </if>
+            <if test="marks != null"> marks = #{marks}, </if>
+            <if test="trainType != null"> train_type = #{trainType}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_TRAIN where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

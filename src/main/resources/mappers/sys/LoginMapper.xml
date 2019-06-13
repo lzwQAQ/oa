@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.core.sys.dao.LoginDao">
+
+    <select id="login" resultType="com.kuyuner.core.sys.entity.User">
+        SELECT
+        t.id AS "id",
+        t.username AS "username",
+        t.password AS "password",
+        t.name AS "name",
+        t.LAST_LOGIN_DATE AS "lastLoginDate",
+        t.login_error_count AS "loginErrorCount",
+        t.state AS "state"
+        FROM T_PT_USER t
+        WHERE t.username = #{username}
+    </select>
+
+    <select id="findUserPermissions" resultType="java.lang.String">
+        SELECT
+          t.PERMISSIONS
+        FROM T_PT_MENU t
+        where t.MENU_STATUS = "1" and t.del_flag = "1" and t.TYPE = "1"
+        and t.id in
+        (
+          select rm.MENU_ID from T_PT_ROLE_MENU rm where rm.ROLE_ID in (select ROLE_ID from T_PT_USER_ROLE where USER_ID = #{userId})
+        )
+    </select>
+
+</mapper>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.article.dao.ArticleDao">
+
+	<sql id="AllColumns">
+		t.ID AS "id",
+		t.TITLE AS "title",
+		t.CONTENT AS "content",
+		t.STATUS AS "status",
+		t.A_TYPE AS "type",
+		t.CREATE_TIME AS "createTime",
+		t.UPDATE_TIME AS "updateTime"
+	</sql>
+	<!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO H_ARTICLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> id, </if>
+            <if test="title != null"> TITLE, </if>
+        	<if test="content != null"> CONTENT, </if>
+        	<if test="status != null"> STATUS, </if>
+			<if test="type != null"> A_TYPE, </if>
+            create_time,
+            update_time
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> #{id}, </if>
+            <if test="title != null"> #{title}, </if>
+            <if test="content != null"> #{content}, </if>
+            <if test="status != null"> #{status}, </if>
+			<if test="type != null"> #{type}, </if>
+            SYSDATE(),
+            SYSDATE()
+		</trim>
+	</insert>
+
+	<update id="update">
+		UPDATE H_ARTICLE
+		<set>
+			<if test="id != null"> ID = #{id}, </if>
+			<if test="title != null"> TITLE = #{title}, </if>
+			<if test="content != null"> CONTENT = #{content}, </if>
+			<if test="status != null"> STATUS = #{status}, </if>
+			<if test="type != null"> A_TYPE = #{type}, </if>
+			UPDATE_TIME = SYSDATE()
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<select id="findList" parameterType="com.kuyuner.bg.article.entity.Article"  resultType="com.kuyuner.bg.article.entity.Article">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM H_ARTICLE t
+		<if test=" type != null">
+			where t.A_TYPE=#{type}
+		</if>
+	</select>
+
+	<select id="findHomePageData" parameterType="java.lang.String"  resultType="com.kuyuner.bg.article.entity.Article">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM H_ARTICLE t
+			where t.A_TYPE=#{type}
+		ORDER BY t.CREATE_TIME DESC LIMIT 10
+	</select>
+
+	<select id="articleDetail" parameterType="java.lang.String" resultType="com.kuyuner.bg.article.entity.Article">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM H_ARTICLE t
+		where t.ID=#{id}
+	</select>
+
+	<!--auto generated Code-->
+	<delete id="deletes">
+		DELETE FROM H_ARTICLE where id in
+		<foreach collection="ids" item="id" separator="," open="(" close=")">
+			#{id}
+		</foreach>
+	</delete>
+</mapper>

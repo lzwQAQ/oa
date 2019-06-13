@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <style type="text/css">
+        .price-total{height: 40px;padding-right: 20px}
+        .price-total span{border-bottom: 1px solid #DDDDDD;padding: 0px 0px 4px 16px}
+        .table .add,.table .delete{cursor: pointer}
+    </style>
+    <title>流程表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${purchase.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                申请人：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${purchase.senderName}" class="form-control" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                申请部门：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${purchase.senderDeptName}" class="form-control" disabled="disabled" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>业务名称：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" name="name" th:value="${purchase.name}" class="form-control only-view" required="required" maxlength="50" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <table id="goods" class="table">
+                                <thead>
+                                <tr>
+                                    <th>物品名称</th>
+                                    <th>型号</th>
+                                    <th>单价/元</th>
+                                    <th>数量</th>
+                                    <th>单位</th>
+                                    <th>总价/元</th>
+                                    <th th:if="${taskType eq 'create' || (taskType eq 'pending' && firstTask eq 'true')}">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:if="${param.type[0] eq 'create'}">
+                                    <td class="enable-edit name" data-placeholder-flag="true" data-placeholder="请输入物品名称" data-check="max">请输入物品名称</td>
+                                    <td class="enable-edit model" data-placeholder-flag="true" data-placeholder="请输入型号" data-check="max">请输入型号</td>
+                                    <td class="enable-edit price calculation" data-check="num">0</td>
+                                    <td class="enable-edit num calculation" data-check="integer">1</td>
+                                    <td class="enable-edit select">个</td>
+                                    <td class="price-sum">0</td>
+                                    <td><i class="glyphicon glyphicon-plus text-success add"></i></td>
+                                </tr>
+                                <tr th:each="goods,iterStat:${goodsList}">
+                                    <td class="enable-edit name" data-placeholder-flag="false" data-placeholder="请输入物品名称" data-check="max" th:text="${goods.name}">请输入物品名称</td>
+                                    <td class="enable-edit model" data-placeholder-flag="false" data-placeholder="请输入型号" data-check="max" th:text="${goods.model}">请输入型号</td>
+                                    <td class="enable-edit price calculation" data-check="num" th:text="${goods.price}">0</td>
+                                    <td class="enable-edit num calculation" data-check="integer" th:text="${goods.num}">1</td>
+                                    <td class="enable-edit select" th:text="${goods.unit}">个</td>
+                                    <td class="price-sum" th:text="${goods.totalPrice}">0</td>
+                                    <td th:if="${taskType eq 'create' || (taskType eq 'pending' && firstTask eq 'true')}">
+                                        <i class="glyphicon glyphicon-plus text-success add"></i>
+                                        &nbsp;&nbsp;
+                                        <i class="glyphicon glyphicon-trash text-danger delete" th:if="${iterStat.index != 0}"></i>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="price-total text-right">
+                            <strong>总价/元：</strong>
+                            <span id="price-num" th:text="${purchase.totalPrice}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                <span class="red" >*</span>
+                                采购事由：
+                            </label>
+                            <div class="col-sm-10">
+                            <textarea name="reason" th:text="${purchase.reason}" class="form-control only-view" required='required'
+                                      maxlength='500' cols="15" rows="5"></textarea>
+                                <p class="help-block">请输入小于500字的采购事由</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--------------审批部分-------------->
+                <div class="row" th:if="${purchase.approvalResult != null && purchase.approvalResult != ''}">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                处理意见：
+                            </label>
+                            <div class="col-sm-10">
+                                <p th:utext="${purchase.approvalResult}" class="form-control" style="height: auto;" ></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="approvalResult-div" style="display: none">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                办理意见：
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea id="approvalResult" name="approvalResult" class="form-control" maxlength="100" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="display: none" id="auditResult-div">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" title="">
+                                <span class="red" >*</span>审批结果：</label>
+                            <div class="col-sm-8">
+                                <select id="auditResult" name="_auditResult" class="form-control select2-single" required="required">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-footer" id="btns-div" style="display: none">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div style="display: none" id="unit-div" >
+    <select class="inner-edit" th:if="${taskType eq 'create' || (taskType eq 'pending' && firstTask eq 'true')}">
+        <option th:each="dict:${dictHolder.getValues('GOODS_UNIT')}" th:value="${dict.dictValue}" th:text="${dict.dictValue}"></option>
+    </select>
+</div>
+<div style="display: none">
+    <table id="goods-templete">
+        <tr>
+            <td class="enable-edit name" data-placeholder-flag="true" data-placeholder="请输入物品名称" data-check="max">请输入物品名称</td>
+            <td class="enable-edit model" data-placeholder-flag="true" data-placeholder="请输入型号" data-check="max">请输入型号</td>
+            <td class="enable-edit price calculation" data-check="num">0</td>
+            <td class="enable-edit num calculation" data-check="integer">1</td>
+            <td class="enable-edit select">个</td>
+            <td class="price-sum">0</td>
+            <td><i class="glyphicon glyphicon-plus text-success add"></i>
+                &nbsp;&nbsp;
+                <i class="glyphicon glyphicon-trash text-danger delete"></i></td></td>
+        </tr>
+    </table>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script type="text/javascript" th:inline="javascript">
+    (function () {
+        var rootUrl =/*[[@{/}]]*/ +'';
+        var type = Util.getQueryString("type");
+        var firstTask = Util.getQueryString("firstTask");
+        var script;
+        if ((type === 'create') || (type === 'pending' && firstTask === 'true')) {
+            script = '<script type="text/javascript" src="' + rootUrl + 'static/js/approval/purchase/taskFormCreate.js"><\/script>\n';
+        }else if(type === 'pending'){
+            script = '<script type="text/javascript" src="' + rootUrl + 'static/js/approval/purchase/taskFormPending.js"><\/script>\n';
+        }else if(type === 'historic'){
+            script = '<script type="text/javascript" src="' + rootUrl + 'static/js/approval/purchase/taskFormHistoric.js"><\/script>\n';
+        }
+        document.write(script);
+    })();
+</script>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <title>工作日报表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${report.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                任务名称：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="hidden" id="planId" th:value="${report.plan.id}" />
+                                <input type="text" class="form-control" th:value="${report.plan.name}" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                负责人：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly="readonly" id="planChargePeoples" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                工时/小时：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="number" th:value="${report.workHour}" class="form-control" readonly='readonly' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                日报时间：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" th:value="${#dates.format(report.reportTime,'yyyy-MM-dd')}" class="form-control" readonly="readonly"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                产出：
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea th:text="${report.output}" cols="15" rows="5" class="form-control" readonly="readonly"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/js/work/reportDetail.js}" type="text/javascript"></script>
+</html>

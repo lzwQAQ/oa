@@ -1,0 +1,9 @@
+/*可以在这里添加你自己的css*/
+body {font-size: 14px;font-family: arial, verdana, sans-serif;line-height: 1.666;padding: 0;margin: 0;
+    overflow: auto;white-space: normal;word-wrap: break-word;height: 100%;min-height: 100px}
+td, input, button, select, body {font-family: Helvetica, 'Microsoft Yahei', verdana}
+pre {white-space: pre-wrap;white-space: -moz-pre-wrap;white-space: -pre-wrap;white-space: -o-pre-wrap;word-wrap: break-word;width: 95%}
+th, td {font-family: arial, verdana, sans-serif;line-height: 1.666}
+img { border: 0}
+header, footer, section, aside, article, nav, hgroup, figure, figcaption {display: block}
+blockquote {margin-right: 0px}

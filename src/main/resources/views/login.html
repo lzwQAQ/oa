@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${env.getString('page.title')+' - 登录'}">登录页</title>
+    <link th:replace="common/head"/>
+    <link th:href="@{/static/common/css/login.css}" rel="stylesheet"/>
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location;
+        }
+    </script>
+
+    <script th:src="@{/static/common/plugins/jquery/jquery-1.12.4.min.js}"></script>
+    <script th:src="@{/static/common/plugins/iCheck/icheck.min.js}" type="text/javascript"></script>
+    <script th:src="@{/static/common/plugins/layer/layer.min.js}" type="text/javascript"></script>
+    <script th:src="@{/static/common/js/Init.js}" type="text/javascript"></script>
+    <!--/*  根路径设置  */-->
+    <script type="text/javascript" th:inline="javascript">
+        var rootUrl = /*[[@{/}]]*/ + '';
+        var adminPath = [[${adminPath}]];
+        Util._path = rootUrl + adminPath;
+        Util._rootpath = rootUrl.substring(0,rootUrl.length-1);
+    </script>
+
+    <script type="text/javascript">
+        Util.removeLastTab();
+        $(function () {
+            $("#rememberMe").iCheck({
+                checkboxClass: 'icheckbox_minimal-green',
+                radioClass: 'iradio_minimal-green'
+            });
+
+            $("#captcha-img").click(function () {
+                $(this).attr("src", Util.getRootPath() + "/login/captcha?t=" + new Date().getTime());
+            });
+
+            $("#form input").keyup(function () {
+                if(event.keyCode === 13){
+                    login();
+                }
+            });
+
+            $("#login").click(function () {
+                login();
+            });
+
+            function login() {
+                if (!$("#username").val()) {
+                    Util.msgWarning("用户名不能为空！");
+                    return;
+                }
+                if (!$("#password").val()) {
+                    Util.msgWarning("密码不能为空！");
+                    return;
+                }
+                if ($("#captcha").val() === '') {
+                    Util.msgWarning("验证码不能为空！");
+                    return;
+                }
+                $("#form").submit();
+            }
+        });
+    </script>
+
+</head>
+<body class="signin">
+<div class="signinpanel">
+    <div class="row">
+        <form th:action="@{/login}" method="post" id="form" class="form-horizontal">
+            <p class="login-title text-center" th:text="${env.getString('page.title')}">专业开发平台</p>
+            <p class="login-title-little help-block text-center" th:text="${env.getString('page.loginMsg')}">K+ 专业开发平台</p>
+            <div class="form-group">
+                <p class="help-block pull-left red" th:if="${errorMessage!=null}"
+                   th:text="${errorMessage}"></p>
+                <input class="form-control uname" name="username" type="text" id="username" placeholder="请输入用户名"/>
+            </div>
+            <div class="form-group">
+                <input class="form-control pword" name="password" type="password" id="password" placeholder="请输入密码"/>
+            </div>
+            <div class="form-group"
+                 th:if="${session.isCaptcha=='true' || env.getBoolean('kuyuner.shiro.captcha')}">
+                <div class="captcha-container pull-left">
+                    <div class="captcha-inner">
+                        <input class="form-control" id="captcha" name="captcha" type="text" placeholder="请输入验证码"/>
+                    </div>
+                </div>
+                <img th:src="@{/login/captcha}" alt="验证码" id="captcha-img"
+                     class="captcha-img pull-right">
+            </div>
+            <div class="form-group">
+                <label class="checkbox-inline pull-left">
+                    <input id="rememberMe" name="rememberMe" type="checkbox"/>记住我
+                </label>
+                <label class="checkbox-inline pull-left">
+                    <input id="loginType" name="loginType" type="text" value="PC"/>记住我
+                </label>
+                <!--<label class="checkbox-inline pull-right">
+                    <a href="javascript:void(0)" class="forget-password">
+                        <small>忘记密码了？</small>
+                    </a>
+                </label>-->
+            </div>
+            <div class="form-group">
+                <input id="login" type="button" class="btn btn-login btn-block" value="登录" />
+            </div>
+        </form>
+    </div>
+</div>
+<div class="signup-footer" style="display: none">
+    <div class="text-center">
+        &copy; 2015 All Rights Reserved. H+
+    </div>
+</div>
+</body>
+
+</html>

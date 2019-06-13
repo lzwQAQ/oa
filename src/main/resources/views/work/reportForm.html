@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:replace="common/head" />
+    <title>工作日报表单</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <form id="form" class="form-horizontal edit-form">
+            <input type="hidden" id="id" name="id" th:value="${report.id}" />
+            <div class="box-body">
+                <div class="form-unit">基本信息</div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>任务名称：
+                            </label>
+                            <div class="col-sm-8">
+                                <select id="planId" name="plan.id" class="form-control select2" required="required">
+                                    <option value="">请选择任务名称</option>
+                                    <option th:selected="${report.plan?.id == plan.id}"  th:each="plan:${planList}" th:value="${plan.id}" th:text="${plan.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>负责人：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly="readonly" id="planChargePeoples" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>工时/小时：
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="number" name="workHour" th:value="${report.workHour}" class="form-control" required='required' min="0" number="true" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label class="control-label col-sm-4">
+                                <span class="red" >*</span>日报时间：
+                            </label>
+                            <div class="col-sm-8 has-feedback">
+                                <input type="text" name="reportTime" th:value="${#dates.format(report.reportTime,'yyyy-MM-dd')}" class="form-control datetime" readonly="readonly" required="required"/>
+                                <span class="glyphicon glyphicon-calendar form-control-feedback"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">
+                                <span class="red" >*</span>产出：
+                            </label>
+                            <div class="col-sm-10">
+                                <textarea name="output" th:text="${report.output}" cols="15" rows="5" class="form-control" maxlength='500' required="required"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-sm btn-primary" id="btnSubmit"><i class="fa fa-check"></i> 保 存</button>&nbsp;
+                        <button type="button" class="btn btn-sm btn-default" id="btnCancel"><i class="fa fa-reply-all"></i> 关 闭</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/js/work/reportForm.js}" type="text/javascript"></script>
+</html>

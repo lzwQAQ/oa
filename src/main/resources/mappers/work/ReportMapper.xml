@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.work.dao.ReportDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+	    t.plan_id AS "plan.id",
+		t1.NAME AS "plan.name",
+		u.name as "plan.sender",
+		t.work_hour AS "workHour",
+		t.output AS "output",
+		t.report_time AS "reportTime",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+        INNER JOIN T_PLAN t1 on t1.ID = t.plan_id
+        inner join T_PT_USER u on u.id = t1.creater
+	</sql>
+
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.work.entity.Report">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_REPORT t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.work.entity.Report">
+		SELECT
+		(select group_concat(u.name) from T_PT_USER u where u.id in (select p.user_id from T_PLAN_USER p where p.plan_id = t.plan_id and p.USER_TYPE = '1')) as "chargePeople",
+		(select name from T_PT_USER where id = t.creater)as "sender",
+		<include refid="AllColumns"/>
+		FROM T_REPORT t
+		    <include refid="AllJoins"/>
+		<where>
+			(
+			t.plan_id in (select plan_id from T_PLAN_USER where user_id = #{userId} and user_type = '1')
+			or
+			t.plan_id in (select p.id from T_PLAN p where p.creater = #{userId})
+			)
+			<if test="report.beginReportTime != null and report.endReportTime != null">
+				and t.report_time between #{report.beginReportTime} and #{report.endReportTime}
+			</if>
+			<if test="report.sender != null and report.sender != ''">
+				and u.name like concat('%',#{report.sender},'%')
+			</if>
+			<if test="report.plan != null">
+				<if test="report.plan.name != null and report.plan.name != ''">
+					AND t1.NAME like concat('%',#{report.plan.name},'%')
+				</if>
+			</if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+    <select id="findPlanList" resultType="com.kuyuner.bg.work.entity.Plan">
+		select
+			t.id as "id",
+			t.name as "name"
+		from T_PLAN t
+		<where>
+			t.id in (select plan_id from T_PLAN_USER where USER_ID = #{userId})
+		</where>
+	</select>
+
+	<select id="findSendList" resultType="com.kuyuner.bg.work.entity.Report">
+		SELECT
+		(select group_concat(u.name) from T_PT_USER u where u.id in (select p.user_id from T_PLAN_USER p where p.plan_id = t.plan_id and p.USER_TYPE = '1')) as "chargePeople",
+		<include refid="AllColumns"/>
+		FROM T_REPORT t
+		<include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+			<if test="id != null and id != ''">
+				AND t.id = #{id}
+			</if>
+			<if test="sender != null and sender != ''">
+				and u.name like concat('%',#{sender},'%')
+			</if>
+			<if test="plan != null">
+				<if test="plan.id != null and plan.id != ''">
+					AND t.plan_id = #{plan.id}
+				</if>
+				<if test="plan.name != null and plan.name != ''">
+					AND t1.NAME like concat('%',#{plan.name},'%')
+				</if>
+			</if>
+			<if test="workHour != null and workHour != ''">
+				AND t.work_hour = #{workHour}
+			</if>
+			<if test="output != null and output != ''">
+				AND t.output = #{output}
+			</if>
+			<if test="beginReportTime != null and endReportTime != null">
+				AND t.report_time BETWEEN #{beginReportTime} AND #{endReportTime}
+			</if>
+			<if test="creater != null and creater != ''">
+				AND t.creater = #{creater}
+			</if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+	<select id="findPlanChargePeoples" resultType="java.lang.String">
+		select
+			t.name as "name"
+		from T_PT_USER t
+		<where>
+			t.id in (select user_id from T_PLAN_USER where plan_id = #{planId} and user_type = '1')
+		</where>
+	</select>
+
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_REPORT
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+            <if test="plan != null and plan.id != null"> plan_id, </if>
+        	<if test="workHour != null"> work_hour, </if>
+        	<if test="output != null"> output, </if>
+        	<if test="reportTime != null"> report_time, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+		    <if test="plan != null and plan.id != null"> #{plan.id}, </if>
+            <if test="workHour != null"> #{workHour}, </if>
+            <if test="output != null"> #{output}, </if>
+            <if test="reportTime != null"> #{reportTime}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_REPORT
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+        	<if test="plan != null and plan.id != null"> plan_id = #{plan.id}, </if>
+            <if test="workHour != null"> work_hour = #{workHour}, </if>
+            <if test="output != null"> output = #{output}, </if>
+            <if test="reportTime != null"> report_time = #{reportTime}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_REPORT where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

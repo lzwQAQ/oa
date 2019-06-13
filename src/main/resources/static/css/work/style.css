@@ -1,0 +1,7 @@
+.head-img{width: 40px;height: 40px;}
+.users{list-style:none;}
+.user-info{margin-left: 5px}
+.users li {float: left;height: 66px;border: 1px solid rgba(202, 202, 202, 0.45);margin-right: 10px;margin-bottom: 10px;padding: 10px 15px;}
+.users p {margin: 0px;width: 80px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.users .name{font-size: 14px;font-weight: bolder;margin-bottom: 4px}
+.users .dept{font-size: 12px;color: #757575}

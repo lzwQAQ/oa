@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.work.dao.PlanDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.name AS "name",
+		t.BEGIN_TIME AS "beginTime",
+		t.end_time AS "endTime",
+		t.content AS "content",
+		t.marks AS "marks",
+		t.state AS "state",
+		t.process AS "process",
+		(select name from T_PT_USER where id = t.creater) as "sender",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.work.entity.Plan">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_PLAN t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.work.entity.Plan">
+		SELECT
+            (select group_concat(u.name) from T_PT_USER u where u.id in (select p.user_id from T_PLAN_USER p where p.plan_id = t.id and p.USER_TYPE = '1')) as "chargePeople",
+			<include refid="AllColumns"/>
+		FROM T_PLAN t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="name != null and name != ''">
+                AND t.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="state != null and state != ''">
+                AND t.state = #{state}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+    <select id="findAllUsers" resultType="com.kuyuner.core.sys.entity.User">
+		select id as "id",name as "name" from T_PT_USER where DEL_FLAG = '1'
+	</select>
+
+    <select id="findPersonalList" resultType="com.kuyuner.bg.work.entity.Plan">
+        SELECT
+        distinct
+        (select group_concat(u.name) from T_PT_USER u where u.id in (select p.user_id from T_PLAN_USER p where p.plan_id = t.id and p.USER_TYPE = '1')) as "chargePeople",
+        <include refid="AllColumns"/>
+        FROM T_PLAN t
+        inner join T_PLAN_USER pu on pu.PLAN_ID = t.ID
+        <where>
+            <if test="userId != null and userId != ''">
+                AND pu.USER_ID = #{userId}
+            </if>
+            <if test="plan.name != null and plan.name != ''">
+                AND t.name LIKE concat('%',#{plan.name},'%')
+            </if>
+            <if test="plan.state != null and plan.state != ''">
+                AND t.state = #{state}
+            </if>
+        </where>
+        order by t.update_date desc
+    </select>
+
+    <select id="findPeoples" resultType="java.util.Map">
+        select
+            u.id as "id",
+            u.name as "name",
+            u.sex as "sex",
+            dept.name as "deptName",
+            t.user_type as "userType"
+        from
+        T_PLAN_USER t
+        inner join T_PT_USER u on u.id = t.USER_ID
+        left join T_PT_DEPT dept on dept.id = u.dept_id
+        <where>
+            PLAN_ID = #{planId}
+            <if test="type != null and type != ''">
+                and USER_TYPE = #{type}
+            </if>
+        </where>
+        order by t.user_type asc
+    </select>
+
+    <!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_PLAN
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="name != null"> name, </if>
+        	<if test="beginTime != null"> BEGIN_TIME, </if>
+        	<if test="endTime != null"> end_time, </if>
+        	<if test="content != null"> content, </if>
+        	<if test="marks != null"> marks, </if>
+        	<if test="state != null"> state, </if>
+        	<if test="process != null"> process, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="name != null"> #{name}, </if>
+            <if test="beginTime != null"> #{beginTime}, </if>
+            <if test="endTime != null"> #{endTime}, </if>
+            <if test="content != null"> #{content}, </if>
+            <if test="marks != null"> #{marks}, </if>
+            <if test="state != null"> #{state}, </if>
+            <if test="process != null"> #{process}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+	<insert id="insertPeoples">
+		INSERT INTO T_PLAN_USER(ID,PLAN_ID,USER_ID,USER_TYPE,CREATE_DATE,UPDATE_DATE,DEL_FLAG)
+		values
+        <foreach collection="peoples" separator="," item="people" >
+            (REPLACE(uuid(),'-',''),#{planId},#{people},#{type},SYSDATE(),SYSDATE(),'1')
+        </foreach>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_PLAN
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="name != null"> name = #{name}, </if>
+            <if test="beginTime != null"> BEGIN_TIME = #{beginTime}, </if>
+            <if test="endTime != null"> end_time = #{endTime}, </if>
+            <if test="content != null"> content = #{content}, </if>
+            <if test="marks != null"> marks = #{marks}, </if>
+            <if test="state != null"> state = #{state}, </if>
+            <if test="process != null"> process = #{process}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE()
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_PLAN where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+	<delete id="deleteByPlan">
+		delete from T_PLAN_USER where PLAN_ID = #{planId}
+	</delete>
+
+</mapper>

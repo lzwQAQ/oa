@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <link th:replace="common/head" />
+    <title>发起培训</title>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="content">
+        <div class="clearfix search-toolbar other-items">
+            <div id="search" class="search form-inline">
+				<div class="form-group ">
+					<label class="control-label">培训主题：</label>
+					<input id="title" type="text" class="form-control">
+				</div>
+            </div>
+            <div class="clearfix btns-div">
+                <div class="form-group-btn center-block">
+                    <a href="javascript:void(0)" id="btn-search" class="btn btn-primary btn-sm">查询</a>
+                    <a href="javascript:void(0)" id="btn-reset" class="btn btn-default btn-sm">重置</a>
+                </div>
+                <div class="btns btn-group btn-group-sm">
+					<button  id="btn-add" type="button" class="btn btn-outline btn-default">
+						<i class="glyphicon glyphicon-plus"></i> 新增
+					</button>
+					<button  id="btn-delete" type="button" class="btn btn-outline btn-default">
+						<i class="glyphicon glyphicon-trash"></i> 删除
+					</button>
+            	</div>
+            </div>
+        </div>
+        <table id="table"></table>
+        <div id="page"></div>
+    </div>
+</div>
+</body>
+<script th:replace="common/footer"></script>
+<script th:src="@{/static/js/work/trainSend.js}" type="text/javascript"></script>
+</html>

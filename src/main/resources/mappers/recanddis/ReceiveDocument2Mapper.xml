@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.recanddis.dao.ReceiveDocumentDao2">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+        o.id as "releaseOrg",
+        o.name as "releaseOrgName",
+		t.receive_date AS "receiveDate",
+		t.URGENT_LEVEL AS "urgentLevel",
+		t.NUMBERS AS "numbers",
+		t.secret AS "secret",
+		t.title AS "title",
+		t.star AS "star",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+        left join T_PT_ORG o on o.id = t.RELEASE_ORG
+	</sql>
+
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.recanddis.entity.ReceiveDocument2">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_RECEIVE_DOCUMENT2 t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.recanddis.entity.ReceiveDocument2">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_RECEIVE_DOCUMENT2 t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="urgentLevel != null and urgentLevel != ''">
+                AND t.URGENT_LEVEL = #{urgentLevel}
+            </if>
+            <if test="secret != null and secret != ''">
+                AND t.secret = #{secret}
+            </if>
+            <if test="title != null and title != ''">
+                AND t.title LIKE concat('%',#{title},'%')
+            </if>
+            <if test="star != null and star != ''">
+                AND t.star = #{star}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+	<!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_AP_RECEIVE_DOCUMENT2
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+            <if test="releaseOrg != null"> RELEASE_ORG, </if>
+        	<if test="receiveDate != null"> receive_date, </if>
+        	<if test="urgentLevel != null"> URGENT_LEVEL, </if>
+        	<if test="numbers != null"> numbers, </if>
+        	<if test="secret != null"> secret, </if>
+        	<if test="title != null"> title, </if>
+            <if test="star != null"> STAR, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="releaseOrg != null"> #{releaseOrg}, </if>
+            <if test="receiveDate != null"> #{receiveDate}, </if>
+            <if test="urgentLevel != null"> #{urgentLevel}, </if>
+            <if test="numbers != null"> #{numbers}, </if>
+            <if test="secret != null"> #{secret}, </if>
+            <if test="title != null"> #{title}, </if>
+            <if test="star != null"> #{star}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+	<!--auto generated Code-->
+	<update id="update">
+		UPDATE T_AP_RECEIVE_DOCUMENT2
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="releaseOrg != null"> RELEASE_ORG = #{releaseOrg}, </if>
+            <if test="receiveDate != null"> receive_date = #{receiveDate}, </if>
+            <if test="urgentLevel != null"> URGENT_LEVEL = #{urgentLevel}, </if>
+            <if test="numbers != null"> numbers = #{numbers}, </if>
+            <if test="secret != null"> secret = #{secret}, </if>
+            <if test="title != null"> title = #{title}, </if>
+            <if test="star != null"> STAR = #{star}, </if>
+            update_date = SYSDATE(),
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+</mapper>

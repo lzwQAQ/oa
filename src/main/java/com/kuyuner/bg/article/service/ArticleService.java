@@ -18,6 +18,8 @@ public interface ArticleService {
 
 	PageJson findArticleList(String pageNum, String pageSize, Article article);
 
+	ResultJson rotatePicture(Article article);
+
 	ResultJson deletes(String[] ids);
 
 	ResultJson getDispatch(String userId);

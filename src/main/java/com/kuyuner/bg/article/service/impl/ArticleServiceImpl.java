@@ -85,6 +85,12 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
+	public ResultJson rotatePicture(Article article) {
+		List<Article> articles = articleDao.findHomePageData(String.valueOf(article.getType()));;
+		return ResultJson.ok(articles);
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public ResultJson deletes(String[] ids) {
 		articleDao.deletes(ids);

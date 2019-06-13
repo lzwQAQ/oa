@@ -2,6 +2,7 @@ package com.kuyuner.core.sys.controller;
 
 
 import com.kuyuner.common.controller.BaseController;
+import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.core.sys.entity.Menu;
 import com.kuyuner.core.sys.entity.User;
@@ -62,11 +63,11 @@ public class LoginController extends BaseController {
 
     @RequestMapping("logininfo")
     @ResponseBody
-    public ResultModel logininfo(ModelMap modelMap,String errorMessage) {
+    public ResultJson logininfo(ModelMap modelMap, String errorMessage) {
         if (UserUtils.getPrincipal() == null) {
             if (StringUtils.isBlank(errorMessage))
-                return ResultModel.newErrorModel("登录失败");
-            return ResultModel.newErrorModel(errorMessage);
+                return ResultJson.failed("登录失败");
+            return ResultJson.failed(errorMessage);
         }
         if (UserUtils.getSession().getAttribute(UserUtils.USER_FLAG) == null) {
             UserUtils.getSession().setAttribute(UserUtils.USER_FLAG,userService.get(UserUtils.getPrincipal().getId()) );
@@ -77,7 +78,7 @@ public class LoginController extends BaseController {
             UserUtils.getSession().setAttribute("menus", menus);
         }
         modelMap.addAttribute("menus", menus);
-        return ResultModel.newSuccessModel(UserUtils.getSession().getAttribute(UserUtils.USER_FLAG));
+        return ResultJson.ok(UserUtils.getSession().getAttribute(UserUtils.USER_FLAG));
     }
 
     /**

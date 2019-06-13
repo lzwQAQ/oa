@@ -2,6 +2,7 @@ package com.kuyuner.bg.article.controller;
 
 import com.kuyuner.bg.article.entity.Article;
 import com.kuyuner.bg.article.service.ArticleService;
+import com.kuyuner.bg.msg.enums.ArticleTypeEnum;
 import com.kuyuner.bg.recanddis.entity.FileTemplete;
 import com.kuyuner.common.controller.BaseController;
 import com.kuyuner.common.controller.PageJson;
@@ -191,5 +192,49 @@ public class ArticleController extends BaseController {
     @RequestMapping("/listEmail")
     public ResultJson listEmail(Article article, String pageNum, String pageSize) {
         return articleService.getEmail(UserUtils.getPrincipal().getId());
+    }
+
+    //###############################H5页面调用接口########################
+
+    /**
+     * 轮播图
+     * @param article
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/rotatePicture")
+    public ResultJson rotatePicture(Article article, String pageNum, String pageSize) {
+        article.setType(ArticleTypeEnum.ROTATE_PICTURE.getCode());
+        return articleService.rotatePicture(article);
+    }
+
+    /**
+     * 单位公告
+     * @param article
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/announcement")
+    public PageJson publicAnnouncement(Article article, String pageNum, String pageSize) {
+        article.setType(ArticleTypeEnum.PUBLIC_ANNOUNCEMENT.getCode());
+        return articleService.findArticleList(pageNum, pageSize, article);
+    }
+
+    /**
+     * 查看文章详情
+     * @param article
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/articleDetail")
+    public ResultJson articleDetail(Article article, String pageNum, String pageSize) {
+        Article result = articleService.articleDetail(article.getId());
+        return ResultJson.ok(result);
     }
 }

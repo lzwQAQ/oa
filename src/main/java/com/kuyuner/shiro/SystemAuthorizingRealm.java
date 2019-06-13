@@ -66,7 +66,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
         UserUtils.getSession().setAttribute(UserUtils.CAPTCHA, null);
         UserUtils.getSession().setAttribute("channel", token.getChannel());
         String isCaptchaStr = (String) UserUtils.getSession().getAttribute(UserUtils.IS_CAPTCHA);
-        if (true || StringUtils.equals(isCaptchaStr, "true")) {
+        if (false || StringUtils.equals(isCaptchaStr, "true")) {
             if (captcha == null || !StringUtils.equalsIgnoreCase(token.getCaptcha(), captcha.toString())) {
                 throw new AuthenticationException("msg:验证码错误！");
             }

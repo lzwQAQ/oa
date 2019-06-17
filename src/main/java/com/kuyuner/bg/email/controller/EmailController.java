@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -263,5 +265,48 @@ public class EmailController extends BaseController {
             builder.append(", ");
         }
         builder.setLength(builder.length() - 2);
+    }
+
+
+    //#################################H5#############################################################################
+    /**
+     * 查看邮件详情
+     *
+     * @param id
+     * @param type
+     * @return
+     */
+    @RequestMapping("/emailDetails")
+    @ResponseBody
+    public ResultJson emailDetails(String id,String type) {
+        Map map = new HashMap();
+        Email email = null;
+        String isSchedule = "0";
+        String isSecret = "0";
+        Date scheduleTime = null;
+        if ("send".equals(type)) {
+            email = emailSendService.getEmail(id);
+            isSchedule = ((EmailSend) email).getIsSchedule();
+            if ("1".equals(isSchedule)) {
+                scheduleTime = emailSendService.getScheduleTime(email.getId());
+            }
+        } else if ("receive".equals(type)) {
+            email = emailReceiveService.getEmail(id);
+            isSecret = ((EmailReceive) email).getIsSecret();
+        }
+        StringBuilder receivers = new StringBuilder();
+        StringBuilder copys = new StringBuilder();
+        makeUser(receivers, email.getReceiverName(), email.getReceiverAccount());
+        makeUser(copys, email.getCopySenderName(), email.getCopySenderAccount());
+
+        map.put("email", email);
+        map.put("isSchedule", isSchedule);
+        map.put("scheduleTime", scheduleTime);
+        map.put("receivers", receivers.toString());
+        map.put("copys", copys.toString());
+        map.put("emailType", type);
+        map.put("isSecret", isSecret);
+
+        return ResultJson.ok(map);
     }
 }

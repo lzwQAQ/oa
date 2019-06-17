@@ -82,4 +82,9 @@ public class DictDataServiceImpl implements DictDataService {
         return dictTypeDao.findList(new DictType());
     }
 
+    @Override
+    public List<DictData> getDictByType(String dictType) {
+        return dictDataDao.getDictByType(dictType);
+    }
+
 }

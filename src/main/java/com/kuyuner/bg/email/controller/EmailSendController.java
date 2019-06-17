@@ -135,7 +135,7 @@ public class EmailSendController extends BaseController {
 
     /**
      * 新增或修改数据
-     *
+     *receivers
      * @return
      */
     @ResponseBody
@@ -173,8 +173,7 @@ public class EmailSendController extends BaseController {
         emailSend.setSenderName(user.getName());
         emailSend.setSenderAccount(user.getEmail());
 
-        List<FileInfo> fileInfos = JsonMapper.getInstance().readValue(files, new TypeReference<List<FileInfo>>() {
-        });
+        List<FileInfo> fileInfos = JsonMapper.getInstance().readValue(files, new TypeReference<List<FileInfo>>() {});
         emailSend.setContainFile(fileInfos.size() == 0 ? "0" : "1");
 
         return emailSendService.saveOrUpdate(emailSend, fileInfos, scheduleTime);

@@ -53,4 +53,11 @@ public interface DictDataService {
      * @return
      */
     List<DictType> findAllTypes();
+
+    /**
+     * 根据类型获取字典信息
+     * @param dictType
+     * @return
+     */
+    List<DictData> getDictByType(String dictType);
 }

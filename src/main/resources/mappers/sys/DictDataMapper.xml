@@ -114,4 +114,10 @@
         </foreach>
     </delete>
 
+	<select id="getDictByType" resultType="com.kuyuner.core.sys.entity.DictData">
+		SELECT
+		<include refid="AllColumns"></include>
+		FROM T_PT_DICT_DATA t
+		WHERE t.DICT_TYPE = #{dictType}
+	</select>
 </mapper>

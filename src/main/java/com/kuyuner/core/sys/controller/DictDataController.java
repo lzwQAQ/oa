@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 /**
  * 字典数据Service层接口
  *
@@ -101,4 +103,15 @@ public class DictDataController extends BaseController {
         return dictDataService.deletes(ids.split(","));
     }
 
+    /**
+     * 获取字典信息
+     * @param dictType
+     * @return
+     */
+    @RequestMapping("getDictByType")
+    @ResponseBody
+    public ResultJson getDictByType(String dictType) {
+        List<DictData> data = dictDataService.getDictByType(dictType);
+        return ResultJson.ok(data);
+    }
 }

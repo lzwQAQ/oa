@@ -11,6 +11,10 @@ import com.kuyuner.common.io.FileInfo;
 import com.kuyuner.common.io.UploadFileUtils;
 import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.core.sys.security.UserUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -35,6 +39,7 @@ import java.util.Map;
  *
  * @author administrator
  */
+@Api(value = "首页接口")
 @Controller
 @RequestMapping("${kuyuner.admin-path}/article")
 public class ArticleController extends BaseController {
@@ -95,6 +100,7 @@ public class ArticleController extends BaseController {
     /**
      * 新增或修改数据
      */
+    @ApiOperation(value = "新增修改文章类型")
     @ResponseBody
     @RequestMapping("save")
     public ResultJson save(HttpServletRequest request, Article article, String editorValue) throws IOException {
@@ -110,6 +116,7 @@ public class ArticleController extends BaseController {
      * @param ids
      * @return
      */
+    @ApiOperation(value = "物理删除首页文章数据")
     @ResponseBody
     @RequestMapping("deletes")
     public ResultJson deletes(String ids) {
@@ -122,6 +129,11 @@ public class ArticleController extends BaseController {
      * @param pageSize
      * @return
      */
+    @ApiOperation(value = "文章列表",notes = "分页显示文章列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageSize", value = "每页文章数量", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "pageNum", value = "分页的页码", required = true, dataType = "Integer")
+    })
     @ResponseBody
     @RequestMapping("/articleList")
     public PageJson sendList(Article article, String pageNum, String pageSize) {
@@ -131,66 +143,56 @@ public class ArticleController extends BaseController {
     /**
      * ['listDispatch', 'listLeave', 'listBusiness', 'listPurchase', 'listEmail']
      * 发文
-     * @param article
-     * @param pageNum
-     * @param pageSize
      * @return
      */
+    @ApiOperation(value = "发文代办",notes = "发文代办")
     @ResponseBody
     @RequestMapping("/listDispatch")
-    public ResultJson listDispatch(Article article, String pageNum, String pageSize) {
+    public ResultJson listDispatch() {
         return articleService.getDispatch(UserUtils.getPrincipal().getId());
     }
 
     /**
      * 请假
-     * @param article
-     * @param pageNum
-     * @param pageSize
      * @return
      */
+    @ApiOperation(value = "请假代办",notes = "请假代办")
     @ResponseBody
     @RequestMapping("/listLeave")
-    public ResultJson listLeave(Article article, String pageNum, String pageSize) {
+    public ResultJson listLeave() {
         return articleService.getLeave(UserUtils.getPrincipal().getId());
     }
 
     /**
      * 业务
-     * @param article
-     * @param pageNum
-     * @param pageSize
      * @return
      */
+    @ApiOperation(value = "业务申请",notes = "业务申请")
     @ResponseBody
     @RequestMapping("/listBusiness")
-    public ResultJson listBusiness(Article article, String pageNum, String pageSize) {
+    public ResultJson listBusiness() {
         return articleService.getBusiness(UserUtils.getPrincipal().getId());
     }
 
     /**
      * 采购
-     * @param article
-     * @param pageNum
-     * @param pageSize
      * @return
      */
+    @ApiOperation(value = "采购申请",notes = "采购申请")
     @ResponseBody
     @RequestMapping("/listPurchase")
-    public ResultJson listPurchase(Article article, String pageNum, String pageSize) {
+    public ResultJson listPurchase() {
         return articleService.getPurchase(UserUtils.getPrincipal().getId());
     }
 
     /**
      * 邮件
-     * @param article
-     * @param pageNum
-     * @param pageSize
      * @return
      */
+    @ApiOperation(value = "邮件通知",notes = "邮件通知")
     @ResponseBody
     @RequestMapping("/listEmail")
-    public ResultJson listEmail(Article article, String pageNum, String pageSize) {
+    public ResultJson listEmail() {
         return articleService.getEmail(UserUtils.getPrincipal().getId());
     }
 
@@ -231,6 +233,10 @@ public class ArticleController extends BaseController {
      * @param pageSize
      * @return
      */
+    @ApiOperation(value = "文章详情",notes = "文章详细信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "文章ID(0fa4f08751ec4463a0847de9742c5fc0)", required = true, dataType = "String")
+    })
     @ResponseBody
     @RequestMapping("/articleDetail")
     public ResultJson articleDetail(Article article, String pageNum, String pageSize) {

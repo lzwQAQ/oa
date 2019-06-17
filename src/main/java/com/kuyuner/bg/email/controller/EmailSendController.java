@@ -190,6 +190,7 @@ public class EmailSendController extends BaseController {
     @RequestMapping("star/{id}")
     public ResultJson star(@PathVariable("id") String id, String star) {
         EmailSend emailSend = new EmailSend();
+
         emailSend.setId(id);
         emailSend.setStar("1".equals(star) ? "1" : "0");
         emailSendService.update(emailSend);

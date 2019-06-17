@@ -12,7 +12,7 @@ public class Msgclient {
             //如果没有，就创建一个类实例，并把值赋值给存储类实例的变量
             ReceiveMsg receiveMsg = new ReceiveMessage();
             client   = new NetMsgclient();
-            client = client.initParameters("202.102.41.101", 9005, "0515C00162703", "123456", receiveMsg);
+                client = client.initParameters("202.102.41.101", 9005, "0515C00162703", "123456", receiveMsg);
             try {
                 /*登录认证*/
                 boolean isLogin = client.anthenMsg(client);

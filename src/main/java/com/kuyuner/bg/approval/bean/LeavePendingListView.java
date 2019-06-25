@@ -3,7 +3,6 @@ package com.kuyuner.bg.approval.bean;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kuyuner.common.persistence.BaseEntity;
 import com.kuyuner.core.common.dict.DictType;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -14,41 +13,34 @@ public class LeavePendingListView extends BaseEntity {
     /**
      * 任务ID
      */
-    @ApiModelProperty(value = "任务ID")
     private String taskId;
 
     /**
      * 流程名称
      */
-    @ApiModelProperty(value = "流程名称")
     private String processName;
 
     /**
      * 请假类型
      */
-    @ApiModelProperty(value = "请假类型")
     @DictType("LEAVE_TYPE")
     private String type;
 
     /**
      * 当前环节
      */
-    @ApiModelProperty(value = "当前环节")
     private String taskName;
 
     /**
      * 申请人
      */
-    @ApiModelProperty(value = "申请人")
     private String sender;
 
-    @ApiModelProperty(value = "请假天数")
     private double leaveDay;
 
     /**
      * 申请时间
      */
-    @ApiModelProperty(value = "申请时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
 

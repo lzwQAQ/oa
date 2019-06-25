@@ -21,7 +21,7 @@ public class SwaggerApp {
                 .apiInfo(apiInfo())
                 .select()
                 //为当前包路径
-                .apis(RequestHandlerSelectors.basePackage("com.kuyuner"))
+                .apis(RequestHandlerSelectors.basePackage("com.kuyuner.bg"))
                 .paths(PathSelectors.any())
                 .build();
 //        return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class)).build();
@@ -32,7 +32,7 @@ public class SwaggerApp {
                 //页面标题
                 .title("Spring Boot 使用 Swagger2 构建RESTful API")
                 //创建人
-                .contact(new Contact("Bryan", "http://www.iliuqi.top/", ""))
+                .contact(new Contact("Bryan", "http://blog.bianxh.top/", ""))
                 //版本号
                 .version("1.0")
                 //描述

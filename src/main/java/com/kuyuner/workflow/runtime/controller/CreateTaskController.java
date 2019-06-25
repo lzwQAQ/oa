@@ -6,7 +6,6 @@ import com.kuyuner.workflow.runtime.service.CreateTaskService;
 import com.kuyuner.workflow.runtime.service.PendingTaskService;
 import com.kuyuner.workflow.util.BpmnModelUtils;
 
-import io.swagger.annotations.*;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.RepositoryService;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author tangzj
  */
-@Api(value = "创建任务")
 @Controller
 @RequestMapping("${kuyuner.admin-path}/createtask")
 public class CreateTaskController {
@@ -59,9 +57,7 @@ public class CreateTaskController {
      */
     @ResponseBody
     @RequestMapping("/findFormPath")
-    @ApiOperation(value = "查询任务的form表单")
-    public ResultJson findFormPath(@ApiParam(value = "任务类型（qingjia、renshidiaodu、yewushenqing、caigou、caiwushenqing、shouwen、yongche、fawen）",required = true) String modelKey,
-                                   @ApiParam(value = "",required = false) String startSequenceFlowName) {
+    public ResultJson findFormPath(String modelKey, String startSequenceFlowName) {
         return createTaskService.getStartFormPath(modelKey, startSequenceFlowName);
     }
 
@@ -70,10 +66,7 @@ public class CreateTaskController {
      */
     @ResponseBody
     @RequestMapping("/isSelectNextTaskCandidateInfos")
-    @ApiOperation(value = "查询下一任务节点是否可以选择候选信息")
-    public ResultJson isSelectNextTaskCandidateInfos(@ApiParam(value = "流程ID",required = true) String processDefinitionId,
-                                                     @ApiParam(value = "",required = false) String sequenceFlowName,
-                                                     @ApiParam(value = "",required = false) String startSequenceFlowName) {
+    public ResultJson isSelectNextTaskCandidateInfos(String processDefinitionId, String sequenceFlowName, String startSequenceFlowName) {
         BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
         UserTask firstUserTask = BpmnModelUtils.getFirstUserTask(bpmnModel, startSequenceFlowName);
         return pendingTaskService.isSelectNextTaskCandidateInfos(processDefinitionId, firstUserTask.getId(), sequenceFlowName, null);
@@ -83,11 +76,9 @@ public class CreateTaskController {
     /**
      * 查询下一任务节点的候选信息
      */
-    @ApiOperation(value = "查询下一任务节点的候选信息")
     @ResponseBody
     @RequestMapping("/findNextTaskCandidateInfos")
-//    @ApiResponse()
-    public ListJson findNextTaskCandidateInfos(@ApiParam(value = "流程ID",required = true) String processDefinitionId, String searchText, String sequenceFlowName, String startSequenceFlowName) {
+    public ListJson findNextTaskCandidateInfos(String processDefinitionId, String searchText, String sequenceFlowName, String startSequenceFlowName) {
         return createTaskService.findNextUserTaskCandidateInfos(processDefinitionId, searchText, startSequenceFlowName, sequenceFlowName);
     }
 }

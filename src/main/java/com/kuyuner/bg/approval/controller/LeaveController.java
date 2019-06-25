@@ -10,8 +10,6 @@ import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.UserService;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -108,12 +106,9 @@ public class LeaveController extends BaseController {
      * @param pageSize
      * @return
      */
-    @ApiOperation(value = "查询请假代办数据列表")
     @ResponseBody
     @RequestMapping("pending/list")
-    public PageJson pendingList(@ApiParam(value = "请假类型type字段",required = false) Leave leave,
-                                @ApiParam(value = "分页",required = true) String pageNum,
-                                @ApiParam(value = "分页数目",required = true) String pageSize) {
+    public PageJson pendingList(Leave leave, String pageNum, String pageSize) {
         return leaveService.findPendingList(pageNum, pageSize, leave);
     }
 
@@ -125,12 +120,9 @@ public class LeaveController extends BaseController {
      * @param pageSize
      * @return
      */
-    @ApiOperation(value = "查询审批历史")
     @ResponseBody
     @RequestMapping("historic/list")
-    public PageJson historicList( Leave leave,
-                                 @ApiParam(value = "分页",required = true) String pageNum,
-                                 @ApiParam(value = "分页数目",required = true) String pageSize) {
+    public PageJson historicList(Leave leave, String pageNum, String pageSize) {
         return leaveService.findHistoricList(pageNum, pageSize, leave);
     }
 
@@ -142,12 +134,9 @@ public class LeaveController extends BaseController {
      * @param pageSize
      * @return
      */
-    @ApiOperation(value = "查询申请历史")
     @ResponseBody
     @RequestMapping("send/list")
-    public PageJson sendList(Leave leave,
-                             @ApiParam(value = "分页",required = true) String pageNum,
-                             @ApiParam(value = "分页数目",required = true) String pageSize) {
+    public PageJson sendList(Leave leave, String pageNum, String pageSize) {
         return leaveService.findSendList(pageNum, pageSize, leave);
     }
 

@@ -131,8 +131,8 @@ public class ArticleController extends BaseController {
      */
     @ApiOperation(value = "文章列表",notes = "分页显示文章列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageSize", value = "每页文章数量", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "pageNum", value = "分页的页码", required = true, dataType = "String")
+            @ApiImplicitParam(name = "pageSize", value = "每页文章数量", required = true, dataType = "Integer"),
+            @ApiImplicitParam(name = "pageNum", value = "分页的页码", required = true, dataType = "Integer")
     })
     @ResponseBody
     @RequestMapping("/articleList")
@@ -200,12 +200,14 @@ public class ArticleController extends BaseController {
 
     /**
      * 轮播图
+     * @param article
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    @ApiOperation(value = "轮播图",notes = "轮播图")
     @ResponseBody
     @RequestMapping("/rotatePicture")
-    public ResultJson rotatePicture(Article article) {
+    public ResultJson rotatePicture(Article article, String pageNum, String pageSize) {
         article.setType(ArticleTypeEnum.ROTATE_PICTURE.getCode());
         return articleService.rotatePicture(article);
     }
@@ -217,11 +219,6 @@ public class ArticleController extends BaseController {
      * @param pageSize
      * @return
      */
-    @ApiOperation(value = "单位公告",notes = "单位公告")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageSize", value = "每页文章数量", required = true, dataType = "String"),
-            @ApiImplicitParam(name = "pageNum", value = "分页的页码", required = true, dataType = "String")
-    })
     @ResponseBody
     @RequestMapping("/announcement")
     public PageJson publicAnnouncement(Article article, String pageNum, String pageSize) {

@@ -1,9 +1,7 @@
 package com.kuyuner.shiro.config;
 
 import com.kuyuner.core.config.autoconfigure.KuyunerProperties;
-import com.kuyuner.shiro.FormAuthenticationFilter;
-import com.kuyuner.shiro.ShiroCache;
-import com.kuyuner.shiro.SystemAuthorizingRealm;
+import com.kuyuner.shiro.*;
 
 import net.sf.ehcache.CacheManager;
 
@@ -35,7 +33,6 @@ import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
  */
 @Configuration
 public class ShiroConfig {
-
     private Map<String, String> getFilterChainDefinitionMap(KuyunerProperties kuyunerProperties) {
         Map<String, String> map = new HashMap<>(4);
         for (String anon : kuyunerProperties.getShiro().getAnons()) {
@@ -67,14 +64,15 @@ public class ShiroConfig {
                                                          FormAuthenticationFilter formAuthenticationFilter,
                                                          KuyunerProperties kuyunerProperties) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+
+        Map<String, Filter> filters = new HashMap<>();
+        filters.put("authc", formAuthenticationFilter);
+        shiroFilterFactoryBean.setFilters(filters);
+
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         shiroFilterFactoryBean.setLoginUrl("/login");
         shiroFilterFactoryBean.setSuccessUrl("/login");
         //shiroFilterFactoryBean.setUnauthorizedUrl("/welcome");
-
-        Map<String, Filter> filters = new HashMap<>(1);
-        filters.put("authc", formAuthenticationFilter);
-        shiroFilterFactoryBean.setFilters(filters);
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(getFilterChainDefinitionMap(kuyunerProperties));
 

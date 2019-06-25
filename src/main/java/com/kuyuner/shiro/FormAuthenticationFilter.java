@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 /**
  * 表单验证（包含验证码）过滤类
@@ -100,4 +101,17 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
         return true;
     }
 
+    /**
+     * 重写登录地址
+     */
+    @Override
+    protected void redirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        String loginUrl = getLoginUrl();
+        String url = req.getRequestURI();
+        if (url.contains("/app")) {
+            loginUrl = "/logininfo";
+        }
+        WebUtils.issueRedirect(request, response, loginUrl);
+    }
 }

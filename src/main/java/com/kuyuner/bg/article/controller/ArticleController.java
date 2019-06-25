@@ -148,8 +148,8 @@ public class ArticleController extends BaseController {
     @ApiOperation(value = "发文代办",notes = "发文代办")
     @ResponseBody
     @RequestMapping("/listDispatch")
-    public ResultJson listDispatch() {
-        return articleService.getDispatch(UserUtils.getPrincipal().getId());
+    public ResultJson listDispatch(String id) {
+        return articleService.getDispatch(UserUtils.getPrincipal() == null ? id : UserUtils.getPrincipal().getId());
     }
 
     /**
@@ -159,8 +159,8 @@ public class ArticleController extends BaseController {
     @ApiOperation(value = "请假代办",notes = "请假代办")
     @ResponseBody
     @RequestMapping("/listLeave")
-    public ResultJson listLeave() {
-        return articleService.getLeave(UserUtils.getPrincipal().getId());
+    public ResultJson listLeave(String id) {
+        return articleService.getLeave(UserUtils.getPrincipal() == null ? id : UserUtils.getPrincipal().getId());
     }
 
     /**
@@ -170,8 +170,8 @@ public class ArticleController extends BaseController {
     @ApiOperation(value = "业务申请",notes = "业务申请")
     @ResponseBody
     @RequestMapping("/listBusiness")
-    public ResultJson listBusiness() {
-        return articleService.getBusiness(UserUtils.getPrincipal().getId());
+    public ResultJson listBusiness(String id) {
+        return articleService.getBusiness(UserUtils.getPrincipal() == null ? id : UserUtils.getPrincipal().getId());
     }
 
     /**
@@ -181,8 +181,8 @@ public class ArticleController extends BaseController {
     @ApiOperation(value = "采购申请",notes = "采购申请")
     @ResponseBody
     @RequestMapping("/listPurchase")
-    public ResultJson listPurchase() {
-        return articleService.getPurchase(UserUtils.getPrincipal().getId());
+    public ResultJson listPurchase(String id) {
+        return articleService.getPurchase(UserUtils.getPrincipal() == null ? id : UserUtils.getPrincipal().getId());
     }
 
     /**
@@ -192,8 +192,8 @@ public class ArticleController extends BaseController {
     @ApiOperation(value = "邮件通知",notes = "邮件通知")
     @ResponseBody
     @RequestMapping("/listEmail")
-    public ResultJson listEmail() {
-        return articleService.getEmail(UserUtils.getPrincipal().getId());
+    public ResultJson listEmail(String id) {
+        return articleService.getEmail(UserUtils.getPrincipal() == null ? id : UserUtils.getPrincipal().getId());
     }
 
     //###############################H5页面调用接口########################

@@ -8,6 +8,7 @@ import com.kuyuner.core.sys.dao.LoginDao;
 import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.security.UserUtils;
 
+import com.kuyuner.shiro.config.ShiroConfig;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -71,7 +72,6 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
                 throw new AuthenticationException("msg:验证码错误！");
             }
         }
-
         User user = loginDao.login(token.getUsername());
         if (user != null) {
             if (StringUtils.equals(user.getState(), "S")) {

@@ -2,6 +2,7 @@ package com.kuyuner.bg.article.service;
 
 
 import com.kuyuner.bg.article.entity.Article;
+import com.kuyuner.bg.article.entity.NeedHandleCount;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,4 +34,6 @@ public interface ArticleService {
 	ResultJson getEmail(String userId);
 
 	Article articleDetail(String id);
+
+	NeedHandleCount needHandle(String userId);
 }

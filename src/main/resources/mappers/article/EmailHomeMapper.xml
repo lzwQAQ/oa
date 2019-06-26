@@ -15,6 +15,7 @@
 			t.contain_file AS "containFile",
 			t.star AS "star",
 			t.type AS "type",
+			dict.DICT_VALUE as "typeName",
 			t.LEVEL AS "level",
 			t.IS_READ AS "read",
 			t.IS_SECRET AS "isSecret",
@@ -24,6 +25,7 @@
 			t.del_flag AS "delFlag"
 		FROM
 			T_EMAIL_RECEIVE t
+			LEFT JOIN T_PT_DICT_DATA dict on dict.DICT_CODE=t.TYPE and dict.DICT_TYPE='EMAIL_TYPE'
 		WHERE
 			t.DEL_FLAG = '1'
 			AND (t.IS_READ='0' or t.IS_READ is null)
@@ -31,5 +33,17 @@
 		ORDER BY
 			t.create_date DESC
 	</select>
+
+    <select id="dataCount" parameterType="java.lang.String"  resultType="java.lang.Integer">
+        SELECT
+			count(1)
+		FROM
+			T_EMAIL_RECEIVE t
+			LEFT JOIN T_PT_DICT_DATA dict on dict.DICT_CODE=t.TYPE and dict.DICT_TYPE='EMAIL_TYPE'
+		WHERE
+			t.DEL_FLAG = '1'
+			AND (t.IS_READ='0' or t.IS_READ is null)
+			AND t.creater =#{userId}
+    </select>
 
 </mapper>

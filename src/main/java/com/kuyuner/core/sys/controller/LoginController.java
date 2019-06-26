@@ -11,7 +11,11 @@ import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.MenuService;
 import com.kuyuner.core.sys.service.UserService;
 
+import com.kuyuner.shiro.UsernamePasswordToken;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -63,12 +67,18 @@ public class LoginController extends BaseController {
 
     @RequestMapping("logininfo")
     @ResponseBody
-    public ResultJson logininfo(ModelMap modelMap, String errorMessage) {
-        if (UserUtils.getPrincipal() == null) {
-            if (StringUtils.isBlank(errorMessage))
-                return ResultJson.failed("登录失败");
-            return ResultJson.failed(errorMessage);
+    public ResultJson logininfo(String username, String password) {
+        if(StringUtils.isBlank(username) || StringUtils.isBlank(password)){
+            return ResultJson.failed("请输入用户名或密码");
         }
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(username,password.toCharArray(),true,"","aaaa","app");
+        try {
+            subject.login(token);
+        }catch (AuthenticationException e){
+            return ResultJson.failed("用户名或密码错误");
+        }
+
         if (UserUtils.getSession().getAttribute(UserUtils.USER_FLAG) == null) {
             UserUtils.getSession().setAttribute(UserUtils.USER_FLAG,userService.get(UserUtils.getPrincipal().getId()) );
         }
@@ -77,6 +87,7 @@ public class LoginController extends BaseController {
             menus = menuService.findAllListBySort(UserUtils.getPrincipal().getId());
             UserUtils.getSession().setAttribute("menus", menus);
         }
+        ModelMap modelMap = new ModelMap();
         modelMap.addAttribute("menus", menus);
         return ResultJson.ok(UserUtils.getSession().getAttribute(UserUtils.USER_FLAG));
     }

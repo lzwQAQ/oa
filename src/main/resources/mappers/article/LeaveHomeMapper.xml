@@ -6,6 +6,7 @@
 		r.ID AS "taskId", -- 任务ID
 		r.PRO_DEF_NAME AS "processName", -- 流程名称
 		t.type AS "type", -- 请假类型
+		dict.DICT_VALUE as "typeName",
 		r.NAME AS "taskName", -- 任务名称
 		u.NAME AS "sender", -- 请假人
 		dept.name AS "detpName", -- 所属部门
@@ -22,10 +23,22 @@
 		INNER JOIN T_AP_LEAVE t ON t.id = r.business_id
 		INNER JOIN T_PT_USER u ON u.id = t.sender_id
 		left join T_PT_DEPT dept on dept.id = u.dept_id
+		LEFT JOIN T_PT_DICT_DATA dict on dict.DICT_CODE=t.TYPE and dict.DICT_TYPE='LEAVE_TYPE'
 		WHERE
 		( r.ASSIGNEE = #{userId} OR ( r.ASSIGNEE IS NULL AND r.USER_ID = #{userId} ) )
 		ORDER BY
 		t.CREATE_DATE DESC
 	</select>
 
+    <select id="dataCount"  parameterType="java.lang.String"  resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM V_WF_RU_TASK r
+        INNER JOIN T_AP_LEAVE t ON t.id = r.business_id
+        INNER JOIN T_PT_USER u ON u.id = t.sender_id
+        left join T_PT_DEPT dept on dept.id = u.dept_id
+        LEFT JOIN T_PT_DICT_DATA dict on dict.DICT_CODE=t.TYPE and dict.DICT_TYPE='LEAVE_TYPE'
+        WHERE
+        ( r.ASSIGNEE = #{userId} OR ( r.ASSIGNEE IS NULL AND r.USER_ID = #{userId} ) )
+    </select>
 </mapper>

@@ -14,4 +14,6 @@ import java.util.List;
 @MyBatisDao
 public interface EmailHomeDao extends CrudDao<EmailHome> {
     List<EmailHome> findData(String userId);
+
+    Integer dataCount(String userId);
 }

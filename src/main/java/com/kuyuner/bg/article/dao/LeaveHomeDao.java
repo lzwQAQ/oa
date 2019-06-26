@@ -14,4 +14,6 @@ import java.util.List;
 @MyBatisDao
 public interface LeaveHomeDao extends CrudDao<LeaveHome> {
     List<LeaveHome> findData(String userId);
+
+    Integer dataCount(String userId);
 }

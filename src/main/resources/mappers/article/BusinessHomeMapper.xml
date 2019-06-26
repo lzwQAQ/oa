@@ -30,4 +30,16 @@
 
 	</select>
 
+	<select id="dataCount" parameterType="java.lang.String"  resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM
+		V_WF_RU_TASK r
+		INNER JOIN T_AP_BUSINESS t ON t.id = r.business_id
+		INNER JOIN T_PT_USER u ON u.id = t.sender_id
+		left join T_PT_DEPT dept on dept.id = u.dept_id
+		WHERE
+		( r.ASSIGNEE = #{userId} OR ( r.ASSIGNEE IS NULL AND r.USER_ID = #{userId} ) )
+	</select>
+
 </mapper>

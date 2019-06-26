@@ -2,6 +2,7 @@ package com.kuyuner.bg.article.entity;
 
 import com.kuyuner.common.persistence.BaseEntity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -48,6 +49,9 @@ public class EmailHome extends BaseEntity {
 
     private String delFlag;
 
+    private String typeName;
+
+    private String dateStr;
     @Override
     public String getId() {
         return id;
@@ -200,5 +204,23 @@ public class EmailHome extends BaseEntity {
     @Override
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getDateStr() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String dateString = sdf.format(this.createDate);
+        return dateString;
+    }
+
+    public void setDateStr(String dateStr) {
+        this.dateStr = dateStr;
     }
 }

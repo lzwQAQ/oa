@@ -163,6 +163,22 @@ public class ArticleServiceImpl implements ArticleService {
 		return article;
 	}
 
+	@Override
+	public NeedHandleCount needHandle(String userId) {
+		NeedHandleCount needHandleCount = new NeedHandleCount();
+		Integer emailCount = emailDao.dataCount(userId);
+		Integer purchaseCount = purchaseHomeDao.dataCount(userId);
+		Integer businessCount = businessDao.dataCount(userId);
+		Integer leaveCount = leaveDao.dataCount(userId);
+		Integer dispatchCount = dispatchHomeDao.dataCount(userId);
+		needHandleCount.setBusinessCount(businessCount == null ? 0 : businessCount);
+		needHandleCount.setDispatchCount(dispatchCount == null ? 0 : dispatchCount);
+		needHandleCount.setEmailCount(emailCount == null ? 0 : emailCount);
+		needHandleCount.setLeaveCount(leaveCount == null ? 0 : leaveCount);
+		needHandleCount.setPurchaseCount(purchaseCount == null ? 0 : purchaseCount);
+		return needHandleCount;
+	}
+
 
 	private void setHomepageResult(Map result){
 		List<Article> image = articleDao.findHomePageData("1");

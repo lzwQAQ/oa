@@ -102,7 +102,7 @@ public class LeaveHome extends BaseEntity {
     }
 
     public String getDateStr() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateString = sdf.format(this.time);
         return dateString;
     }

@@ -44,6 +44,7 @@ public class EmailSend extends Email {
     @Length(max = 1, message = "是否定时邮件长度不能大于1")
     private String isSchedule;
 
+    private String emailType = "send";
 
     public EmailSend(String id) {
         this.id = id;
@@ -91,5 +92,13 @@ public class EmailSend extends Email {
 
     public void setIsSchedule(String isSchedule) {
         this.isSchedule = isSchedule;
+    }
+
+    public String getEmailType() {
+        return emailType;
+    }
+
+    public void setEmailType(String emailType) {
+        this.emailType = emailType;
     }
 }

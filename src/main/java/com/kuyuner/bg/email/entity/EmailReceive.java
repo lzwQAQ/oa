@@ -16,6 +16,16 @@ public class EmailReceive extends Email {
      */
     private String isSecret;
 
+    private String emailType = "receive";
+
+    public String getEmailType() {
+        return emailType;
+    }
+
+    public void setEmailType(String emailType) {
+        this.emailType = emailType;
+    }
+
     public EmailReceive() {
     }
 

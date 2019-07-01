@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 发件箱Service层接口
@@ -181,10 +183,13 @@ public class EmailSendController extends BaseController {
         emailSend.setSenderName(user.getName());
         emailSend.setSenderAccount(user.getEmail());
 
-        List<FileInfo> fileInfos = JsonMapper.getInstance().readValue(files, new TypeReference<List<FileInfo>>() {});
+        List<FileInfo> fileInfos = new ArrayList<>();
+        if (StringUtils.isNotBlank(files)) {
+            fileInfos = JsonMapper.getInstance().readValue(files, new TypeReference<List<FileInfo>>() {});
+        }
         emailSend.setContainFile(fileInfos.size() == 0 ? "0" : "1");
 
-        return emailSendService.saveOrUpdate(emailSend, fileInfos, scheduleTime);
+        return emailSendService.saveOrUpdate(emailSend, fileInfos, scheduleTime,userId);
     }
 
     /**
@@ -282,4 +287,46 @@ public class EmailSendController extends BaseController {
             account.add(receiver.split(";")[1]);
         }
     }
+
+    //#######################################草稿箱####################################
+    /**
+     * 显示发送邮件页面
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping("draft/detail")
+    @ResponseBody
+    public ResultJson draftDetail(String id, String sendType, String emailType) {
+        Map map = new HashMap();
+        if (StringUtils.isNotBlank(id)) {
+            EmailSend emailSend = new EmailSend();
+            if ("receive".equals(emailType)) {
+                EmailReceive emailReceive = emailReceiveService.getEmail(id);
+                BeanUtils.copyProperties(emailReceive, emailSend);
+            } else {
+                emailSend = emailSendService.getEmail(id);
+            }
+            if (StringUtils.isNotBlank(emailType)) {
+                emailSend.setId(null);
+                emailSend.setTitle(("forward".equals(sendType) ? "转发：" : "回复：") + emailSend.getTitle());
+                StringBuilder sender = new StringBuilder();
+                StringBuilder receivers = new StringBuilder();
+                StringBuilder copys = new StringBuilder();
+                makeUser(sender, emailSend.getSenderName(), emailSend.getSenderAccount());
+                makeUser(receivers, emailSend.getReceiverName(), emailSend.getReceiverAccount());
+                makeUser(copys, emailSend.getCopySenderName(), emailSend.getCopySenderAccount());
+                map.put("sender", sender.toString());
+                map.put("receivers", receivers.toString());
+                map.put("copys", copys.toString());
+            }
+            map.put("emailSend", emailSend);
+            map.put("fromId", id);
+        } else {
+            map.put("emailSend", new EmailSend());
+            map.put("fromId", null);
+        }
+        return ResultJson.ok(map);
+    }
+
 }

@@ -81,10 +81,10 @@ public class EmailSendServiceImpl implements EmailSendService {
 
     @Override
     @Transactional
-    public ResultJson saveOrUpdate(EmailSend emailSend, List<FileInfo> fileInfos, String scheduleTime) {
+    public ResultJson saveOrUpdate(EmailSend emailSend, List<FileInfo> fileInfos, String scheduleTime,String userId) {
         if (StringUtils.isBlank(emailSend.getId())) {
             emailSend.setId(IdGenerate.uuid());
-            emailSend.setCreater(UserUtils.getPrincipal().getId());
+            emailSend.setCreater(UserUtils.getPrincipal()==null? userId : UserUtils.getPrincipal().getId());
             emailSendDao.insert(emailSend);
         } else {
             //更新发送时间

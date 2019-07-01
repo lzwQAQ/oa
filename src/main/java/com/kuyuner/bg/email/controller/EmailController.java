@@ -273,24 +273,24 @@ public class EmailController extends BaseController {
      * 查看邮件详情
      *
      * @param id
-     * @param type
+     * @param emailType
      * @return
      */
     @RequestMapping("/emailDetails")
     @ResponseBody
-    public ResultJson emailDetails(String id,String type) {
+    public ResultJson emailDetails(String id,String emailType) {
         Map map = new HashMap();
         Email email = null;
         String isSchedule = "0";
         String isSecret = "0";
         Date scheduleTime = null;
-        if ("send".equals(type)) {
+        if ("send".equals(emailType)) {
             email = emailSendService.getEmail(id);
             isSchedule = ((EmailSend) email).getIsSchedule();
             if ("1".equals(isSchedule)) {
                 scheduleTime = emailSendService.getScheduleTime(email.getId());
             }
-        } else if ("receive".equals(type)) {
+        } else if ("receive".equals(emailType)) {
             email = emailReceiveService.getEmail(id);
             isSecret = ((EmailReceive) email).getIsSecret();
         }
@@ -304,7 +304,7 @@ public class EmailController extends BaseController {
         map.put("scheduleTime", scheduleTime);
         map.put("receivers", receivers.toString());
         map.put("copys", copys.toString());
-        map.put("emailType", type);
+        map.put("emailType", emailType);
         map.put("isSecret", isSecret);
 
         return ResultJson.ok(map);

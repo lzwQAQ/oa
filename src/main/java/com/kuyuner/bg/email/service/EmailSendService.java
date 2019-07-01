@@ -52,7 +52,7 @@ public interface EmailSendService {
      * @param scheduleTime
      * @return
      */
-    ResultJson saveOrUpdate(EmailSend emailSend, List<FileInfo> fileInfos, String scheduleTime);
+    ResultJson saveOrUpdate(EmailSend emailSend, List<FileInfo> fileInfos, String scheduleTime,String userId);
 
     /**
      * 删除数据

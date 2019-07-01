@@ -189,19 +189,19 @@
     var adminPath = [[${adminPath}]];
     Util._path = rootUrl + adminPath;
     Util._rootpath = rootUrl.substring(0,rootUrl.length-1);
-    var LEAVE_TYPE = [[${dictHolder.getValues('LEAVE_TYPE')}]]
+    var LEAVE_TYPE = [[${dictHolder.getValues('LEAVE_TYPE')}]];
     var getLeaveType = function(value){
         return LEAVE_TYPE.find(function (v) {
             return v.dictCode == value
         }).dictValue
-    }
-    var EMAIL_TYPE = [[${dictHolder.getValues('EMAIL_TYPE')}]]
+    };
+    var EMAIL_TYPE = [[${dictHolder.getValues('EMAIL_TYPE')}]];
     var getEmailType = function(value){
         var dic = EMAIL_TYPE.find(function (v) {
             return v.dictCode == value
-        })
+        });
         return dic?dic.dictValue:'未知'
-    }
+    };
     function getDate(ts, showTime) {
         var date = new Date(ts);
         var year = date.getFullYear();
@@ -222,7 +222,7 @@
 
     types.forEach(function (value, index) {
         getArticles(index + 1)
-    })
+    });
 
     function getArticles(type){
         $.post(Util.getPath() + '/article/articleList',
@@ -247,40 +247,40 @@
     }
 
     function render(data, type){
-        var str = ''
-        var $wrapper = null
+        var str = '';
+        var $wrapper = null;
         switch (type) {
             case 1:
                 $wrapper = $('#slide-show-list');
                 data.forEach(function (v) {
                     str += '<li class="switch-item"><a href="#" title="a"><img src="'+v.content+'" alt=""></a></li>'
-                })
-                $wrapper.append($(str))
-                renderSlideShow()
+                });
+                $wrapper.append($(str));
+                renderSlideShow();
                 break;
             default:
-                $wrapper = $('#type'+type+' .article-list')
+                $wrapper = $('#type'+type+' .article-list');
                 data.forEach(function (v) {
                     str += '<li><a href="javascript:void(0);" onclick="navToArticle(\''+v.id+'\', \''+types[type-1]+'\')"><span class="title">'+ v.title +'</span><span class="date">'+getDate(v.updateTime)+'</span></a></li>'
-                })
-                $wrapper.append($(str))
+                });
+                $wrapper.append($(str));
                 if(data.length)
-                    $wrapper.after($('<div class="more"><a href="javascript: navToList(\''+type+'\')">查看更多>></a></div>'))
+                    $wrapper.after($('<div class="more"><a href="javascript: navToList(\''+type+'\')">查看更多>></a></div>'));
                 else
                     $wrapper.after($('<div class="empty">暂无内容</div>'))
         }
     }
 
     function renderTODOCommon($ul, str){
-        $table = $ul.parents('table')
-        $ul.html('')
+        $table = $ul.parents('table');
+        $ul.html('');
         if(str == ''){
-            $table.hide()
-            $table.next('.empty').remove()
+            $table.hide();
+            $table.next('.empty').remove();
             $table.after($('<div class="empty">暂无待办</div>'))
         } else {
-            $table.show()
-            $table.next('.empty').remove()
+            $table.show();
+            $table.next('.empty').remove();
             $ul.append($(str))
         }
     }
@@ -290,41 +290,41 @@
             var str = '', $ul = $('#'+key);
             data.forEach(function (v) {
                 str += '<tr><td>'+v.title+'</td><td>'+v.sender+'</td><td>'+getDate(v.time, true)+'</td></tr>'
-            })
+            });
             renderTODOCommon($ul, str)
         },
         listLeave: function (key, data) {
             var str = '', $ul = $('#'+key);
             data.forEach(function (v) {
                 str += '<tr><td>'+getLeaveType(v.type)+'</td><td>'+v.sender+'</td><td>'+getDate(v.time, true)+'</td></tr>'
-            })
+            });
             renderTODOCommon($ul, str)
         },
         listBusiness: function (key, data) {
             var str = '', $ul = $('#'+key);
             data.forEach(function (v) {
                 str += '<tr><td>'+v.businessName+'</td><td>'+v.sender+'</td><td>'+getDate(v.time, true)+'</td></tr>'
-            })
+            });
             renderTODOCommon($ul, str)
         },
         listPurchase: function (key, data) {
             var str = '', $ul = $('#'+key);
             data.forEach(function (v) {
-                str += '<tr><td>'+v.taskName+'</td><td>'+v.sender+'</td><td>'+getDate(v.time, true)+'</td></tr>'
-            })
+                str += '<tr><td>'+v.businessName+'</td><td>'+v.sender+'</td><td>'+getDate(v.time, true)+'</td></tr>'
+            });
             renderTODOCommon($ul, str)
         },
         listEmail: function (key, data) {
             var str = '', $ul = $('#'+key);
             data.forEach(function (v) {
                 str += '<tr><td>'+getEmailType(v.type)+'</td><td>'+v.title+'</td><td>'+v.senderName+'</td><td>'+getDate(v.updateDate)+'</td></tr>'
-            })
+            });
             renderTODOCommon($ul, str)
         }
-    }
+    };
 
     function getTodos(){
-        var urls = ['listDispatch', 'listLeave', 'listBusiness', 'listPurchase', 'listEmail']
+        var urls = ['listDispatch', 'listLeave', 'listBusiness', 'listPurchase', 'listEmail'];
         urls.forEach(function (value) {
             $.post(Util.getPath() + '/article/' + value,
                 {
@@ -333,9 +333,9 @@
                 function(res){
                     var num = res.data.length;
                     if(num){
-                        $('.dot-num.'+value).css('display', 'inline-block').html(num)
+                        $('.dot-num.'+value).css('display', 'inline-block').html(num);
                     }else{
-                        $('.dot-num.'+value).css('display', 'none').innerHeight('')
+                        $('.dot-num.'+value).css('display', 'none').innerHeight('');
                     }
                     if(res.data.length >6){
                         res.data.length = 6
@@ -346,31 +346,31 @@
         })
     }
 
-    getTodos()
-    setInterval(getTodos, 15000)
+    getTodos();
+    setInterval(getTodos, 15000);
 
     $(".head-tab").click(function () {
         if($(this).hasClass('active')) return;
         $(this).addClass("active").siblings().removeClass('active');
-        $(this).parent().nextAll('.active').removeClass('active').siblings('#'+$(this).data('id')).addClass('active')
-    })
+        $(this).parent().nextAll('.active').removeClass('active').siblings('#'+$(this).data('id')).addClass('active');
+    });
 
     $('.head-tabs').on('mousedown', function(ev){
-        var el = this
-        var start = ev.pageX
-        var sl = this.scrollLeft
+        var el = this;
+        var start = ev.pageX;
+        var sl = this.scrollLeft;
         $(document).on('mousemove', function(ev){
-            var scroll = ev.pageX - start
+            var scroll = ev.pageX - start;
             el.scrollLeft = sl - scroll;
-        })
+        });
         $(document).on('mouseup', function(ev){
-            $(document).off('mousemove')
+            $(document).off('mousemove');
             $(document).off('mouseup')
         });
-    })
+    });
 
     function navToArticle(id){
-        var url = adminPath+'/article/view/'+id
+        var url = adminPath+'/article/view/'+id;
         parent.openTab(url, '文章')
     }
 
@@ -383,8 +383,8 @@
         [adminPath+'/leave/pending', '待办-请假'],
         [adminPath+'/business/pending', '待办-业务'],
         [adminPath+'/purchase/pending', '待办-采购'],
-        [adminPath+'/emailreceive/receive', '收件箱'],
-    ]
+        [adminPath+'/emailreceive/receive', '收件箱']
+    ];
     function navToTODO(i) {
         parent.openTab(urlTODO[i][0], urlTODO[i][1])
     }

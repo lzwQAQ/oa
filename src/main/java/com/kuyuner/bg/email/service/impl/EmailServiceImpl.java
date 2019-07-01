@@ -32,15 +32,15 @@ public class EmailServiceImpl implements EmailService {
     private EmailReceiveDao emailReceiveDao;
 
     @Override
-    public ListJson findStarEmailList(Email email) {
-        email.setCreater(UserUtils.getPrincipal().getId());
+    public ListJson findStarEmailList(Email email,String userId) {
+        email.setCreater(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
         List<EmailView> list = emailDao.findStarEmailList(email);
         return new ListJson(list);
     }
 
     @Override
-    public ListJson findRecyclebinList(Email email) {
-        email.setCreater(UserUtils.getPrincipal().getId());
+    public ListJson findRecyclebinList(Email email,String userId) {
+        email.setCreater(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
         List<EmailView> list = emailDao.findRecyclebinList(email);
         return new ListJson(list);
     }

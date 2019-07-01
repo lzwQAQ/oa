@@ -6,6 +6,7 @@ import com.kuyuner.common.controller.BaseController;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 
+import com.kuyuner.common.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,8 +45,12 @@ public class EmailReceiveController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("list")
-    public PageJson list(EmailReceive emailReceive, String pageNum, String pageSize) {
-        return emailReceiveService.findPageList(pageNum, pageSize, emailReceive);
+    public PageJson list(EmailReceive emailReceive, String pageNum, String pageSize,String userId) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum = "1";
+            pageSize = "10000";
+        }
+        return emailReceiveService.findPageList(pageNum, pageSize, emailReceive,userId);
     }
 
     /**

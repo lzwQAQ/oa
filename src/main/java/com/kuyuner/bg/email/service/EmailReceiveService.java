@@ -19,7 +19,7 @@ public interface EmailReceiveService {
      * @param emailReceive
      * @return
      */
-    PageJson findPageList(String pageNum, String pageSize, EmailReceive emailReceive);
+    PageJson findPageList(String pageNum, String pageSize, EmailReceive emailReceive,String userId);
 
     /**
      * 查询唯一

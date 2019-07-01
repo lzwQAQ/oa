@@ -39,8 +39,8 @@ public class EmailReceiveServiceImpl implements EmailReceiveService {
     private UserDao userDao;
 
     @Override
-    public PageJson findPageList(String pageNum, String pageSize, EmailReceive emailReceive) {
-        emailReceive.setCreater(UserUtils.getPrincipal().getId());
+    public PageJson findPageList(String pageNum, String pageSize, EmailReceive emailReceive,String userId) {
+        emailReceive.setCreater(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
         Page<EmailReceive> page = new Page<>(pageNum, pageSize);
         page.start();
         emailReceiveDao.findList(emailReceive);

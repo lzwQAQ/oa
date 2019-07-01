@@ -113,9 +113,13 @@ public class EmailSendController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("list")
-    public PageJson list(EmailSend emailSend, String pageNum, String pageSize) {
+    public PageJson list(EmailSend emailSend, String pageNum, String pageSize,String userId) {
         emailSend.setDraft("0");
-        return emailSendService.findPageList(pageNum, pageSize, emailSend);
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum = "1";
+            pageSize = "10000";
+        }
+        return emailSendService.findPageList(pageNum, pageSize, emailSend,userId);
     }
 
     /**
@@ -128,9 +132,13 @@ public class EmailSendController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("draft/list")
-    public PageJson findDraftList(EmailSend emailSend, String pageNum, String pageSize) {
+    public PageJson findDraftList(EmailSend emailSend, String pageNum, String pageSize,String userId) {
         emailSend.setDraft("1");
-        return emailSendService.findPageList(pageNum, pageSize, emailSend);
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum = "1";
+            pageSize = "10000";
+        }
+        return emailSendService.findPageList(pageNum, pageSize, emailSend,userId);
     }
 
     /**
@@ -140,7 +148,7 @@ public class EmailSendController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public ResultJson save(String id, String[] receivers, String[] copys, String[] secrets, String title,
+    public ResultJson save(String userId,String id, String[] receivers, String[] copys, String[] secrets, String title,
                            String editorValue, String toMessage, String draft, String schedule,
                            String type, String level, String files, String scheduleTime) throws IOException {
         EmailSend emailSend = new EmailSend();
@@ -169,7 +177,7 @@ public class EmailSendController extends BaseController {
         emailSend.setSecretSenderName(StringUtils.join(secretName, ";"));
         emailSend.setSecretSenderAccount(StringUtils.join(secretAccount, ";"));
 
-        User user = userService.get(UserUtils.getPrincipal().getId());
+        User user = userService.get(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
         emailSend.setSenderName(user.getName());
         emailSend.setSenderAccount(user.getEmail());
 

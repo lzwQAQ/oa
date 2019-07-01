@@ -60,8 +60,8 @@ public class EmailSendServiceImpl implements EmailSendService {
     private TaskManager taskManager;
 
     @Override
-    public PageJson findPageList(String pageNum, String pageSize, EmailSend emailSend) {
-        emailSend.setCreater(UserUtils.getPrincipal().getId());
+    public PageJson findPageList(String pageNum, String pageSize, EmailSend emailSend,String userId) {
+        emailSend.setCreater(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
         Page<EmailSend> page = new Page<>(pageNum, pageSize);
         page.start();
         emailSendDao.findList(emailSend);

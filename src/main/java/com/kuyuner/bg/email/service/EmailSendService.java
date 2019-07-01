@@ -26,7 +26,7 @@ public interface EmailSendService {
      * @param emailSend
      * @return
      */
-    PageJson findPageList(String pageNum, String pageSize, EmailSend emailSend);
+    PageJson findPageList(String pageNum, String pageSize, EmailSend emailSend,String userId);
 
     /**
      * 查询唯一

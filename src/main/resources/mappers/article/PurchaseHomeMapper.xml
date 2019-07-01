@@ -6,6 +6,7 @@
 		r.ID AS "taskId",
 		r.PRO_DEF_NAME AS "processName",
 		r.NAME AS "taskName",
+		t.name as "businessName",
 		u.NAME AS "sender",
 		dept.name AS "detpName",
 		t.CREATE_DATE AS "time"

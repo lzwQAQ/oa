@@ -194,8 +194,8 @@ public class EmailController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("favorite/list")
-    public ListJson findStarEmailList(Email email) {
-        return emailService.findStarEmailList(email);
+    public ListJson findStarEmailList(Email email,String userId) {
+        return emailService.findStarEmailList(email, userId);
     }
 
     /**
@@ -206,8 +206,8 @@ public class EmailController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("recyclebin/list")
-    public ListJson findRecyclebinList(Email email) {
-        return emailService.findRecyclebinList(email);
+    public ListJson findRecyclebinList(Email email,String userId) {
+        return emailService.findRecyclebinList(email,userId);
     }
 
     /**

@@ -32,6 +32,8 @@ public class PurchaseHome extends BaseEntity {
 
     private String dateStr;
 
+    private String businessName;
+
     public String getTaskId() {
         return taskId;
     }
@@ -87,5 +89,13 @@ public class PurchaseHome extends BaseEntity {
     }
     public void setDateStr(String dateStr) {
         this.dateStr = dateStr;
+    }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
     }
 }

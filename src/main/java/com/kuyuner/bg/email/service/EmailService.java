@@ -14,7 +14,7 @@ public interface EmailService {
      * @param email
      * @return
      */
-    ListJson findStarEmailList(Email email);
+    ListJson findStarEmailList(Email email,String userId);
 
     /**
      * 查看回收站
@@ -22,7 +22,7 @@ public interface EmailService {
      * @param email
      * @return
      */
-    ListJson findRecyclebinList(Email email);
+    ListJson findRecyclebinList(Email email,String userId);
 
     /**
      * 删除数据

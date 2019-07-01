@@ -126,6 +126,10 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping("/articleList")
     public PageJson sendList(Article article, String pageNum, String pageSize) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum = "1";
+            pageSize = "10000";
+        }
         return articleService.findArticleList(pageNum, pageSize, article);
     }
 

@@ -3,9 +3,11 @@ package com.kuyuner.bg.approval.controller;
 import com.kuyuner.bg.approval.entity.Business;
 import com.kuyuner.bg.approval.entity.Leave;
 import com.kuyuner.bg.approval.entity.PersonnelAdjustment;
+import com.kuyuner.bg.approval.lib.ProduceFacadeFactory;
 import com.kuyuner.bg.approval.service.BusinessService;
 import com.kuyuner.bg.approval.service.LeaveService;
 import com.kuyuner.bg.approval.service.PersonnelAdjustmentService;
+import com.kuyuner.bg.approval.service.ProduceFaced;
 import com.kuyuner.common.controller.BaseController;
 import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.PageJson;
@@ -35,9 +37,11 @@ public class ProduceController extends BaseController {
     private LeaveService leaveService;
     @Autowired
     private PersonnelAdjustmentService personnelAdjustmentService;
+    @Autowired
+    private ProduceFacadeFactory produceFacadeFactory;
 
     /**
-     * 查询1.代办数据 2.申请历史 3.审批历史 4.采购申请 5.用车申请 6.财务申请
+     * 查询1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请
      *
      * @param produceType 1.请假 2.业务 3.人事
      * @param pageNum
@@ -47,69 +51,50 @@ public class ProduceController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/list")
-    public PageJson procedureHistory(String leaveType,String senderName, String pageNum, String pageSize,String produceType,String dataType,String userId) {
+    public PageJson procedureHistory(String leaveType,String senderName,String businessName, String pageNum, String pageSize,String produceType,String dataType,String userId) {
         if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
             pageNum = "1";
             pageSize = "10000";
         }
+        String produce = getFacedCode(produceType);
+        ProduceFaced biz = produceFacadeFactory.getBizFacad(produce);
         PageJson pageJson = new PageJson();
-        switch (produceType){
+        switch (dataType){
             case "1":
-                Leave leave = new Leave();
-                leave.setType(leaveType);
-                leave.setSenderName(senderName);
-                switch (dataType){
-                    case "1":
-                        pageJson = leaveService.findPendingList(pageNum, pageSize, leave,userId);
-                        break;
-                    case "2":
-                        pageJson = leaveService.findSendList(pageNum, pageSize, leave,userId);
-                        break;
-                    case "3":
-                        pageJson = leaveService.findHistoricList(pageNum, pageSize, leave,userId);
-                        break;
-                    default:
-                            break;
-                }
-               break;
+                return biz.findPendingList(pageNum, pageSize, senderName,businessName,leaveType,userId);
             case "2":
-                Business business = new Business();
-                switch (dataType){
-                    case "1":
-                        pageJson = businessService.findPendingList(pageNum, pageSize, business,userId);
-                        break;
-                    case "2":
-                        pageJson = businessService.findSendList(pageNum, pageSize, business,userId);
-                        break;
-                    case "3":
-                        pageJson = businessService.findHistoricList(pageNum, pageSize, business,userId);
-                        break;
-                    default:
-                        break;
-                }
-                break;
+                return biz.findSendList(pageNum, pageSize, senderName,businessName,leaveType,userId);
             case "3":
-                PersonnelAdjustment personnelAdjustment = new PersonnelAdjustment();
-                personnelAdjustment.setSenderName(senderName);
-                switch (dataType){
-                    case "1":
-                        pageJson = personnelAdjustmentService.findPendingList(pageNum, pageSize, personnelAdjustment,userId);
-                        break;
-                    case "2":
-                        pageJson = personnelAdjustmentService.findSendList(pageNum, pageSize, personnelAdjustment,userId);
-                        break;
-                    case "3":
-                        pageJson = personnelAdjustmentService.findHistoricList(pageNum, pageSize, personnelAdjustment,userId);
-                        break;
-                    default:
-                        break;
-                }
-               break;
+                return biz.findHistoricList(pageNum, pageSize, senderName,businessName,leaveType,userId);
             default:
-
-                break;
+                return pageJson;
         }
-        return pageJson;
     }
 
+    private String getFacedCode(String produceType){
+        String produce = "";
+        switch (produceType){
+            case "1":
+                produce = "leave";
+                break;
+            case "2":
+                produce = "business";
+                break;
+            case "3":
+                produce = "personnel";
+                break;
+            case "4":
+                produce = "purchase";
+                break;
+            case "5":
+                produce = "carApply";
+                break;
+            case "6":
+                produce = "finance";
+                break;
+            default:
+                break;
+        }
+        return produce;
+    }
 }

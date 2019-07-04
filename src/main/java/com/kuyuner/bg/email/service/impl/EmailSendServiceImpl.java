@@ -239,7 +239,7 @@ public class EmailSendServiceImpl implements EmailSendService {
         list.addAll(Arrays.asList(emailSend.getCopySenderAccount().split(";")));
         list.addAll(Arrays.asList(secretAccounts));
         List<User> users = emailSendDao.findUsersByAccounts(list);
-
+        logger.info("需要发送的人员:{}",users == null ? "0" : users.toArray());
         List<EmailReceive> emailReceives = new ArrayList<>();
         List<EmailFile> emailFiles = new ArrayList<>();
         for (User user : users) {

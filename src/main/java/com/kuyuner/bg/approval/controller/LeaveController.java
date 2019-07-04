@@ -113,8 +113,8 @@ public class LeaveController extends BaseController {
     @RequestMapping("pending/list")
     public PageJson pendingList(@ApiParam(value = "请假类型type字段",required = false) Leave leave,
                                 @ApiParam(value = "分页",required = true) String pageNum,
-                                @ApiParam(value = "分页数目",required = true) String pageSize) {
-        return leaveService.findPendingList(pageNum, pageSize, leave);
+                                @ApiParam(value = "分页数目",required = true) String pageSize,String userId) {
+        return leaveService.findPendingList(pageNum, pageSize, leave,userId);
     }
 
     /**
@@ -130,8 +130,8 @@ public class LeaveController extends BaseController {
     @RequestMapping("historic/list")
     public PageJson historicList( Leave leave,
                                  @ApiParam(value = "分页",required = true) String pageNum,
-                                 @ApiParam(value = "分页数目",required = true) String pageSize) {
-        return leaveService.findHistoricList(pageNum, pageSize, leave);
+                                 @ApiParam(value = "分页数目",required = true) String pageSize,String userId) {
+        return leaveService.findHistoricList(pageNum, pageSize, leave,userId);
     }
 
     /**
@@ -147,8 +147,8 @@ public class LeaveController extends BaseController {
     @RequestMapping("send/list")
     public PageJson sendList(Leave leave,
                              @ApiParam(value = "分页",required = true) String pageNum,
-                             @ApiParam(value = "分页数目",required = true) String pageSize) {
-        return leaveService.findSendList(pageNum, pageSize, leave);
+                             @ApiParam(value = "分页数目",required = true) String pageSize,String userId) {
+        return leaveService.findSendList(pageNum, pageSize, leave,userId);
     }
 
     /**

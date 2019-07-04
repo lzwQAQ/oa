@@ -104,8 +104,8 @@ public class PersonnelAdjustmentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("pending/list")
-    public PageJson pendingList(PersonnelAdjustment personnelAdjustment, String pageNum, String pageSize) {
-        return personnelAdjustmentService.findPendingList(pageNum, pageSize, personnelAdjustment);
+    public PageJson pendingList(PersonnelAdjustment personnelAdjustment, String pageNum, String pageSize,String userId) {
+        return personnelAdjustmentService.findPendingList(pageNum, pageSize, personnelAdjustment,userId);
     }
 
     /**
@@ -118,8 +118,8 @@ public class PersonnelAdjustmentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("historic/list")
-    public PageJson historicList(PersonnelAdjustment personnelAdjustment, String pageNum, String pageSize) {
-        return personnelAdjustmentService.findHistoricList(pageNum, pageSize, personnelAdjustment);
+    public PageJson historicList(PersonnelAdjustment personnelAdjustment, String pageNum, String pageSize,String userId) {
+        return personnelAdjustmentService.findHistoricList(pageNum, pageSize, personnelAdjustment,userId);
     }
 
     /**
@@ -132,8 +132,8 @@ public class PersonnelAdjustmentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("send/list")
-    public PageJson sendList(PersonnelAdjustment personnelAdjustment, String pageNum, String pageSize) {
-        return personnelAdjustmentService.findSendList(pageNum, pageSize, personnelAdjustment);
+    public PageJson sendList(PersonnelAdjustment personnelAdjustment, String pageNum, String pageSize,String userId) {
+        return personnelAdjustmentService.findSendList(pageNum, pageSize, personnelAdjustment,userId);
     }
 
     /**

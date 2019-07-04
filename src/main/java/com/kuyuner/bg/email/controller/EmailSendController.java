@@ -13,6 +13,8 @@ import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.UserService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,7 +37,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("${kuyuner.admin-path}/emailsend")
 public class EmailSendController extends BaseController {
-
+    private Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private EmailSendService emailSendService;
 
@@ -153,6 +155,7 @@ public class EmailSendController extends BaseController {
     public ResultJson save(String userId,String id, String[] receivers, String[] copys, String[] secrets, String title,
                            String editorValue, String toMessage, String draft, String schedule,
                            String type, String level, String files, String scheduleTime) throws IOException {
+        logger.info("日志打印发送邮件参数:receivers:{},copys:{},secrets{}",receivers,copys,secrets);
         EmailSend emailSend = new EmailSend();
         emailSend.setId(id);
         emailSend.setTitle(title);
@@ -329,4 +332,67 @@ public class EmailSendController extends BaseController {
         return ResultJson.ok(map);
     }
 
+
+    /**
+     * 新增或修改数据
+     *receivers
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("saveForApp")
+    public ResultJson saveForApp(String userId,String id, String receivers, String copys, String secrets, String title,
+                           String editorValue, String toMessage, String draft, String schedule,
+                           String type, String level, String files, String scheduleTime) throws IOException {
+        logger.info("日志打印发送邮件参数:receivers:{},copys:{},secrets:{}",receivers,copys,secrets);
+        if(StringUtils.isBlank(receivers)){
+            return ResultJson.failed("请录入收件人信息");
+        }
+        String[] recArr = receivers.split(",");
+        String[] copArr = new String[0];
+        if (StringUtils.isNotBlank(copys)) {
+            copArr = copys.split(",");
+        }
+        String[] secArr = new String[0];
+        if (StringUtils.isNotBlank(secrets)) {
+            secArr = secrets.split(",");
+        }
+
+        EmailSend emailSend = new EmailSend();
+        emailSend.setId(id);
+        emailSend.setTitle(title);
+        emailSend.setContent(editorValue);
+        emailSend.setDraft("1".equals(draft) ? "1" : "0");
+        emailSend.setToMessage("1".equals(toMessage) ? "1" : "0");
+        emailSend.setLevel(level);
+        emailSend.setIsSchedule("1".equals(schedule) ? "1" : "0");
+        emailSend.setType(type);
+
+        List<String> receiverName = new ArrayList<>();
+        List<String> receiverAccount = new ArrayList<>();
+        List<String> copyName = new ArrayList<>();
+        List<String> copyAccount = new ArrayList<>();
+        List<String> secretName = new ArrayList<>();
+        List<String> secretAccount = new ArrayList<>();
+        splitArray(recArr, receiverName, receiverAccount);
+        splitArray(copArr, copyName, copyAccount);
+        splitArray(secArr, secretName, secretAccount);
+        emailSend.setReceiverName(StringUtils.join(receiverName, ";"));
+        emailSend.setReceiverAccount(StringUtils.join(receiverAccount, ";"));
+        emailSend.setCopySenderName(StringUtils.join(copyName, ";"));
+        emailSend.setCopySenderAccount(StringUtils.join(copyAccount, ";"));
+        emailSend.setSecretSenderName(StringUtils.join(secretName, ";"));
+        emailSend.setSecretSenderAccount(StringUtils.join(secretAccount, ";"));
+
+        User user = userService.get(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
+        emailSend.setSenderName(user.getName());
+        emailSend.setSenderAccount(user.getEmail());
+
+        List<FileInfo> fileInfos = new ArrayList<>();
+        if (StringUtils.isNotBlank(files)) {
+            fileInfos = JsonMapper.getInstance().readValue(files, new TypeReference<List<FileInfo>>() {});
+        }
+        emailSend.setContainFile(fileInfos.size() == 0 ? "0" : "1");
+
+        return emailSendService.saveOrUpdate(emailSend, fileInfos, scheduleTime,userId);
+    }
 }

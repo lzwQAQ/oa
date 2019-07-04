@@ -98,8 +98,8 @@ public class BusinessController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("pending/list")
-    public PageJson pendingList(Business business, String pageNum, String pageSize) {
-        return businessService.findPendingList(pageNum, pageSize, business);
+    public PageJson pendingList(Business business, String pageNum, String pageSize,String userId) {
+        return businessService.findPendingList(pageNum, pageSize, business,userId);
     }
 
     /**
@@ -112,8 +112,8 @@ public class BusinessController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("historic/list")
-    public PageJson historicList(Business business, String pageNum, String pageSize) {
-        return businessService.findHistoricList(pageNum, pageSize, business);
+    public PageJson historicList(Business business, String pageNum, String pageSize,String userId) {
+        return businessService.findHistoricList(pageNum, pageSize, business,userId);
     }
 
     /**
@@ -126,8 +126,8 @@ public class BusinessController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("send/list")
-    public PageJson sendList(Business business, String pageNum, String pageSize) {
-        return businessService.findSendList(pageNum, pageSize, business);
+    public PageJson sendList(Business business, String pageNum, String pageSize,String userId) {
+        return businessService.findSendList(pageNum, pageSize, business,userId);
     }
 
     /**

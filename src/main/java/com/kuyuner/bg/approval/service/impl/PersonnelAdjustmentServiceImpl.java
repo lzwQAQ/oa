@@ -56,28 +56,28 @@ public class PersonnelAdjustmentServiceImpl implements PersonnelAdjustmentServic
     }
 
     @Override
-    public PageJson findPendingList(String pageNum, String pageSize, PersonnelAdjustment personnelAdjustment) {
+    public PageJson findPendingList(String pageNum, String pageSize, PersonnelAdjustment personnelAdjustment,String userId) {
         Page<AdjustmentPendingListView> page = new Page<>(pageNum, pageSize);
         page.start();
-        personnelAdjustmentDao.findPendingList(personnelAdjustment, UserUtils.getPrincipal().getId());
+        personnelAdjustmentDao.findPendingList(personnelAdjustment, UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }
 
     @Override
-    public PageJson findHistoricList(String pageNum, String pageSize, PersonnelAdjustment personnelAdjustment) {
+    public PageJson findHistoricList(String pageNum, String pageSize, PersonnelAdjustment personnelAdjustment,String userId) {
         Page<AdjustmentHistoricListView> page = new Page<>(pageNum, pageSize);
         page.start();
-        personnelAdjustmentDao.findHistoricList(personnelAdjustment, UserUtils.getPrincipal().getId());
+        personnelAdjustmentDao.findHistoricList(personnelAdjustment, UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }
 
     @Override
-    public PageJson findSendList(String pageNum, String pageSize, PersonnelAdjustment personnelAdjustment) {
+    public PageJson findSendList(String pageNum, String pageSize, PersonnelAdjustment personnelAdjustment,String userId) {
         Page<AdjustmentHistoricListView> page = new Page<>(pageNum, pageSize);
         page.start();
-        personnelAdjustmentDao.findSendList(personnelAdjustment, UserUtils.getPrincipal().getId());
+        personnelAdjustmentDao.findSendList(personnelAdjustment,UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }

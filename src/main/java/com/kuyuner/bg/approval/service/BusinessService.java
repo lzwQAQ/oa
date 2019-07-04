@@ -45,7 +45,7 @@ public interface BusinessService {
      * @param business
      * @return
      */
-    PageJson findPendingList(String pageNum, String pageSize, Business business);
+    PageJson findPendingList(String pageNum, String pageSize, Business business,String userId);
 
     /**
      * 查询历史审批
@@ -55,7 +55,7 @@ public interface BusinessService {
      * @param business
      * @return
      */
-    PageJson findHistoricList(String pageNum, String pageSize, Business business);
+    PageJson findHistoricList(String pageNum, String pageSize, Business business,String userId);
 
     /**
      * 查询申请历史
@@ -65,7 +65,7 @@ public interface BusinessService {
      * @param business
      * @return
      */
-    PageJson findSendList(String pageNum, String pageSize, Business business);
+    PageJson findSendList(String pageNum, String pageSize, Business business,String userId);
 
     /**
      * 提交申请

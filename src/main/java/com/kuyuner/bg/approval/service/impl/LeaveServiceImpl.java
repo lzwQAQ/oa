@@ -61,28 +61,28 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    public PageJson findPendingList(String pageNum, String pageSize, Leave leave) {
+    public PageJson findPendingList(String pageNum, String pageSize, Leave leave,String userId) {
         Page<LeavePendingListView> page = new Page<>(pageNum, pageSize);
         page.start();
-        leaveDao.findPendingList(leave, UserUtils.getPrincipal().getId());
+        leaveDao.findPendingList(leave,  UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }
 
     @Override
-    public PageJson findHistoricList(String pageNum, String pageSize, Leave leave) {
+    public PageJson findHistoricList(String pageNum, String pageSize, Leave leave,String userId) {
         Page<LeaveHistoricListView> page = new Page<>(pageNum, pageSize);
         page.start();
-        leaveDao.findHistoricList(leave, UserUtils.getPrincipal().getId());
+        leaveDao.findHistoricList(leave,  UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }
 
     @Override
-    public PageJson findSendList(String pageNum, String pageSize, Leave leave) {
+    public PageJson findSendList(String pageNum, String pageSize, Leave leave,String userId) {
         Page<LeavePendingListView> page = new Page<>(pageNum, pageSize);
         page.start();
-        leaveDao.findSendList(leave, UserUtils.getPrincipal().getId());
+        leaveDao.findSendList(leave,  UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }

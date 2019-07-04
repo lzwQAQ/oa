@@ -42,7 +42,7 @@ public interface LeaveService {
      * @param leave
      * @return
      */
-    PageJson findPendingList(String pageNum, String pageSize, Leave leave);
+    PageJson findPendingList(String pageNum, String pageSize, Leave leave,String userId);
 
     /**
      * 查询历史审批
@@ -52,7 +52,7 @@ public interface LeaveService {
      * @param leave
      * @return
      */
-    PageJson findHistoricList(String pageNum, String pageSize, Leave leave);
+    PageJson findHistoricList(String pageNum, String pageSize, Leave leave,String userId);
 
     /**
      * 查询申请历史
@@ -62,7 +62,7 @@ public interface LeaveService {
      * @param leave
      * @return
      */
-    PageJson findSendList(String pageNum, String pageSize, Leave leave);
+    PageJson findSendList(String pageNum, String pageSize, Leave leave,String userId);
 
     /**
      * 提交申请

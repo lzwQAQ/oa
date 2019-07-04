@@ -64,28 +64,28 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public PageJson findPendingList(String pageNum, String pageSize, Business business) {
+    public PageJson findPendingList(String pageNum, String pageSize, Business business,String userId) {
         Page<BusinessPendingListView> page = new Page<>(pageNum, pageSize);
         page.start();
-        businessDao.findPendingList(business, UserUtils.getPrincipal().getId());
+        businessDao.findPendingList(business, UserUtils.getPrincipal() == null  ? userId : UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }
 
     @Override
-    public PageJson findHistoricList(String pageNum, String pageSize, Business business) {
+    public PageJson findHistoricList(String pageNum, String pageSize, Business business,String userId) {
         Page<BusinessHistoricListView> page = new Page<>(pageNum, pageSize);
         page.start();
-        businessDao.findHistoricList(business, UserUtils.getPrincipal().getId());
+        businessDao.findHistoricList(business,UserUtils.getPrincipal() == null  ? userId : UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }
 
     @Override
-    public PageJson findSendList(String pageNum, String pageSize, Business business) {
+    public PageJson findSendList(String pageNum, String pageSize, Business business,String userId) {
         Page<BusinessHistoricListView> page = new Page<>(pageNum, pageSize);
         page.start();
-        businessDao.findSendList(business, UserUtils.getPrincipal().getId());
+        businessDao.findSendList(business, UserUtils.getPrincipal() == null  ? userId : UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }

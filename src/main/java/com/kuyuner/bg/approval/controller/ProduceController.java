@@ -43,7 +43,7 @@ public class ProduceController extends BaseController {
     /**
      * 查询1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请
      *
-     * @param produceType 1.请假 2.业务 3.人事
+     * @param produceType 1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请
      * @param pageNum
      * @param pageSize
      * @param dataType 1.代办数据 2.申请历史 3.审批历史

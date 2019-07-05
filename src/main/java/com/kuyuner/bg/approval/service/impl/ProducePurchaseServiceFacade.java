@@ -23,6 +23,7 @@ import com.kuyuner.workflow.api.bean.TaskInfo;
 import com.kuyuner.workflow.api.service.WorkFlowService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,7 @@ import java.util.List;
  *
  * @author administrator
  */
-@Service
+@Component
 public class ProducePurchaseServiceFacade implements ProduceFaced {
 
     @Autowired

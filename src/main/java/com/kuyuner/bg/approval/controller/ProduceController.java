@@ -1,24 +1,12 @@
 package com.kuyuner.bg.approval.controller;
 
-import com.kuyuner.bg.approval.entity.Business;
-import com.kuyuner.bg.approval.entity.Leave;
-import com.kuyuner.bg.approval.entity.PersonnelAdjustment;
 import com.kuyuner.bg.approval.lib.ProduceFacadeFactory;
-import com.kuyuner.bg.approval.service.BusinessService;
-import com.kuyuner.bg.approval.service.LeaveService;
-import com.kuyuner.bg.approval.service.PersonnelAdjustmentService;
 import com.kuyuner.bg.approval.service.ProduceFaced;
 import com.kuyuner.common.controller.BaseController;
-import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.PageJson;
-import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
-import com.kuyuner.core.sys.entity.User;
-import com.kuyuner.core.sys.security.UserUtils;
-import com.kuyuner.core.sys.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -32,18 +20,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ProduceController extends BaseController {
 
     @Autowired
-    private BusinessService businessService;
-    @Autowired
-    private LeaveService leaveService;
-    @Autowired
-    private PersonnelAdjustmentService personnelAdjustmentService;
-    @Autowired
     private ProduceFacadeFactory produceFacadeFactory;
 
     /**
      * 查询1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请
      *
-     * @param produceType 1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请
+     * @param produceType 1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请 7.自定义申请
      * @param pageNum
      * @param pageSize
      * @param dataType 1.代办数据 2.申请历史 3.审批历史
@@ -91,6 +73,9 @@ public class ProduceController extends BaseController {
                 break;
             case "6":
                 produce = "finance";
+                break;
+            case "7":
+                produce = "simple";
                 break;
             default:
                 break;

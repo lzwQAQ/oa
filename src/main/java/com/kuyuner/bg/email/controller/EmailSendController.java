@@ -5,6 +5,7 @@ import com.kuyuner.bg.email.entity.EmailReceive;
 import com.kuyuner.bg.email.entity.EmailSend;
 import com.kuyuner.bg.email.service.EmailReceiveService;
 import com.kuyuner.bg.email.service.EmailSendService;
+import com.kuyuner.bg.msg.util.HtmlRegexpUtil;
 import com.kuyuner.common.controller.*;
 import com.kuyuner.common.io.FileInfo;
 import com.kuyuner.common.lang.StringUtils;
@@ -323,6 +324,7 @@ public class EmailSendController extends BaseController {
                 map.put("receivers", receivers.toString());
                 map.put("copys", copys.toString());
             }
+            emailSend.setContent(HtmlRegexpUtil.filterHtml(emailSend.getContent()));
             map.put("emailSend", emailSend);
             map.put("fromId", id);
         } else {

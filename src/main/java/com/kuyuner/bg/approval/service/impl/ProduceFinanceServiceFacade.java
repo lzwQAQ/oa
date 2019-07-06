@@ -46,7 +46,7 @@ public class ProduceFinanceServiceFacade implements ProduceFaced {
         Finance finance = new Finance();
         finance.setSenderName(senderName);
         finance.setBusiness(businessName);
-        financeDao.findPendingList(finance, UserUtils.getPrincipal().getId());
+        financeDao.findPendingList(finance,  UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
     }

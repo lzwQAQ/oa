@@ -84,4 +84,6 @@ public interface CarApplyDao extends CrudDao<CarApply> {
      * @return
      */
     List<Car> findCars();
+
+    List<CarApplyPendingListView> findPendingDetail(@Param("taskId") String taskId, @Param("userId") String userId);
 }

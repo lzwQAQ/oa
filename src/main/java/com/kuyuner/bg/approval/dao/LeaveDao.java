@@ -69,4 +69,5 @@ public interface LeaveDao extends CrudDao<Leave> {
      */
     int insertLog(Leave leaveLog);
 
+    List<LeavePendingListView> findPendingDetail(@Param("taskId") String taskId, @Param("userId") String userId);
 }

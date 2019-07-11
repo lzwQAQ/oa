@@ -45,6 +45,10 @@ public class SimpleWorkflowPendingListView extends BaseEntity {
      */
     private String content;
 
+    private String sendDeptName;
+
+    private String approvalResult;
+
     public String getTaskId() {
         return taskId;
     }
@@ -99,5 +103,21 @@ public class SimpleWorkflowPendingListView extends BaseEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getSendDeptName() {
+        return sendDeptName;
+    }
+
+    public void setSendDeptName(String sendDeptName) {
+        this.sendDeptName = sendDeptName;
+    }
+
+    public String getApprovalResult() {
+        return approvalResult;
+    }
+
+    public void setApprovalResult(String approvalResult) {
+        this.approvalResult = approvalResult;
     }
 }

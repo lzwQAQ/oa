@@ -76,7 +76,7 @@ public interface ReleaseDocumentService {
      * @param taskResult
      * @return
      */
-    ResultJson submitForm(ReleaseDocument releaseDocument, FileInfo fileInfo, String taskResult);
+    ResultJson submitForm(ReleaseDocument releaseDocument, FileInfo fileInfo, String taskResult,String userId);
 
     /**
      * 审批操作
@@ -87,7 +87,7 @@ public interface ReleaseDocumentService {
      * @param taskName
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult, String taskName, String sendTo);
+    ResultJson approvalForm(String id, String approvalResult, String taskResult, String taskName, String sendTo,String userId);
 
 
     /**

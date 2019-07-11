@@ -27,7 +27,7 @@ public interface WorkFlowService {
      * @param businessKey 业务key
      * @return
      */
-    TaskInfo submitTask(String task, BusinessKey businessKey);
+    TaskInfo submitTask(String task, BusinessKey businessKey,String userId);
 
     /**
      * 提交任务，用于开启流程实例或完成任务
@@ -38,6 +38,6 @@ public interface WorkFlowService {
      * @param useLastCandidates 是否使用上一次的环节处理人
      * @return
      */
-    TaskInfo submitTask(String task, BusinessKey businessKey, boolean useLastCandidates);
+    TaskInfo submitTask(String task, BusinessKey businessKey, boolean useLastCandidates,String userId);
 
 }

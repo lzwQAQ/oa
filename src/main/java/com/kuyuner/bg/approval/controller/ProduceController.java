@@ -4,6 +4,7 @@ import com.kuyuner.bg.approval.lib.ProduceFacadeFactory;
 import com.kuyuner.bg.approval.service.ProduceFaced;
 import com.kuyuner.common.controller.BaseController;
 import com.kuyuner.common.controller.PageJson;
+import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -51,6 +52,56 @@ public class ProduceController extends BaseController {
             default:
                 return pageJson;
         }
+    }
+
+    /**
+     * 查询1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请
+     *
+     * @param produceType 1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请 7.自定义申请
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/submit")
+    public ResultJson procedureSubmit(String body, String taskResult, String pageNum, String pageSize, String produceType, String userId,String goods, String modelKey) {
+        String produce = getFacedCode(produceType);
+        ProduceFaced biz = produceFacadeFactory.getBizFacad(produce);
+        return biz.submit(body,taskResult,userId,goods,modelKey);
+    }
+
+
+    /**
+     * 审批
+     *
+     * @param approvalResult
+     * @param taskResult
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("approval")
+    public ResultJson approval(String produceType,String businessId, String approvalResult, String taskResult,String userId) {
+        String produce = getFacedCode(produceType);
+        ProduceFaced biz = produceFacadeFactory.getBizFacad(produce);
+        approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
+        return biz.approvalForm(businessId, approvalResult, taskResult,userId);
+    }
+
+    /**
+     * 详情
+     * 必传: produceType、type（historic为历史 pendding:审核）、userId
+     * 在首次发起流程进入页面时调用：传参（userId，produceType，type，modelKey，startSequenceFlowName）  modelKey必传 任务类型（qingjia、renshidiaodu、yewushenqing、caigou、caiwushenqing、shouwen、yongche、fawen、aaaa）startSequenceFlowName可以不传
+     * 在审批进入页面的时候调用：传参（userId，produceType，type，businessId（列表中的ID），taskId）
+     * 采购申请特殊处理 满足上面的情况下，在发起和审批过程中需要传参firstTask在第一次发起申请的时候穿"true"，在代办的时候传“false”
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("detail")
+    public ResultJson detail(String produceType,String businessId, String firstTask, String type,String taskId,
+                             String modelKey, String startSequenceFlowName,String userId) {
+        String produce = getFacedCode(produceType);
+        ProduceFaced biz = produceFacadeFactory.getBizFacad(produce);
+        return biz.detail(produceType,businessId,firstTask,type,taskId,modelKey,startSequenceFlowName,userId);
     }
 
     private String getFacedCode(String produceType){

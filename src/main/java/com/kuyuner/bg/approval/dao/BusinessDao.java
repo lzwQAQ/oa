@@ -84,4 +84,6 @@ public interface BusinessDao extends CrudDao<Business> {
      * @return
      */
     List<Map<String, Object>> findAllDepts();
+
+    List<BusinessPendingListView> findPendingDetail(@Param("taskId") String taskId, @Param("userId") String userId);
 }

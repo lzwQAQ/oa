@@ -96,7 +96,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson submitForm(Purchase purchase, String taskResult, List<PurchaseGoods> purchaseGoods) {
+    public ResultJson submitForm(Purchase purchase, String taskResult, List<PurchaseGoods> purchaseGoods,String userId) {
         //保存业务数据
         if (StringUtils.isBlank(purchase.getId())) {
             purchase.setId(IdGenerate.uuid());
@@ -112,14 +112,14 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchaseGoodsDao.deleteGoods(purchaseId);
         purchaseGoodsDao.inserts(purchaseGoods);
 
-        handleForm(purchase, taskResult, purchaseGoods);
+        handleForm(purchase, taskResult, purchaseGoods,userId);
 
         return ResultJson.ok();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult) {
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId) {
         Purchase purchase = new Purchase();
         purchase.setId(id);
         String approvalResultContent = purchaseDao.getApprovalResult(purchase.getId());
@@ -132,7 +132,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         PurchaseGoods goods = new PurchaseGoods();
         goods.setPurchaseId(id);
         List<PurchaseGoods> purchaseGoods = purchaseGoodsDao.findList(goods);
-        handleForm(purchase, taskResult, purchaseGoods);
+        handleForm(purchase, taskResult, purchaseGoods,userId);
 
         return ResultJson.ok();
     }
@@ -156,7 +156,8 @@ public class PurchaseServiceImpl implements PurchaseService {
      * @param taskResult
      * @param purchaseGoods
      */
-    private void handleForm(Purchase purchase, String taskResult, List<PurchaseGoods> purchaseGoods) {
+    @Override
+    public void handleForm(Purchase purchase, String taskResult, List<PurchaseGoods> purchaseGoods, String userId) {
         //记录日志
         Purchase purchaseLog = new Purchase();
         BeanUtils.copyProperties(purchase, purchaseLog);
@@ -169,7 +170,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         BusinessKey businessKey = new BusinessKey();
         businessKey.setId(purchase.getId());
         businessKey.setLogId(purchaseLog.getId());
-        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey);
+        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey,userId);
 
         //更新业务表的当前环节字段
         Purchase purchase2 = new Purchase();

@@ -12,6 +12,7 @@ import com.kuyuner.common.idgen.IdGenerate;
 import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.common.mapper.JsonMapper;
 import com.kuyuner.common.persistence.Page;
+import com.kuyuner.common.utils.GfJsonUtil;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.workflow.api.bean.BusinessKey;
 import com.kuyuner.workflow.api.bean.TaskBean;
@@ -35,7 +36,7 @@ public class ProducePersonnelAdjustmentServiceFacade implements ProduceFaced {
     private PersonnelAdjustmentDao personnelAdjustmentDao;
 
     @Autowired
-    private WorkFlowService workFlowService;
+    private PersonnelAdjustmentService personnelAdjustmentService;
 
     @Override
     public PageJson findPendingList(String pageNum, String pageSize, String senderName,String businessName,String leaveType, String userId) {
@@ -73,6 +74,49 @@ public class ProducePersonnelAdjustmentServiceFacade implements ProduceFaced {
     @Override
     public String getCode() {
         return "personnel";
+    }
+
+    @Override
+    public ResultJson submit(String body, String taskResult, String userId,String goods, String modelKey) {
+        if(UserUtils.getPrincipal()==null && StringUtils.isBlank(userId)){
+            return ResultJson.failed("请传入用户信息");
+        }
+        PersonnelAdjustment personnelAdjustment = GfJsonUtil.parseObject(body,PersonnelAdjustment.class);
+        //保存业务数据
+        if (StringUtils.isBlank(personnelAdjustment.getId())) {
+            personnelAdjustment.setId(IdGenerate.uuid());
+            personnelAdjustment.setSenderId(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
+            personnelAdjustment.setCreater(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
+            personnelAdjustmentDao.insert(personnelAdjustment);
+        } else {
+            personnelAdjustmentDao.update(personnelAdjustment);
+            personnelAdjustment = personnelAdjustmentDao.get(new PersonnelAdjustment(personnelAdjustment.getId()));
+        }
+        personnelAdjustmentService.handleForm(personnelAdjustment, taskResult,userId);
+        return ResultJson.ok();
+    }
+
+    @Override
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult, String userId) {
+        PersonnelAdjustment personnelAdjustment = new PersonnelAdjustment();
+        personnelAdjustment.setId(id);
+        String approvalResultContent = personnelAdjustmentDao.getApprovalResult(personnelAdjustment.getId());
+        TaskBean taskBean = JsonMapper.fromJsonString(taskResult, TaskBean.class);
+        String str = "<span class=\"people_name\">%s</span>的处理意见：</br>%s；<span class=\"audit_result\">%s</span></br>";
+        personnelAdjustment.setApprovalResult((approvalResultContent == null ? "" : approvalResultContent) + String.format(str, UserUtils.getPrincipal().getName(), approvalResult, taskBean.getSequenceFlowName()));
+        personnelAdjustmentDao.update(personnelAdjustment);
+
+        personnelAdjustment = personnelAdjustmentDao.get(new PersonnelAdjustment(personnelAdjustment.getId()));
+        personnelAdjustmentService.handleForm(personnelAdjustment, taskResult,userId);
+
+
+        return ResultJson.ok();
+    }
+
+    @Override
+    public ResultJson detail(String produceType, String businessId, String firstTask, String type, String taskId,
+                             String modelKey, String startSequenceFlowName, String userId) {
+        return null;
     }
 
 }

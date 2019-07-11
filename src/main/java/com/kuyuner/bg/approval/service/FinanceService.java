@@ -71,7 +71,7 @@ public interface FinanceService {
      * @param taskResult
      * @return
      */
-    ResultJson submitForm(Finance finance, String taskResult);
+    ResultJson submitForm(Finance finance, String taskResult,String userId);
 
     /**
      * 审批操作
@@ -81,6 +81,7 @@ public interface FinanceService {
      * @param taskResult
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult);
+    ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId);
 
+    void handleForm(Finance finance, String taskResult,String userId);
 }

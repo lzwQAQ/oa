@@ -137,8 +137,8 @@ public class SimpleWorkflowController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("sbumit")
-    public ResultJson sbumit(SimpleWorkflow simpleWorkflow, String taskResult, String modelKey) {
-        return simpleWorkflowService.submitForm(simpleWorkflow, taskResult, modelKey);
+    public ResultJson sbumit(SimpleWorkflow simpleWorkflow, String taskResult, String modelKey,String userId) {
+        return simpleWorkflowService.submitForm(simpleWorkflow, taskResult, modelKey,userId);
     }
 
     /**
@@ -152,9 +152,9 @@ public class SimpleWorkflowController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult, String modelKey) {
+    public ResultJson approval(String id, String approvalResult, String taskResult, String modelKey,String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return simpleWorkflowService.approvalForm(id, approvalResult, taskResult, modelKey);
+        return simpleWorkflowService.approvalForm(id, approvalResult, taskResult, modelKey,userId);
     }
 
     /**

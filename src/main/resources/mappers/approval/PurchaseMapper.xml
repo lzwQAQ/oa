@@ -89,6 +89,7 @@
 	</select>
 	<select id="findPendingList" resultType="com.kuyuner.bg.approval.bean.PurchasePendingListView">
 		select
+			t.id as "id",
 			r.ID as "taskId",
 			r.PRO_DEF_NAME as "processName",
 			r.NAME as "taskName",
@@ -248,4 +249,27 @@
         </foreach>
     </delete>
 
+	<select id="findPendingDetail" resultType="com.kuyuner.bg.approval.bean.PurchasePendingListView">
+		select
+		t.ID as "id",
+		r.ID as "taskId",
+		r.PRO_DEF_NAME as "processName",
+		r.NAME as "taskName",
+		u.name as "sender",
+		t.name as "name",
+		t.REASON as "reason",
+		t.APPROVAL_RESULT as "approvalResult",
+		t.TOTAL_PRICE as "totalPrice",
+		t.CREATE_DATE as "time"
+		from V_WF_RU_TASK r
+		inner join T_AP_PURCHASE t on t.id = r.business_id
+		inner join T_PT_USER u on u.id = t.sender_id
+		<where>
+			(r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
+			<if test="taskId != null and taskId != ''">
+				AND r.ID = #{taskId}
+			</if>
+		</where>
+		order by t.CREATE_DATE desc
+	</select>
 </mapper>

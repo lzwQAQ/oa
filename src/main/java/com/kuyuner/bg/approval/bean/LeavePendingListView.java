@@ -52,6 +52,16 @@ public class LeavePendingListView extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
 
+    private String startTime;
+
+    private String endTime;
+
+    private String reason;
+
+    private String sendDeptName;
+
+    private String leaveType;
+
     public String getTaskId() {
         return taskId;
     }
@@ -106,5 +116,45 @@ public class LeavePendingListView extends BaseEntity {
 
     public void setLeaveDay(double leaveDay) {
         this.leaveDay = leaveDay;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getSendDeptName() {
+        return sendDeptName;
+    }
+
+    public void setSendDeptName(String sendDeptName) {
+        this.sendDeptName = sendDeptName;
+    }
+
+    public String getLeaveType() {
+        return leaveType;
+    }
+
+    public void setLeaveType(String leaveType) {
+        this.leaveType = leaveType;
     }
 }

@@ -40,11 +40,21 @@ public class CarApplyPendingListView extends BaseEntity {
      */
     private String sender;
 
+    private String driverId;
+
     /**
      * 申请时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
+
+    private String startTime;
+
+    private String endTime;
+
+    private String sendDeptName;
+
+    private String phone;
 
     public String getTaskId() {
         return taskId;
@@ -100,5 +110,45 @@ public class CarApplyPendingListView extends BaseEntity {
 
     public void setDriver(String driver) {
         this.driver = driver;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getSendDeptName() {
+        return sendDeptName;
+    }
+
+    public void setSendDeptName(String sendDeptName) {
+        this.sendDeptName = sendDeptName;
+    }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(String driverId) {
+        this.driverId = driverId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

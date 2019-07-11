@@ -69,4 +69,6 @@ public interface FinanceDao extends CrudDao<Finance> {
      */
     int insertLog(Finance financeLog);
 
+
+    List<FinancePendingListView> findPendingDetail(@Param("taskId") String taskId, @Param("userId") String userId);
 }

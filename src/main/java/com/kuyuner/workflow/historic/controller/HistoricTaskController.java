@@ -3,6 +3,7 @@ package com.kuyuner.workflow.historic.controller;
 import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
+import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.workflow.engine.image.HighLightFlowElement;
 import com.kuyuner.workflow.historic.service.HistoricTaskService;
@@ -58,14 +59,18 @@ public class HistoricTaskController {
      *
      * @param processDefinitionName
      * @param modelKey
-     * @param taskType              任务类型，表示是审批的还是申请的任务
+     * @param taskType 任务类型，表示是审批的还是申请的任务
      * @return
      */
     @ResponseBody
     @RequestMapping("/findHistoricTask")
     public PageJson findHistoricTask(String pageNum, String pageSize, String processDefinitionName,
-                                     String personName, String modelKey, String taskType) {
-        return historyTaskService.findHistoricTask(UserUtils.getPrincipal().getId(),
+                                     String personName, String modelKey, String taskType,String userId) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum = "1";
+            pageSize = "10000";
+        }
+        return historyTaskService.findHistoricTask(UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId(),
                 processDefinitionName, personName, pageNum, pageSize, modelKey, taskType);
     }
 

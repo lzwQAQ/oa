@@ -1,10 +1,12 @@
 package com.kuyuner.bg.approval.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.kuyuner.bg.approval.entity.PurchaseGoods;
 import com.kuyuner.common.persistence.BaseEntity;
 import com.kuyuner.core.common.dict.DictType;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author administrator
@@ -43,6 +45,14 @@ public class PurchasePendingListView extends BaseEntity {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
+
+    private String sendDeptName;
+
+    private String reason;
+    private String approvalResult;
+    private String totalPrice;
+
+    private List<PurchaseGoods> goods;
 
     public String getTaskId() {
         return taskId;
@@ -98,5 +108,45 @@ public class PurchasePendingListView extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSendDeptName() {
+        return sendDeptName;
+    }
+
+    public void setSendDeptName(String sendDeptName) {
+        this.sendDeptName = sendDeptName;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getApprovalResult() {
+        return approvalResult;
+    }
+
+    public void setApprovalResult(String approvalResult) {
+        this.approvalResult = approvalResult;
+    }
+
+    public String getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(String totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public List<PurchaseGoods> getGoods() {
+        return goods;
+    }
+
+    public void setGoods(List<PurchaseGoods> goods) {
+        this.goods = goods;
     }
 }

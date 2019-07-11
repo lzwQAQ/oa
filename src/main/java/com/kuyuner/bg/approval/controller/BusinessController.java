@@ -138,8 +138,8 @@ public class BusinessController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("submit")
-    public ResultJson submit(Business business, String taskResult) {
-        return businessService.submitForm(business, taskResult);
+    public ResultJson submit(Business business, String taskResult,String userId) {
+        return businessService.submitForm(business, taskResult,userId);
     }
 
     /**
@@ -152,9 +152,9 @@ public class BusinessController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult) {
+    public ResultJson approval(String id, String approvalResult, String taskResult,String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return businessService.approvalForm(id, approvalResult, taskResult);
+        return businessService.approvalForm(id, approvalResult, taskResult,userId);
     }
 
     /**

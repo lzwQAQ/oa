@@ -163,7 +163,7 @@ public class ReceiveDocumentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "submit", produces = "text/html;charset=utf-8")
-    public String submit(HttpServletRequest request, ReceiveDocument receiveDocument, String taskResult) throws IOException {
+    public String submit(HttpServletRequest request, ReceiveDocument receiveDocument, String taskResult,String userId) throws IOException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String folder = fileBasePath + "approval_files" + File.separator + dateFormat.format(new Date()) + File.separator;
         List<FileInfo> list = UploadFileUtils.uploadFileToFolder(request, folder);
@@ -172,7 +172,7 @@ public class ReceiveDocumentController extends BaseController {
             fileInfo = list.get(0);
             fileInfo.setUrl(fileInfo.getOriginFile().getAbsolutePath().replace(fileBasePath, "files/").replace("\\", "/"));
         }
-        ResultJson resultJson = receiveDocumentService.submitForm(receiveDocument, fileInfo, taskResult);
+        ResultJson resultJson = receiveDocumentService.submitForm(receiveDocument, fileInfo, taskResult,userId);
         return JsonMapper.toJsonString(resultJson);
     }
 
@@ -186,9 +186,9 @@ public class ReceiveDocumentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult) {
+    public ResultJson approval(String id, String approvalResult, String taskResult,String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return receiveDocumentService.approvalForm(id, approvalResult, taskResult);
+        return receiveDocumentService.approvalForm(id, approvalResult, taskResult,userId);
     }
 
 }

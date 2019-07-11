@@ -93,7 +93,7 @@ public class ReceiveDocumentServiceImpl implements ReceiveDocumentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson submitForm(ReceiveDocument receiveDocument, FileInfo fileInfo, String taskResult) {
+    public ResultJson submitForm(ReceiveDocument receiveDocument, FileInfo fileInfo, String taskResult,String userId) {
         //保存业务数据
         ApprovalFile file;
         if (StringUtils.isBlank(receiveDocument.getId())) {
@@ -122,14 +122,14 @@ public class ReceiveDocumentServiceImpl implements ReceiveDocumentService {
         }
 
         file = fileDao.getFileByAppId(receiveDocument.getId());
-        _submitForm(receiveDocument, file, taskResult);
+        _submitForm(receiveDocument, file, taskResult,userId);
 
         return ResultJson.ok();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult) {
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId) {
         ReceiveDocument receiveDocument = new ReceiveDocument();
         receiveDocument.setId(id);
         String approvalResultContent = receiveDocumentDao.getApprovalResult(receiveDocument.getId());
@@ -140,7 +140,7 @@ public class ReceiveDocumentServiceImpl implements ReceiveDocumentService {
 
         receiveDocument = receiveDocumentDao.get(new ReceiveDocument(receiveDocument.getId()));
         ApprovalFile file = fileDao.getFileByAppId(receiveDocument.getId());
-        _submitForm(receiveDocument, file, taskResult);
+        _submitForm(receiveDocument, file, taskResult,userId);
 
         return ResultJson.ok();
     }
@@ -157,7 +157,7 @@ public class ReceiveDocumentServiceImpl implements ReceiveDocumentService {
      * @param file
      * @param taskResult
      */
-    private void _submitForm(ReceiveDocument receiveDocument, ApprovalFile file, String taskResult) {
+    private void _submitForm(ReceiveDocument receiveDocument, ApprovalFile file, String taskResult,String userId) {
         //记录日志
         ReceiveDocument receiveDocumentLog = new ReceiveDocument();
         BeanUtils.copyProperties(receiveDocument, receiveDocumentLog);
@@ -173,7 +173,7 @@ public class ReceiveDocumentServiceImpl implements ReceiveDocumentService {
         BusinessKey businessKey = new BusinessKey();
         businessKey.setId(receiveDocument.getId());
         businessKey.setLogId(receiveDocumentLog.getId());
-        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey);
+        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey,userId);
 
         //更新业务表的当前环节字段
         ReceiveDocument receiveDocument2 = new ReceiveDocument();

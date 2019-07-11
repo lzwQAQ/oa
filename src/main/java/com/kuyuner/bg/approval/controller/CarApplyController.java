@@ -149,8 +149,8 @@ public class CarApplyController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("submit")
-    public ResultJson submit(CarApply carApply, String taskResult) {
-        return carApplyService.submitForm(carApply, taskResult);
+    public ResultJson submit(CarApply carApply, String taskResult,String userId) {
+        return carApplyService.submitForm(carApply, taskResult,userId);
     }
 
     /**
@@ -163,9 +163,9 @@ public class CarApplyController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult) {
+    public ResultJson approval(String id, String approvalResult, String taskResult,String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return carApplyService.approvalForm(id, approvalResult, taskResult);
+        return carApplyService.approvalForm(id, approvalResult, taskResult,userId);
     }
 
     /**

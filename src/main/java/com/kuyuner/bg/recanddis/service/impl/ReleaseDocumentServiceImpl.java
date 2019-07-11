@@ -105,7 +105,7 @@ public class ReleaseDocumentServiceImpl implements ReleaseDocumentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson submitForm(ReleaseDocument releaseDocument, FileInfo fileInfo, String taskResult) {
+    public ResultJson submitForm(ReleaseDocument releaseDocument, FileInfo fileInfo, String taskResult,String userId) {
         //保存业务数据
         ApprovalFile file;
         if (StringUtils.isBlank(releaseDocument.getId())) {
@@ -134,14 +134,14 @@ public class ReleaseDocumentServiceImpl implements ReleaseDocumentService {
         }
 
         file = fileDao.getFileByAppId(releaseDocument.getId());
-        _submitForm(releaseDocument, file, taskResult, null);
+        _submitForm(releaseDocument, file, taskResult, null,userId);
 
         return ResultJson.ok();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult, String taskName, String sendTo) {
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult, String taskName, String sendTo,String userId) {
         ReleaseDocument releaseDocument = new ReleaseDocument();
         releaseDocument.setId(id);
         if ("核稿".equals(taskName)) {
@@ -155,7 +155,7 @@ public class ReleaseDocumentServiceImpl implements ReleaseDocumentService {
 
         releaseDocument = releaseDocumentDao.get(new ReleaseDocument(releaseDocument.getId()));
         ApprovalFile file = fileDao.getFileByAppId(releaseDocument.getId());
-        _submitForm(releaseDocument, file, taskResult, sendTo);
+        _submitForm(releaseDocument, file, taskResult, sendTo,userId);
 
         return ResultJson.ok();
     }
@@ -172,7 +172,7 @@ public class ReleaseDocumentServiceImpl implements ReleaseDocumentService {
      * @param file
      * @param taskResult
      */
-    private void _submitForm(ReleaseDocument releaseDocument, ApprovalFile file, String taskResult, String sendTo) {
+    private void _submitForm(ReleaseDocument releaseDocument, ApprovalFile file, String taskResult, String sendTo,String userId) {
         //记录日志
         ReleaseDocument releaseDocumentLog = new ReleaseDocument();
         BeanUtils.copyProperties(releaseDocument, releaseDocumentLog);
@@ -188,7 +188,7 @@ public class ReleaseDocumentServiceImpl implements ReleaseDocumentService {
         BusinessKey businessKey = new BusinessKey();
         businessKey.setId(releaseDocument.getId());
         businessKey.setLogId(releaseDocumentLog.getId());
-        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey);
+        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey,userId);
 
         //更新业务表的当前环节字段
         ReleaseDocument releaseDocument2 = new ReleaseDocument();

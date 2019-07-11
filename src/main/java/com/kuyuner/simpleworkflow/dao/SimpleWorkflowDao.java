@@ -80,4 +80,6 @@ public interface SimpleWorkflowDao extends CrudDao<SimpleWorkflow> {
      * @return
      */
     String getModelId(@Param("modelKey") String modelKey);
+
+    List<SimpleWorkflowPendingListView> findPendingDetail(@Param("taskId") String taskId, @Param("userId") String userId);
 }

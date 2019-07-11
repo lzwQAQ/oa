@@ -115,6 +115,7 @@
 
     <select id="findPendingList" resultType="com.kuyuner.bg.approval.bean.CarApplyPendingListView">
         select
+        t.id as "id",
         r.ID as "taskId",
         r.PRO_DEF_NAME as "processName",
         c.id AS "car.id",
@@ -312,4 +313,33 @@
         </foreach>
     </delete>
 
+    <select id="findPendingDetail" resultType="com.kuyuner.bg.approval.bean.CarApplyPendingListView">
+        select
+        r.ID as "taskId",
+        r.PRO_DEF_NAME as "processName",
+        c.id AS "car.id",
+        c.car_no AS "car.carNo",
+        c.seat_num AS "car.seatNum",
+        c.brand AS "car.brand",
+        (select name from T_PT_USER where id = t.user_id) as 'driver',
+        (select PHONE from T_PT_USER where id = t.user_id) as 'phone',
+        t.user_id as "driverId",
+        r.NAME as "taskName",
+        u.name as "sender",
+        t.START_TIME as "startTime",
+        t.END_TIME as "endTime",
+        t.REASON as "reason",
+        t.APPROVAL_RESULT as "approvalResult",
+        t.CREATE_DATE as "time"
+        from V_WF_RU_TASK r
+        inner join T_AP_CAR t on t.id = r.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        inner join T_CAR c on c.id = t.car_id
+        <where>
+            (r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
+            <if test="taskId != null ">
+                AND r.ID = #{taskId}
+            </if>
+        </where>
+    </select>
 </mapper>

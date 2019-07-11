@@ -89,7 +89,7 @@ public class CarApplyServiceImpl implements CarApplyService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson submitForm(CarApply carApply, String taskResult) {
+    public ResultJson submitForm(CarApply carApply, String taskResult,String userId) {
         //保存业务数据
         if (StringUtils.isBlank(carApply.getId())) {
             carApply.setId(IdGenerate.uuid());
@@ -102,14 +102,14 @@ public class CarApplyServiceImpl implements CarApplyService {
         }
 
 
-        _submitForm(carApply, taskResult);
+        _submitForm(carApply, taskResult,userId);
 
         return ResultJson.ok();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult) {
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId) {
         CarApply carApply = new CarApply();
         carApply.setId(id);
         String approvalResultContent = carApplyDao.getApprovalResult(carApply.getId());
@@ -119,7 +119,7 @@ public class CarApplyServiceImpl implements CarApplyService {
         carApplyDao.update(carApply);
 
         carApply = carApplyDao.get(new CarApply(carApply.getId()));
-        submitForm(carApply, taskResult);
+        submitForm(carApply, taskResult,userId);
 
         return ResultJson.ok();
     }
@@ -147,7 +147,8 @@ public class CarApplyServiceImpl implements CarApplyService {
      * @param carApply
      * @param taskResult
      */
-    private void _submitForm(CarApply carApply, String taskResult) {
+    @Override
+    public void _submitForm(CarApply carApply, String taskResult, String userId) {
         //记录日志
         CarApply carApplyLog = new CarApply();
         BeanUtils.copyProperties(carApply, carApplyLog);
@@ -158,7 +159,7 @@ public class CarApplyServiceImpl implements CarApplyService {
         BusinessKey businessKey = new BusinessKey();
         businessKey.setId(carApply.getId());
         businessKey.setLogId(carApplyLog.getId());
-        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey);
+        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey,userId);
 
         //更新业务表的当前环节字段
         CarApply carApply2 = new CarApply();

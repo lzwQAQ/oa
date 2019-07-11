@@ -144,8 +144,8 @@ public class PersonnelAdjustmentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("submit")
-    public ResultJson submit(PersonnelAdjustment personnelAdjustment, String taskResult) {
-        return personnelAdjustmentService.submitForm(personnelAdjustment, taskResult);
+    public ResultJson submit(PersonnelAdjustment personnelAdjustment, String taskResult,String userId) {
+        return personnelAdjustmentService.submitForm(personnelAdjustment, taskResult,userId);
     }
 
     /**
@@ -158,8 +158,8 @@ public class PersonnelAdjustmentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult) {
+    public ResultJson approval(String id, String approvalResult, String taskResult,String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return personnelAdjustmentService.approvalForm(id, approvalResult, taskResult);
+        return personnelAdjustmentService.approvalForm(id, approvalResult, taskResult,userId);
     }
 }

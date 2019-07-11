@@ -92,7 +92,7 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson submitForm(Business business, String taskResult) {
+    public ResultJson submitForm(Business business, String taskResult,String userId) {
         //保存业务数据
         if (StringUtils.isBlank(business.getId())) {
             business.setId(IdGenerate.uuid());
@@ -105,14 +105,14 @@ public class BusinessServiceImpl implements BusinessService {
         }
 
 
-        handleForm(business, taskResult);
+        handleForm(business, taskResult,userId);
 
         return ResultJson.ok();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult) {
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId) {
         Business business = new Business();
         business.setId(id);
         String approvalResultContent = businessDao.getApprovalResult(business.getId());
@@ -122,7 +122,7 @@ public class BusinessServiceImpl implements BusinessService {
         businessDao.update(business);
 
         business = businessDao.get(new Business(business.getId()));
-        handleForm(business, taskResult);
+        handleForm(business, taskResult,userId);
 
 
         return ResultJson.ok();
@@ -144,7 +144,8 @@ public class BusinessServiceImpl implements BusinessService {
      * @param business
      * @param taskResult
      */
-    private void handleForm(Business business, String taskResult) {
+    @Override
+    public void handleForm(Business business, String taskResult, String userId) {
         //记录日志
         Business businessLog = new Business();
         BeanUtils.copyProperties(business, businessLog);
@@ -155,7 +156,7 @@ public class BusinessServiceImpl implements BusinessService {
         BusinessKey businessKey = new BusinessKey();
         businessKey.setId(business.getId());
         businessKey.setLogId(businessLog.getId());
-        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey);
+        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey,userId);
 
         //更新业务表的当前环节字段
         Business business1 = new Business();

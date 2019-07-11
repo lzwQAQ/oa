@@ -74,7 +74,7 @@ public interface BusinessService {
      * @param taskResult
      * @return
      */
-    ResultJson submitForm(Business business, String taskResult);
+    ResultJson submitForm(Business business, String taskResult,String userId);
 
     /**
      * 审批操作
@@ -84,7 +84,7 @@ public interface BusinessService {
      * @param taskResult
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult);
+    ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId);
 
     /**
      * 查询所有的用户
@@ -99,4 +99,6 @@ public interface BusinessService {
      * @return
      */
     List<Map<String, Object>> findAllDepts();
+
+    void handleForm(Business business, String taskResult,String userId);
 }

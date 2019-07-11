@@ -45,6 +45,11 @@ public class FinancePendingListView extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
 
+    private String sendDeptName;
+
+    private String purpose;
+    private String approvalResult;
+
     public String getTaskId() {
         return taskId;
     }
@@ -100,5 +105,29 @@ public class FinancePendingListView extends BaseEntity {
 
     public void setMoney(Double money) {
         this.money = money;
+    }
+
+    public String getSendDeptName() {
+        return sendDeptName;
+    }
+
+    public void setSendDeptName(String sendDeptName) {
+        this.sendDeptName = sendDeptName;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
+    }
+
+    public String getApprovalResult() {
+        return approvalResult;
+    }
+
+    public void setApprovalResult(String approvalResult) {
+        this.approvalResult = approvalResult;
     }
 }

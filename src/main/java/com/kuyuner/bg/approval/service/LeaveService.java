@@ -71,7 +71,7 @@ public interface LeaveService {
      * @param taskResult
      * @return
      */
-    ResultJson submitForm(Leave leave, String taskResult);
+    ResultJson submitForm(Leave leave, String taskResult,String userId);
 
     /**
      * 审批操作
@@ -81,5 +81,7 @@ public interface LeaveService {
      * @param taskResult
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult);
+    ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId);
+
+    void handleForm(Leave leave, String taskResult,String userId);
 }

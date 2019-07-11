@@ -85,6 +85,7 @@ public class PendingTaskServiceImpl implements PendingTaskService {
         map.put("modelKey", processDefinition.getKey());
         map.put("processDefinitionName", processDefinition.getName());
         map.put("processDefinitionId", processDefinition.getId());
+        map.put("businessId", businessKey.getId());
         return ResultJson.ok(map);
     }
 

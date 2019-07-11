@@ -75,7 +75,7 @@ public interface PurchaseService {
      * @param fileInfos
      * @return
      */
-    ResultJson submitForm(Purchase purchase, String taskResult, List<PurchaseGoods> fileInfos);
+    ResultJson submitForm(Purchase purchase, String taskResult, List<PurchaseGoods> fileInfos,String userId);
 
     /**
      * 审批操作
@@ -85,7 +85,7 @@ public interface PurchaseService {
      * @param taskResult
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult);
+    ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId);
 
 
     /**
@@ -103,5 +103,7 @@ public interface PurchaseService {
      * @return
      */
     List<PurchaseGoods> findGoods(String businessId);
+
+    void handleForm(Purchase purchase, String taskResult, List<PurchaseGoods> purchaseGoods,String userId);
 
 }

@@ -89,7 +89,7 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson submitForm(Finance finance, String taskResult) {
+    public ResultJson submitForm(Finance finance, String taskResult,String userId) {
         //保存业务数据
         if (StringUtils.isBlank(finance.getId())) {
             finance.setId(IdGenerate.uuid());
@@ -102,14 +102,14 @@ public class FinanceServiceImpl implements FinanceService {
         }
 
 
-        handleForm(finance, taskResult);
+        handleForm(finance, taskResult,userId);
 
         return ResultJson.ok();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult) {
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId) {
         Finance finance = new Finance();
         finance.setId(id);
         String approvalResultContent = financeDao.getApprovalResult(finance.getId());
@@ -119,7 +119,7 @@ public class FinanceServiceImpl implements FinanceService {
         financeDao.update(finance);
 
         finance = financeDao.get(new Finance(finance.getId()));
-        handleForm(finance, taskResult);
+        handleForm(finance, taskResult,userId);
 
         return ResultJson.ok();
     }
@@ -130,7 +130,8 @@ public class FinanceServiceImpl implements FinanceService {
      * @param finance
      * @param taskResult
      */
-    private void handleForm(Finance finance, String taskResult) {
+    @Override
+    public void handleForm(Finance finance, String taskResult, String userId) {
         //记录日志
         Finance financeLog = new Finance();
         BeanUtils.copyProperties(finance, financeLog);
@@ -141,7 +142,7 @@ public class FinanceServiceImpl implements FinanceService {
         BusinessKey businessKey = new BusinessKey();
         businessKey.setId(finance.getId());
         businessKey.setLogId(financeLog.getId());
-        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey);
+        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey,userId);
 
         //更新业务表的当前环节字段
         Finance finance1 = new Finance();

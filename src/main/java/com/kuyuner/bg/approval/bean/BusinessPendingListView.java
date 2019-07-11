@@ -52,6 +52,17 @@ public class BusinessPendingListView extends BaseEntity {
      */
     private String header;
 
+    private String startTime;
+
+    private String endTime;
+
+    private String collaborationDept;
+    private String needPlace;
+    private String explains;
+    private String funds;
+
+    private String sendDeptName;
+
     public String getTaskId() {
         return taskId;
     }
@@ -114,5 +125,61 @@ public class BusinessPendingListView extends BaseEntity {
 
     public void setHeader(String header) {
         this.header = header;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getCollaborationDept() {
+        return collaborationDept;
+    }
+
+    public void setCollaborationDept(String collaborationDept) {
+        this.collaborationDept = collaborationDept;
+    }
+
+    public String getNeedPlace() {
+        return needPlace;
+    }
+
+    public void setNeedPlace(String needPlace) {
+        this.needPlace = needPlace;
+    }
+
+    public String getExplains() {
+        return explains;
+    }
+
+    public void setExplains(String explains) {
+        this.explains = explains;
+    }
+
+    public String getFunds() {
+        return funds;
+    }
+
+    public void setFunds(String funds) {
+        this.funds = funds;
+    }
+
+    public String getSendDeptName() {
+        return sendDeptName;
+    }
+
+    public void setSendDeptName(String sendDeptName) {
+        this.sendDeptName = sendDeptName;
     }
 }

@@ -76,7 +76,7 @@ public interface ReceiveDocumentService {
      * @param taskResult
      * @return
      */
-    ResultJson submitForm(ReceiveDocument receiveDocument, FileInfo fileInfo, String taskResult);
+    ResultJson submitForm(ReceiveDocument receiveDocument, FileInfo fileInfo, String taskResult,String userId);
 
     /**
      * 审批操作
@@ -86,7 +86,7 @@ public interface ReceiveDocumentService {
      * @param taskResult
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult);
+    ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId);
 
 
     /**

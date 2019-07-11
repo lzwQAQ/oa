@@ -84,26 +84,26 @@ public class PersonnelAdjustmentServiceImpl implements PersonnelAdjustmentServic
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson submitForm(PersonnelAdjustment personnelAdjustment, String taskResult) {
+    public ResultJson submitForm(PersonnelAdjustment personnelAdjustment, String taskResult,String userId) {
         //保存业务数据
         if (StringUtils.isBlank(personnelAdjustment.getId())) {
             personnelAdjustment.setId(IdGenerate.uuid());
-            personnelAdjustment.setSenderId(UserUtils.getPrincipal().getId());
-            personnelAdjustment.setCreater(UserUtils.getPrincipal().getId());
+            personnelAdjustment.setSenderId(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
+            personnelAdjustment.setCreater(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
             personnelAdjustmentDao.insert(personnelAdjustment);
         } else {
             personnelAdjustmentDao.update(personnelAdjustment);
             personnelAdjustment = personnelAdjustmentDao.get(new PersonnelAdjustment(personnelAdjustment.getId()));
         }
 
-        handleForm(personnelAdjustment, taskResult);
+        handleForm(personnelAdjustment, taskResult,userId);
 
         return ResultJson.ok();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult) {
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId) {
         PersonnelAdjustment personnelAdjustment = new PersonnelAdjustment();
         personnelAdjustment.setId(id);
         String approvalResultContent = personnelAdjustmentDao.getApprovalResult(personnelAdjustment.getId());
@@ -113,7 +113,7 @@ public class PersonnelAdjustmentServiceImpl implements PersonnelAdjustmentServic
         personnelAdjustmentDao.update(personnelAdjustment);
 
         personnelAdjustment = personnelAdjustmentDao.get(new PersonnelAdjustment(personnelAdjustment.getId()));
-        handleForm(personnelAdjustment, taskResult);
+        handleForm(personnelAdjustment, taskResult,userId);
 
 
         return ResultJson.ok();
@@ -125,7 +125,8 @@ public class PersonnelAdjustmentServiceImpl implements PersonnelAdjustmentServic
      * @param personnelAdjustment
      * @param taskResult
      */
-    private void handleForm(PersonnelAdjustment personnelAdjustment, String taskResult) {
+    @Override
+    public void handleForm(PersonnelAdjustment personnelAdjustment, String taskResult, String userId) {
         //记录日志
         PersonnelAdjustment adjustmentLog = new PersonnelAdjustment();
         BeanUtils.copyProperties(personnelAdjustment, adjustmentLog);
@@ -136,7 +137,7 @@ public class PersonnelAdjustmentServiceImpl implements PersonnelAdjustmentServic
         BusinessKey businessKey = new BusinessKey();
         businessKey.setId(personnelAdjustment.getId());
         businessKey.setLogId(adjustmentLog.getId());
-        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey);
+        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey,userId);
 
         //更新业务表的当前环节字段
         PersonnelAdjustment adjustment = new PersonnelAdjustment();

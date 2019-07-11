@@ -61,6 +61,7 @@
 
 	<select id="findPendingList" resultType="com.kuyuner.simpleworkflow.bean.SimpleWorkflowPendingListView">
 		select
+		t.id as "id",
 			r.ID as "taskId",
 			r.PRO_DEF_NAME as "processName",
 			t.title as "title",
@@ -257,4 +258,24 @@
 		select ID_ from ACT_RE_MODEL where KEY_ = #{modelKey}
 	</select>
 
+	<select id="findPendingDetail" resultType="com.kuyuner.simpleworkflow.bean.SimpleWorkflowPendingListView">
+		select
+		r.ID as "taskId",
+		r.PRO_DEF_NAME as "processName",
+		t.title as "title",
+		r.NAME as "taskName",
+		u.name as "sender",
+		t.CONTENT as "content",
+		t.APPROVAL_RESULT as "approvalResult",
+		t.CREATE_DATE as "time"
+		from V_WF_RU_TASK r
+		inner join T_WF_SIMPLE t on t.id = r.business_id
+		inner join T_PT_USER u on u.id = t.creater
+		<where>
+			(r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
+			<if test="taskId != null and taskId != ''">
+				and r.ID=#{taskId}
+			</if>
+		</where>
+	</select>
 </mapper>

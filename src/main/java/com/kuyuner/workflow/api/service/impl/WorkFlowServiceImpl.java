@@ -61,14 +61,14 @@ public class WorkFlowServiceImpl implements WorkFlowService {
     private HistoryService historyService;
 
     @Override
-    public TaskInfo submitTask(String task, BusinessKey businessKey) {
-        return submitTask(task, businessKey, true);
+    public TaskInfo submitTask(String task, BusinessKey businessKey,String userId) {
+        return submitTask(task, businessKey, true,userId);
     }
 
     @Override
-    public TaskInfo submitTask(String task, BusinessKey businessKey, boolean useLastCandidates) {
+    public TaskInfo submitTask(String task, BusinessKey businessKey, boolean useLastCandidates,String uid) {
         TaskBean taskBean = JsonMapper.fromJsonString(task, TaskBean.class);
-        String userId = UserUtils.getPrincipal().getId();
+        String userId = UserUtils.getPrincipal() == null ? uid : UserUtils.getPrincipal().getId();
 
         // 完成任务
         if (StringUtils.isNotBlank(taskBean.getTaskId())) {

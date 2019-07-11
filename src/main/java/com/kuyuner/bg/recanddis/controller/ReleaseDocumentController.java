@@ -168,7 +168,7 @@ public class ReleaseDocumentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "submit", produces = "text/html;charset=utf-8")
-    public String submit(HttpServletRequest request, ReleaseDocument releaseDocument, String taskResult) throws IOException {
+    public String submit(HttpServletRequest request, ReleaseDocument releaseDocument, String taskResult,String userId) throws IOException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String folder = fileBasePath + "approval_files" + File.separator + dateFormat.format(new Date()) + File.separator;
         List<FileInfo> list = UploadFileUtils.uploadFileToFolder(request, folder);
@@ -177,7 +177,7 @@ public class ReleaseDocumentController extends BaseController {
             fileInfo = list.get(0);
             fileInfo.setUrl(fileInfo.getOriginFile().getAbsolutePath().replace(fileBasePath, "files/").replace("\\", "/"));
         }
-        ResultJson resultJson = releaseDocumentService.submitForm(releaseDocument, fileInfo, taskResult);
+        ResultJson resultJson = releaseDocumentService.submitForm(releaseDocument, fileInfo, taskResult,userId);
         return JsonMapper.toJsonString(resultJson);
     }
 
@@ -191,9 +191,9 @@ public class ReleaseDocumentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult, String taskName, String sendTo) {
+    public ResultJson approval(String id, String approvalResult, String taskResult, String taskName, String sendTo,String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return releaseDocumentService.approvalForm(id, approvalResult, taskResult, taskName, sendTo);
+        return releaseDocumentService.approvalForm(id, approvalResult, taskResult, taskName, sendTo,userId);
     }
 
 

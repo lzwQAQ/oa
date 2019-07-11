@@ -159,8 +159,8 @@ public class LeaveController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("submit")
-    public ResultJson submit(Leave leave, String taskResult) {
-        return leaveService.submitForm(leave, taskResult);
+    public ResultJson submit(Leave leave, String taskResult,String userId) {
+        return leaveService.submitForm(leave, taskResult,userId);
     }
 
     /**
@@ -173,9 +173,9 @@ public class LeaveController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult) {
+    public ResultJson approval(String id, String approvalResult, String taskResult,String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return leaveService.approvalForm(id, approvalResult, taskResult);
+        return leaveService.approvalForm(id, approvalResult, taskResult,userId);
     }
 
 }

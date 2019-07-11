@@ -72,7 +72,7 @@ public interface CarApplyService {
      * @param taskResult
      * @return
      */
-    ResultJson submitForm(CarApply carApply, String taskResult);
+    ResultJson submitForm(CarApply carApply, String taskResult,String userId);
 
     /**
      * 审批操作
@@ -82,7 +82,7 @@ public interface CarApplyService {
      * @param taskResult
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult);
+    ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId);
 
     /**
      * 查询驾驶员
@@ -97,4 +97,6 @@ public interface CarApplyService {
      * @return
      */
     ListJson findCars();
+
+    void _submitForm(CarApply carApply, String taskResult,String userId);
 }

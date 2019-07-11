@@ -41,4 +41,26 @@ public interface ProduceFaced {
 
     String getCode();
 
+    /**
+     * 提交
+     * @param body
+     * @return
+     */
+    ResultJson submit(String body,String taskResult,String userId,String goods, String modelKey);
+
+    /**
+     * 审批
+     * @param id
+     * @return
+     */
+    ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId);
+
+    /**
+     * 获取任务详情信息
+     * @param taskId
+     * @param userId
+     * @return
+     */
+    ResultJson detail(String produceType,String businessId, String firstTask, String type,String taskId,
+                      String modelKey, String startSequenceFlowName,String userId);
 }

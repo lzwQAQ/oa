@@ -27,7 +27,7 @@ public interface SimpleWorkflowService {
      * @param modelKey
      * @return
      */
-    ResultJson submitForm(SimpleWorkflow simpleWorkflow, String taskResult, String modelKey);
+    ResultJson submitForm(SimpleWorkflow simpleWorkflow, String taskResult, String modelKey,String userId);
 
     /**
      * 删除数据
@@ -84,5 +84,7 @@ public interface SimpleWorkflowService {
      * @param modelKey
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult, String modelKey);
+    ResultJson approvalForm(String id, String approvalResult, String taskResult, String modelKey,String userId);
+
+    void submitForm(SimpleWorkflow simpleWorkflow, String taskResult,String userId);
 }

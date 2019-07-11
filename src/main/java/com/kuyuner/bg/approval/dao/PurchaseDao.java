@@ -68,4 +68,5 @@ public interface PurchaseDao extends CrudDao<Purchase> {
      */
     int insertLog(Purchase purchaseLog);
 
+    List<PurchasePendingListView> findPendingDetail(@Param("taskId") String taskId, @Param("userId") String userId);
 }

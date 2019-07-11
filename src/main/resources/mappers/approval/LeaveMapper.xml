@@ -103,9 +103,11 @@
 
     <select id="findPendingList" resultType="com.kuyuner.bg.approval.bean.LeavePendingListView">
         select
+            t.id as "id",
             r.ID as "taskId",
             r.PRO_DEF_NAME as "processName",
             t.type as "type",
+            t.type as "leaveType",
             r.NAME as "taskName",
             u.name as "sender",
             t.LEAVE_DAY as "leaveDay",
@@ -265,5 +267,30 @@
             #{id}
         </foreach>
     </delete>
+
+
+    <select id="findPendingDetail" resultType="com.kuyuner.bg.approval.bean.LeavePendingListView">
+        select
+        r.ID as "taskId",
+        r.PRO_DEF_NAME as "processName",
+        t.type as "type",
+        t.type as "leaveType",
+        r.NAME as "taskName",
+        u.name as "sender",
+        t.LEAVE_DAY as "leaveDay",
+        t.START_TIME as "startTime",
+        t.END_TIME as "endTime",
+        t.REASON as "reason",
+        t.CREATE_DATE as "time"
+        from V_WF_RU_TASK r
+        inner join T_AP_LEAVE t on t.id = r.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            (r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
+            <if test="taskId != null and taskId != ''">
+                AND r.ID = #{taskId}
+            </if>
+        </where>
+    </select>
 
 </mapper>

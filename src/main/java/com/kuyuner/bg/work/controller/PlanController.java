@@ -109,8 +109,12 @@ public class PlanController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("sendlist")
-    public PageJson sendList(Plan plan, String pageNum, String pageSize) {
-        return planService.findSendPageList(pageNum, pageSize, plan);
+    public PageJson sendList(Plan plan, String pageNum, String pageSize,String userId) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum = "1";
+            pageSize = "10000";
+        }
+        return planService.findSendPageList(pageNum, pageSize, plan,userId);
     }
 
     /**

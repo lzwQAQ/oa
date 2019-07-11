@@ -89,12 +89,12 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson submitForm(Leave leave, String taskResult) {
+    public ResultJson submitForm(Leave leave, String taskResult,String userId) {
         //保存业务数据
         if (StringUtils.isBlank(leave.getId())) {
             leave.setId(IdGenerate.uuid());
-            leave.setSenderId(UserUtils.getPrincipal().getId());
-            leave.setCreater(UserUtils.getPrincipal().getId());
+            leave.setSenderId(UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
+            leave.setCreater(UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
             leaveDao.insert(leave);
         } else {
             leaveDao.update(leave);
@@ -102,14 +102,14 @@ public class LeaveServiceImpl implements LeaveService {
         }
 
 
-        handleForm(leave, taskResult);
+        handleForm(leave, taskResult,userId);
 
         return ResultJson.ok();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult) {
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId) {
         Leave leave = new Leave();
         leave.setId(id);
         String approvalResultContent = leaveDao.getApprovalResult(leave.getId());
@@ -119,7 +119,7 @@ public class LeaveServiceImpl implements LeaveService {
         leaveDao.update(leave);
 
         leave = leaveDao.get(new Leave(leave.getId()));
-        handleForm(leave, taskResult);
+        handleForm(leave, taskResult,userId);
 
         return ResultJson.ok();
     }
@@ -130,7 +130,8 @@ public class LeaveServiceImpl implements LeaveService {
      * @param leave
      * @param taskResult
      */
-    private void handleForm(Leave leave, String taskResult) {
+    @Override
+    public void handleForm(Leave leave, String taskResult,String userId) {
         //记录日志
         Leave leaveLog = new Leave();
         BeanUtils.copyProperties(leave, leaveLog);
@@ -141,7 +142,7 @@ public class LeaveServiceImpl implements LeaveService {
         BusinessKey businessKey = new BusinessKey();
         businessKey.setId(leave.getId());
         businessKey.setLogId(leaveLog.getId());
-        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey);
+        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey,userId);
 
         //更新业务表的当前环节字段
         Leave leave2 = new Leave();

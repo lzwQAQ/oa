@@ -148,8 +148,8 @@ public class FinanceController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("submit")
-    public ResultJson submit(Finance finance, String taskResult) {
-        return financeService.submitForm(finance, taskResult);
+    public ResultJson submit(Finance finance, String taskResult,String userId) {
+        return financeService.submitForm(finance, taskResult,userId);
     }
 
     /**
@@ -162,9 +162,9 @@ public class FinanceController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult) {
+    public ResultJson approval(String id, String approvalResult, String taskResult,String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return financeService.approvalForm(id, approvalResult, taskResult);
+        return financeService.approvalForm(id, approvalResult, taskResult,userId);
     }
 
 }

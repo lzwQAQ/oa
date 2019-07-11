@@ -43,7 +43,7 @@ public class SimpleWorkflowServiceImpl implements SimpleWorkflowService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson submitForm(SimpleWorkflow simpleWorkflow, String taskResult, String modelKey) {
+    public ResultJson submitForm(SimpleWorkflow simpleWorkflow, String taskResult, String modelKey,String userId) {
 
         //保存业务数据
         if (StringUtils.isBlank(simpleWorkflow.getId())) {
@@ -58,7 +58,7 @@ public class SimpleWorkflowServiceImpl implements SimpleWorkflowService {
         }
 
 
-        submitForm(simpleWorkflow, taskResult);
+        submitForm(simpleWorkflow, taskResult,userId);
 
         return ResultJson.ok();
     }
@@ -105,7 +105,7 @@ public class SimpleWorkflowServiceImpl implements SimpleWorkflowService {
     }
 
     @Override
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult, String modelKey) {
+    public ResultJson approvalForm(String id, String approvalResult, String taskResult, String modelKey,String userId) {
         SimpleWorkflow simpleWorkflow = new SimpleWorkflow();
         simpleWorkflow.setId(id);
         String approvalResultContent = simpleWorkflowDao.getApprovalResult(simpleWorkflow.getId());
@@ -115,7 +115,7 @@ public class SimpleWorkflowServiceImpl implements SimpleWorkflowService {
         simpleWorkflowDao.update(simpleWorkflow);
 
         simpleWorkflow = simpleWorkflowDao.get(new SimpleWorkflow(simpleWorkflow.getId()));
-        submitForm(simpleWorkflow, taskResult);
+        submitForm(simpleWorkflow, taskResult,userId);
 
 
         return ResultJson.ok();
@@ -127,7 +127,8 @@ public class SimpleWorkflowServiceImpl implements SimpleWorkflowService {
      * @param simpleWorkflow
      * @param taskResult
      */
-    private void submitForm(SimpleWorkflow simpleWorkflow, String taskResult) {
+    @Override
+    public void submitForm(SimpleWorkflow simpleWorkflow, String taskResult, String userId) {
         //记录日志
         SimpleWorkflow simpleWorkflowLog = new SimpleWorkflow();
         BeanUtils.copyProperties(simpleWorkflow, simpleWorkflowLog);
@@ -138,7 +139,7 @@ public class SimpleWorkflowServiceImpl implements SimpleWorkflowService {
         BusinessKey businessKey = new BusinessKey();
         businessKey.setId(simpleWorkflow.getId());
         businessKey.setLogId(simpleWorkflowLog.getId());
-        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey);
+        TaskInfo taskInfo = workFlowService.submitTask(taskResult, businessKey,userId);
 
         //更新业务表的当前环节字段
         SimpleWorkflow workflow = new SimpleWorkflow();

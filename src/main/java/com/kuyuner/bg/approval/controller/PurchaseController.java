@@ -146,10 +146,9 @@ public class PurchaseController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("submit")
-    public ResultJson submit(Purchase purchase, String taskResult, String goods) throws IOException {
-        List<PurchaseGoods> purchaseGoods = JsonMapper.getInstance().readValue(goods, new TypeReference<List<PurchaseGoods>>() {
-        });
-        return purchaseService.submitForm(purchase, taskResult, purchaseGoods);
+    public ResultJson submit(Purchase purchase, String taskResult, String goods,String userId) throws IOException {
+        List<PurchaseGoods> purchaseGoods = JsonMapper.getInstance().readValue(goods, new TypeReference<List<PurchaseGoods>>() {});
+        return purchaseService.submitForm(purchase, taskResult, purchaseGoods,userId);
     }
 
     /**
@@ -162,9 +161,9 @@ public class PurchaseController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult) {
+    public ResultJson approval(String id, String approvalResult, String taskResult,String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return purchaseService.approvalForm(id, approvalResult, taskResult);
+        return purchaseService.approvalForm(id, approvalResult, taskResult,userId);
     }
 
 }

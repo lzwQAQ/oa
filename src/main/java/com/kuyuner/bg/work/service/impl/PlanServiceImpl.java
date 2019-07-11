@@ -72,8 +72,8 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public PageJson findSendPageList(String pageNum, String pageSize, Plan plan) {
-        plan.setCreater(UserUtils.getUser().getId());
+    public PageJson findSendPageList(String pageNum, String pageSize, Plan plan,String userId) {
+        plan.setCreater(StringUtils.isNotBlank(userId) ? userId : UserUtils.getUser().getId());
         Page<Plan> page = new Page<>(pageNum, pageSize);
         page.start();
         planDao.findList(plan);

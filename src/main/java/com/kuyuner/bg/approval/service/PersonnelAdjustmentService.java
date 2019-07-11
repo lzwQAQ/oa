@@ -71,7 +71,7 @@ public interface PersonnelAdjustmentService {
      * @param taskResult
      * @return
      */
-    ResultJson submitForm(PersonnelAdjustment personnelAdjustment, String taskResult);
+    ResultJson submitForm(PersonnelAdjustment personnelAdjustment, String taskResult,String userId);
 
     /**
      * 审批操作
@@ -81,6 +81,8 @@ public interface PersonnelAdjustmentService {
      * @param taskResult
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult);
+    ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId);
+
+    void handleForm(PersonnelAdjustment personnelAdjustment, String taskResult,String userId);
 
 }

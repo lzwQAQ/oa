@@ -115,6 +115,7 @@
 
     <select id="findPendingList" resultType="com.kuyuner.bg.approval.bean.BusinessPendingListView">
         select
+        t.id as "id",
             r.ID as "taskId",
             r.PRO_DEF_NAME as "processName",
             r.NAME as "taskName",
@@ -301,4 +302,30 @@
         </foreach>
     </delete>
 
+
+    <select id="findPendingDetail" resultType="com.kuyuner.bg.approval.bean.BusinessPendingListView">
+        select
+        r.ID as "taskId",
+        r.PRO_DEF_NAME as "processName",
+        r.NAME as "taskName",
+        u.name as "sender",
+        t.CREATE_DATE as "time",
+        t.START_TIMS as "startTime",
+        t.COLLABORATION_DEPT as "collaborationDept",
+        t.NEED_PLACE as "needPlace",
+        t.EXPLAINS as "explains",
+        t.FUNDS as "funds",
+        t.END_TIME as "endTime",
+        t.business_name AS "businessName",
+        t.header AS "header"
+        from V_WF_RU_TASK r
+        inner join T_AP_BUSINESS t on t.id = r.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            (r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
+            <if test="taskId != null and taskId != ''">
+                AND r.ID = #{taskId}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -59,7 +59,7 @@ public interface PlanService {
      * @param plan
      * @return
      */
-    PageJson findSendPageList(String pageNum, String pageSize, Plan plan);
+    PageJson findSendPageList(String pageNum, String pageSize, Plan plan,String userId);
 
     /**
      * 查询所有的用户

@@ -34,6 +34,11 @@ public class UserUtils {
         return user;
     }
 
+    public static User getUserFromDB(String userId) {
+        User user = userDao.get(new User(userId));
+        return user;
+    }
+
     /**
      * 获得登录凭证
      *

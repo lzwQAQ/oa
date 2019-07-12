@@ -7,6 +7,7 @@ import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.bg.work.entity.Plan;
 import com.kuyuner.bg.work.service.PlanService;
+import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.security.UserUtils;
 
 
@@ -16,6 +17,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 任务计划Controller层
@@ -95,8 +100,12 @@ public class PlanController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("list")
-    public PageJson list(Plan plan, String pageNum, String pageSize) {
-        return planService.findPageList(pageNum, pageSize, plan);
+    public PageJson list(Plan plan, String pageNum, String pageSize,String userId) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum = "1";
+            pageSize = "10000";
+        }
+        return planService.findPageList(pageNum, pageSize, plan,userId);
     }
 
     /**
@@ -125,8 +134,8 @@ public class PlanController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public ResultJson save(Plan plan, String joinPeople, String chargePeoples) {
-        return planService.saveOrUpdate(plan, joinPeople, chargePeoples);
+    public ResultJson save(Plan plan, String joinPeople, String chargePeoples,String userId) {
+        return planService.saveOrUpdate(plan, joinPeople, chargePeoples,userId);
     }
 
     /**
@@ -164,4 +173,33 @@ public class PlanController extends BaseController {
     public ListJson joinPeoples(String planId) {
         return planService.findJoinPeoples(planId);
     }
+
+    /**
+     * 详情
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("sendDetail")
+    public ResultJson findPeopleList(String id,String userId) {
+        Map map = new HashMap();
+        if (StringUtils.isNotBlank(id)) {
+            map.put("plan", planService.get(id));
+            map.put("joinPeoples", planService.findPeopleList(id));
+        } else {
+            Plan plan = new Plan();
+            plan.setProcess(-1);
+            plan.setSender(UserUtils.getUserFromDB(userId).getName());
+            map.put("plan", plan);
+        }
+        return ResultJson.ok(map);
+    }
+
+    @ResponseBody
+    @RequestMapping("findUsers")
+    public ResultJson findPeopleList() {
+        List<User> users = planService.findAllUsers();
+        return ResultJson.ok(users);
+    }
+
 }

@@ -31,10 +31,10 @@ public class PlanServiceImpl implements PlanService {
     private PlanDao planDao;
 
     @Override
-    public PageJson findPageList(String pageNum, String pageSize, Plan plan) {
+    public PageJson findPageList(String pageNum, String pageSize, Plan plan,String userId) {
         Page<Plan> page = new Page<>(pageNum, pageSize);
         page.start();
-        planDao.findPersonalList(plan, UserUtils.getUser().getId());
+        planDao.findPersonalList(plan, StringUtils.isNotBlank(userId) ? userId : UserUtils.getUser().getId());
         page.end();
         return new PageJson(page);
     }
@@ -46,10 +46,10 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson saveOrUpdate(Plan plan, String joinPeople, String chargePeoples) {
+    public ResultJson saveOrUpdate(Plan plan, String joinPeople, String chargePeoples,String userId) {
         if (StringUtils.isBlank(plan.getId())) {
             plan.setId(IdGenerate.uuid());
-            plan.setCreater(UserUtils.getPrincipal().getId());
+            plan.setCreater(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
             planDao.insert(plan);
         } else {
             planDao.update(plan);

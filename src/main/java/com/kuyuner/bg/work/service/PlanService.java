@@ -24,7 +24,7 @@ public interface PlanService {
      * @param plan
      * @return
      */
-    PageJson findPageList(String pageNum, String pageSize, Plan plan);
+    PageJson findPageList(String pageNum, String pageSize, Plan plan,String userId);
 
     /**
      * 查询唯一
@@ -42,7 +42,7 @@ public interface PlanService {
      * @param chargePeoples
      * @return
      */
-    ResultJson saveOrUpdate(Plan plan, String joinPeople, String chargePeoples);
+    ResultJson saveOrUpdate(Plan plan, String joinPeople, String chargePeoples,String userId);
 
     /**
      * 删除数据

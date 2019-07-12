@@ -74,7 +74,7 @@
                 AND t.name LIKE concat('%',#{plan.name},'%')
             </if>
             <if test="plan.state != null and plan.state != ''">
-                AND t.state = #{state}
+                AND t.state = #{plan.state}
             </if>
         </where>
         order by t.update_date desc

@@ -108,9 +108,11 @@
 		h.PROC_INST_ID as "processInstanceId",
 		t.title as "title",
 		t.task_name as "taskName",
+		u.name as "sender",
 		t.CREATE_DATE as "time"
 		from V_WF_HI_TASK h
 		inner join T_WF_SIMPLE t on t.id = h.business_id
+		inner join T_PT_USER u on u.id = t.sender_id
 		<where>
 			h.START_USER_ID = #{userId}
 			<if test="workflow.title != null and workflow.title != ''">

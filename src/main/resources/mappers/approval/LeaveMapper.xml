@@ -155,11 +155,13 @@
             h.PROC_NAME as "processName",
             h.PROC_INST_ID as "processInstanceId",
             t.type as "type",
+            u.name as "sender",
             t.task_name as "taskName",
             t.LEAVE_DAY as "leaveDay",
             t.CREATE_DATE as "time"
         from V_WF_HI_TASK h
         inner join T_AP_LEAVE t on t.id = h.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
         <where>
             h.START_USER_ID = #{userId}
             <if test="leave.type != null and leave.type != ''">

@@ -146,9 +146,11 @@
         t.business AS "business",
         t.money AS "money",
         t.task_name as "taskName",
+        u.name as "sender",
         t.CREATE_DATE as "time"
         from V_WF_HI_TASK h
         inner join T_AP_FINANCE t on t.id = h.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
         <where>
             h.START_USER_ID = #{userId}
             <if test="finance.business != null and finance.business != ''">

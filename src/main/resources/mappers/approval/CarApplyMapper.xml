@@ -173,6 +173,7 @@
         t.id as "id",
         h.PROC_NAME as "processName",
         h.PROC_INST_ID as "processInstanceId",
+        u.name as "sender",
         c.id AS "car.id",
         c.car_no AS "car.carNo",
         c.seat_num AS "car.seatNum",
@@ -183,6 +184,7 @@
         from V_WF_HI_TASK h
         inner join T_AP_CAR t on t.id = h.business_id
         inner join T_CAR c on c.id = t.car_id
+        inner join T_PT_USER u on u.id = t.sender_id
         <where>
             h.START_USER_ID = #{userId}
             <if test="carApply.car != null and carApply.car.carNo != '' and carApply.car.carNo != null">

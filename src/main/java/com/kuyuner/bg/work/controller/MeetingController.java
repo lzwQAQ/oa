@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 会议通知Controller层
  *
@@ -86,8 +89,12 @@ public class MeetingController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("list")
-    public PageJson list(Meeting meeting, String pageNum, String pageSize) {
-        return meetingService.findPageList(pageNum, pageSize, meeting);
+    public PageJson list(Meeting meeting, String pageNum, String pageSize,String userId) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum="1";
+            pageSize="10000";
+        }
+        return meetingService.findPageList(pageNum, pageSize, meeting,userId);
     }
 
     /**
@@ -100,8 +107,12 @@ public class MeetingController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("sendlist")
-    public PageJson sendList(Meeting meeting, String pageNum, String pageSize) {
-        return meetingService.findSendPageList(pageNum, pageSize, meeting);
+    public PageJson sendList(Meeting meeting, String pageNum, String pageSize,String userId) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum="1";
+            pageSize="10000";
+        }
+        return meetingService.findSendPageList(pageNum, pageSize, meeting,userId);
     }
 
     /**
@@ -112,8 +123,8 @@ public class MeetingController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public ResultJson save(Meeting meeting) {
-        return meetingService.saveOrUpdate(meeting);
+    public ResultJson save(Meeting meeting,String userId) {
+        return meetingService.saveOrUpdate(meeting,userId);
     }
 
     /**
@@ -128,4 +139,20 @@ public class MeetingController extends BaseController {
         return meetingService.deletes(ids.split(","));
     }
 
+
+
+    /**
+     * 显示详情页面
+     *
+     * @return
+     */
+    @RequestMapping("detail")
+    @ResponseBody
+    public ResultJson showMeetingForm(String id) {
+        Meeting meeting = meetingService.get(id);
+        Map map = new HashMap();
+        map.put("meeting", meeting);
+        map.put("joinPeoples", meetingService.findJoinPeoples(meeting.getJoinPeople().split(",")));
+        return ResultJson.ok(map);
+    }
 }

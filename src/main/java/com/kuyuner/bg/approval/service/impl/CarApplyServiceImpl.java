@@ -125,11 +125,11 @@ public class CarApplyServiceImpl implements CarApplyService {
     }
 
     @Override
-    public ListJson findDrivers() {
+    public ListJson findDrivers(String userId) {
         List<Driver> list = carApplyDao.findDrivers();
         Driver driver = new Driver();
         User user = new User();
-        BeanUtils.copyProperties(UserUtils.getUser(), user);
+        BeanUtils.copyProperties(UserUtils.getUserFromDB(userId), user);
         user.setName("自驾");
         driver.setUser(user);
         list.add(0, driver);

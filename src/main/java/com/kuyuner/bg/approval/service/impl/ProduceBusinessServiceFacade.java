@@ -8,6 +8,7 @@ import com.kuyuner.bg.approval.entity.Accounts;
 import com.kuyuner.bg.approval.entity.Business;
 import com.kuyuner.bg.approval.service.BusinessService;
 import com.kuyuner.bg.approval.service.ProduceFaced;
+import com.kuyuner.bg.msg.util.HtmlRegexpUtil;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.idgen.IdGenerate;
@@ -137,11 +138,17 @@ public class ProduceBusinessServiceFacade implements ProduceFaced {
         Map map = new HashMap();
         ResultJson result = taskService.getFormPath(modelKey,startSequenceFlowName,taskId);
         map.put("work",result.getData());
+        if(StringUtils.isBlank(businessId) || "null".equals(businessId)){
+            return ResultJson.ok(map);
+        }
+
         if ("historic".equals(type)) {
             map.put("data", businessService.getLog(businessId));
         } else {
             if (StringUtils.isNotBlank(businessId)) {
-                map.put("data", businessService.get(businessId));
+                Business business = businessService.get(businessId);
+                business.setApprovalResult(HtmlRegexpUtil.filterHtml(business.getApprovalResult()));
+                map.put("data", business);
             } else {
                 User user = userService.get(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
                 Business business = new Business();

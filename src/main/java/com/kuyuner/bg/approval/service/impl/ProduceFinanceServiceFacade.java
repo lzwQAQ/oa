@@ -8,6 +8,7 @@ import com.kuyuner.bg.approval.entity.Accounts;
 import com.kuyuner.bg.approval.entity.Finance;
 import com.kuyuner.bg.approval.service.FinanceService;
 import com.kuyuner.bg.approval.service.ProduceFaced;
+import com.kuyuner.bg.msg.util.HtmlRegexpUtil;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.idgen.IdGenerate;
@@ -84,7 +85,7 @@ public class ProduceFinanceServiceFacade implements ProduceFaced {
         Finance finance = new Finance();
         finance.setSenderName(senderName);
         finance.setBusiness(businessName);
-        financeDao.findHistoricList(finance, UserUtils.getPrincipal() == null?userId:UserUtils.getPrincipal().getId());
+//        financeDao.findHistoricList(finance, UserUtils.getPrincipal() == null?userId:UserUtils.getPrincipal().getId());
         financeDao.findSendList(finance,UserUtils.getPrincipal() == null?userId:UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
@@ -141,11 +142,16 @@ public class ProduceFinanceServiceFacade implements ProduceFaced {
         Map map = new HashMap();
         ResultJson result = taskService.getFormPath(modelKey,startSequenceFlowName,taskId);
         map.put("work",result.getData());
+        if(StringUtils.isBlank(businessId) || "null".equals(businessId)){
+            return ResultJson.ok(map);
+        }
         if ("historic".equals(type)) {
             map.put("data", financeService.getLog(businessId));
         } else {
             if (StringUtils.isNotBlank(businessId)) {
-                map.put("data", financeService.get(businessId));
+                Finance finance = financeService.get(businessId);
+                finance.setApprovalResult(HtmlRegexpUtil.filterHtml(finance.getApprovalResult()));
+                map.put("data", finance);
             } else {
                 User user = userService.get(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
                 Finance finance = new Finance();

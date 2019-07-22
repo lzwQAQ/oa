@@ -8,6 +8,7 @@ import com.kuyuner.bg.approval.entity.CarApply;
 import com.kuyuner.bg.approval.entity.Driver;
 import com.kuyuner.bg.approval.service.CarApplyService;
 import com.kuyuner.bg.approval.service.ProduceFaced;
+import com.kuyuner.bg.msg.util.HtmlRegexpUtil;
 import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
@@ -110,7 +111,7 @@ public class ProduceCarApplyServiceFaced implements ProduceFaced {
         if (StringUtils.isBlank(carApply.getId())) {
             carApply.setId(IdGenerate.uuid());
             carApply.setSenderId(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
-            carApply.setCreater(UserUtils.getPrincipal().getId());
+            carApply.setCreater(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
             carApplyDao.insert(carApply);
         } else {
             carApplyDao.update(carApply);
@@ -146,11 +147,16 @@ public class ProduceCarApplyServiceFaced implements ProduceFaced {
         Map map = new HashMap();
         ResultJson result = taskService.getFormPath(modelKey,startSequenceFlowName,taskId);
         map.put("work",result.getData());
+        if(StringUtils.isBlank(businessId) || "null".equals(businessId)){
+            return ResultJson.ok(map);
+        }
         if ("historic".equals(type)) {
             map.put("data", carApplyService.getLog(businessId));
         } else {
             if (StringUtils.isNotBlank(businessId)) {
-                map.put("data", carApplyService.get(businessId));
+                CarApply carApply = carApplyService.get(businessId);
+                carApply.setApprovalResult(HtmlRegexpUtil.filterHtml(carApply.getApprovalResult()));
+                map.put("data", carApply);
             } else {
                 User user = userService.get(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
                 CarApply carApply = new CarApply();

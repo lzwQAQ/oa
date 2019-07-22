@@ -1,6 +1,7 @@
 package com.kuyuner.bg.approval.service.impl;
 
 import com.kuyuner.bg.approval.service.ProduceFaced;
+import com.kuyuner.bg.msg.util.HtmlRegexpUtil;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.idgen.IdGenerate;
@@ -136,11 +137,16 @@ public class ProduceSimpleWorkflowServiceFacade implements ProduceFaced {
         Map map = new HashMap();
         ResultJson result = taskService.getFormPath(modelKey,startSequenceFlowName,taskId);
         map.put("work",result.getData());
+        if(StringUtils.isBlank(businessId) || "null".equals(businessId)){
+            return ResultJson.ok(map);
+        }
         if ("historic".equals(type)) {
             map.put("data", simpleWorkflowService.getLog(businessId));
         } else {
             if (StringUtils.isNotBlank(businessId)) {
-                map.put("data", simpleWorkflowService.get(businessId));
+                SimpleWorkflow simpleWorkflow = simpleWorkflowService.get(businessId);
+                simpleWorkflow.setApprovalResult(HtmlRegexpUtil.filterHtml(simpleWorkflow.getApprovalResult()));
+                map.put("data", simpleWorkflow);
             } else {
                 User user = userService.get(UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
                 SimpleWorkflow workflow = new SimpleWorkflow();

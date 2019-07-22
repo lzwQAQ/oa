@@ -175,8 +175,8 @@ public class CarApplyController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("finddrivers")
-    public ListJson findDrivers() {
-        return carApplyService.findDrivers();
+    public ListJson findDrivers(String userId) {
+        return carApplyService.findDrivers(userId);
     }
 
     /**

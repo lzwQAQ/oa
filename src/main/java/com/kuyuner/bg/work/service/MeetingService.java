@@ -22,7 +22,7 @@ public interface MeetingService {
      * @param meeting
      * @return
      */
-    PageJson findPageList(String pageNum, String pageSize, Meeting meeting);
+    PageJson findPageList(String pageNum, String pageSize, Meeting meeting,String userId);
 
     /**
      * 查询唯一
@@ -38,7 +38,7 @@ public interface MeetingService {
      * @param meeting
      * @return
      */
-    ResultJson saveOrUpdate(Meeting meeting);
+    ResultJson saveOrUpdate(Meeting meeting,String userId);
 
     /**
      * 删除数据
@@ -63,5 +63,5 @@ public interface MeetingService {
      * @param meeting
      * @return
      */
-    PageJson findSendPageList(String pageNum, String pageSize, Meeting meeting);
+    PageJson findSendPageList(String pageNum, String pageSize, Meeting meeting,String userId);
 }

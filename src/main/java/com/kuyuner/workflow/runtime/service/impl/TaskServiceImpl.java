@@ -28,10 +28,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public ResultJson getFormPath(String modelKey, String startSequenceFlowName, String taskId) {
         ResultJson result = new ResultJson();
-        if (StringUtils.isNotBlank(taskId)) {
+        if (StringUtils.isNotBlank(taskId) && !"null".equals(taskId)) {
             result = pendingTaskService.getDefaultFormPath(taskId);
         }
-        if (StringUtils.isNotBlank(modelKey) && StringUtils.isBlank(taskId)){
+        if (StringUtils.isNotBlank(modelKey) && (StringUtils.isBlank(taskId) || "null".equals(taskId))){
             result = createTaskService.getStartFormPath(modelKey, startSequenceFlowName);
         }
         return result;

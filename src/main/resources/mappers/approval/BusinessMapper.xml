@@ -34,9 +34,31 @@
     <!--auto generated Code-->
 	<select id="get" resultType="com.kuyuner.bg.approval.entity.Business">
 		SELECT
-			<include refid="AllColumns"/>
+            t.id AS "id",
+            t.task_name AS "taskName",
+            t.approval_result AS "approvalResult",
+            t.business_name AS "businessName",
+            t.collaboration_dept AS "collaborationDept",
+            dcoll.name AS "collaborationDeptName",
+            t.header AS "header",
+             ucoll.name AS "headerName",
+            t.start_tims AS "startTims",
+            t.end_time AS "endTime",
+            t.need_place AS "needPlace",
+            t.explains AS "explains",
+            t.funds AS "funds",
+            t.SENDER_ID AS "senderId",
+            d.name as "senderDeptName",
+            u.name as "senderName",
+            t.creater AS "creater",
+            t.create_date AS "createDate",
+            t.update_date AS "updateDate",
+            t.del_flag AS "delFlag"
 		FROM T_AP_BUSINESS t
-            <include refid="AllJoins"/>
+           inner join T_PT_USER u on u.id = t.SENDER_ID
+           left join T_PT_DEPT d on d.id = u.dept_id
+           left JOIN T_PT_USER ucoll on ucoll.id = t.header
+           left join T_PT_DEPT dcoll on dcoll.id = t.collaboration_dept
 		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
 	</select>
 

@@ -6,6 +6,9 @@ import com.kuyuner.common.controller.BaseController;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
+import com.kuyuner.common.reflect.ReflectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("${kuyuner.admin-path}/procedure")
 public class ProduceController extends BaseController {
-
+    private static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
     @Autowired
     private ProduceFacadeFactory produceFacadeFactory;
 
@@ -65,7 +68,9 @@ public class ProduceController extends BaseController {
     @ResponseBody
     @RequestMapping("/submit")
     public ResultJson procedureSubmit(String body, String taskResult, String pageNum, String pageSize, String produceType, String userId,String goods, String modelKey) {
+        logger.info("流程提交参数...userId={},produceType={},body={},modelKey={},taskResult={}",userId,produceType,body,modelKey,taskResult);
         String produce = getFacedCode(produceType);
+        logger.info("流程produce:{}",produce);
         ProduceFaced biz = produceFacadeFactory.getBizFacad(produce);
         return biz.submit(body,taskResult,userId,goods,modelKey);
     }
@@ -99,6 +104,7 @@ public class ProduceController extends BaseController {
     @RequestMapping("detail")
     public ResultJson detail(String produceType,String businessId, String firstTask, String type,String taskId,
                              String modelKey, String startSequenceFlowName,String userId) {
+
         String produce = getFacedCode(produceType);
         ProduceFaced biz = produceFacadeFactory.getBizFacad(produce);
         return biz.detail(produceType,businessId,firstTask,type,taskId,modelKey,startSequenceFlowName,userId);

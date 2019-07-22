@@ -29,9 +29,9 @@ public class MeetingServiceImpl implements MeetingService {
     private MeetingDao meetingDao;
 
     @Override
-    public PageJson findPageList(String pageNum, String pageSize, Meeting meeting) {
+    public PageJson findPageList(String pageNum, String pageSize, Meeting meeting,String userId) {
         meeting.setMeetingType("0");
-        meeting.setCreater(UserUtils.getPrincipal().getId());
+        meeting.setCreater(StringUtils.isBlank(userId)?UserUtils.getPrincipal().getId():UserUtils.getUserFromDB(userId).getId());
         Page<Meeting> page = new Page<>(pageNum, pageSize);
         page.start();
         meetingDao.findList(meeting);
@@ -46,11 +46,11 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson saveOrUpdate(Meeting meeting) {
+    public ResultJson saveOrUpdate(Meeting meeting,String userId) {
         meeting.setId(IdGenerate.uuid());
-        meeting.setCreater(UserUtils.getPrincipal().getId());
+        meeting.setCreater(StringUtils.isBlank(userId)?UserUtils.getPrincipal().getId():UserUtils.getUserFromDB(userId).getId());
         meeting.setMeetingType("1");
-        meeting.setTrainer(UserUtils.getUser());
+        meeting.setTrainer(StringUtils.isBlank(userId)?UserUtils.getUser():UserUtils.getUserFromDB(userId));
         meetingDao.insert(meeting);
         sendToUsers(meeting);
         return ResultJson.ok();
@@ -79,9 +79,9 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-    public PageJson findSendPageList(String pageNum, String pageSize, Meeting meeting) {
+    public PageJson findSendPageList(String pageNum, String pageSize, Meeting meeting,String userId) {
         meeting.setMeetingType("1");
-        meeting.setCreater(UserUtils.getPrincipal().getId());
+        meeting.setCreater(StringUtils.isBlank(userId)?UserUtils.getPrincipal().getId():UserUtils.getUserFromDB(userId).getId());
         Page<Meeting> page = new Page<>(pageNum, pageSize);
         page.start();
         meetingDao.findList(meeting);

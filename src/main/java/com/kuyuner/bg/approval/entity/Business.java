@@ -81,6 +81,10 @@ public class Business extends BaseEntity {
 
     private String senderDeptName;
 
+    private String collaborationDeptName;
+
+    private String headerName;
+
 
     public Business(String id) {
         this.id = id;
@@ -192,5 +196,21 @@ public class Business extends BaseEntity {
 
     public void setSenderDeptName(String senderDeptName) {
         this.senderDeptName = senderDeptName;
+    }
+
+    public String getCollaborationDeptName() {
+        return collaborationDeptName;
+    }
+
+    public void setCollaborationDeptName(String collaborationDeptName) {
+        this.collaborationDeptName = collaborationDeptName;
+    }
+
+    public String getHeaderName() {
+        return headerName;
+    }
+
+    public void setHeaderName(String headerName) {
+        this.headerName = headerName;
     }
 }

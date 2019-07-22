@@ -45,6 +45,8 @@ public class BusinessHistoricListView extends BaseEntity {
      */
     private String header;
 
+    private String status="审批中";
+
     public String getProcessInstanceId() {
         return processInstanceId;
     }
@@ -99,5 +101,13 @@ public class BusinessHistoricListView extends BaseEntity {
 
     public void setHeader(String header) {
         this.header = header;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

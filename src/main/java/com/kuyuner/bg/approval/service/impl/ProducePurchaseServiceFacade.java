@@ -12,6 +12,7 @@ import com.kuyuner.bg.approval.entity.Purchase;
 import com.kuyuner.bg.approval.entity.PurchaseGoods;
 import com.kuyuner.bg.approval.service.ProduceFaced;
 import com.kuyuner.bg.approval.service.PurchaseService;
+import com.kuyuner.bg.msg.util.HtmlRegexpUtil;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.idgen.IdGenerate;
@@ -160,12 +161,17 @@ public class ProducePurchaseServiceFacade implements ProduceFaced {
         Map map = new HashMap();
         ResultJson result = taskService.getFormPath(modelKey,startSequenceFlowName,taskId);
         map.put("work",result.getData());
+        if(StringUtils.isBlank(businessId) || "null".equals(businessId)){
+            return ResultJson.ok(map);
+        }
         if ("historic".equals(type)) {
             map.put("purchase", purchaseService.getLog(businessId));
             map.put("goodsList", purchaseService.findGoodsLog(businessId));
         } else {
             if (StringUtils.isNotBlank(businessId)) {
-                map.put("purchase", purchaseService.get(businessId));
+                Purchase purchase = purchaseService.get(businessId);
+                purchase.setApprovalResult(HtmlRegexpUtil.filterHtml(purchase.getApprovalResult()));
+                map.put("purchase", purchase);
                 map.put("goodsList", purchaseService.findGoods(businessId));
             } else {
                 User user = userService.get(UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());

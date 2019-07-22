@@ -54,6 +54,10 @@ public class PendingTaskController {
     @ResponseBody
     @RequestMapping("/findTask")
     public PageJson findTask(String pageNum, String pageSize, String processDefinitionName, String taskName, String modelKey) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum = "1";
+            pageSize = "10000";
+        }
         return pendingTaskService.findTask(pageNum, pageSize, processDefinitionName, taskName, modelKey);
     }
 

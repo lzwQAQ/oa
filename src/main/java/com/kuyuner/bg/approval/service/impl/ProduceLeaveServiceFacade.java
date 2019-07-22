@@ -6,6 +6,7 @@ import com.kuyuner.bg.approval.dao.LeaveDao;
 import com.kuyuner.bg.approval.entity.Leave;
 import com.kuyuner.bg.approval.service.LeaveService;
 import com.kuyuner.bg.approval.service.ProduceFaced;
+import com.kuyuner.bg.msg.util.HtmlRegexpUtil;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.idgen.IdGenerate;
@@ -127,11 +128,16 @@ public class ProduceLeaveServiceFacade implements ProduceFaced {
         Map map = new HashMap();
         ResultJson result = taskService.getFormPath(modelKey,startSequenceFlowName,taskId);
         map.put("work",result.getData());
+        if(StringUtils.isBlank(businessId) || "null".equals(businessId)){
+            return ResultJson.ok(map);
+        }
         if ("historic".equals(type)) {
             map.put("data", leaveService.getLog(businessId));
         } else {
             if (StringUtils.isNotBlank(businessId)) {
-                map.put("data", leaveService.get(businessId));
+                Leave leave = leaveService.get(businessId);
+                leave.setApprovalResult(HtmlRegexpUtil.filterHtml(leave.getApprovalResult()));
+                map.put("data", leave);
             } else {
                 User user = userService.get(UserUtils.getPrincipal()==null?userId:UserUtils.getPrincipal().getId());
                 Leave leave = new Leave();

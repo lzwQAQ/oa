@@ -2,6 +2,7 @@ package com.kuyuner.workflow.runtime.controller;
 
 import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.ResultJson;
+import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.workflow.runtime.service.CreateTaskService;
 import com.kuyuner.workflow.runtime.service.PendingTaskService;
 import com.kuyuner.workflow.util.BpmnModelUtils;
@@ -88,6 +89,7 @@ public class CreateTaskController {
     @RequestMapping("/findNextTaskCandidateInfos")
 //    @ApiResponse()
     public ListJson findNextTaskCandidateInfos(@ApiParam(value = "流程ID",required = true) String processDefinitionId, String searchText, String sequenceFlowName, String startSequenceFlowName) {
+        sequenceFlowName = StringUtils.isBlank(sequenceFlowName) ? "同意":sequenceFlowName;
         return createTaskService.findNextUserTaskCandidateInfos(processDefinitionId, searchText, startSequenceFlowName, sequenceFlowName);
     }
 }

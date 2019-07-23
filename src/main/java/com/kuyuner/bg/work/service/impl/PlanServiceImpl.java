@@ -101,4 +101,14 @@ public class PlanServiceImpl implements PlanService {
         return planDao.findPeoples(id, null);
     }
 
+    @Override
+    public PageJson applist(String pageNum, String pageSize, Plan plan, String userId) {
+        plan.setCreater(StringUtils.isNotBlank(userId) ? userId : UserUtils.getUser().getId());
+        Page<Plan> page = new Page<>(pageNum, pageSize);
+        page.start();
+        planDao.applist(plan);
+        page.end();
+        return new PageJson(page);
+    }
+
 }

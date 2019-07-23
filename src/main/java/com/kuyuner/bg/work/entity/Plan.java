@@ -151,4 +151,5 @@ public class Plan extends BaseEntity {
     public void setSender(String sender) {
         this.sender = sender;
     }
+
 }

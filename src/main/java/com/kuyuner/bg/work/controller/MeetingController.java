@@ -155,4 +155,14 @@ public class MeetingController extends BaseController {
         map.put("joinPeoples", meetingService.findJoinPeoples(meeting.getJoinPeople().split(",")));
         return ResultJson.ok(map);
     }
+
+    @RequestMapping("applist")
+    @ResponseBody
+    public PageJson applist(Meeting meeting, String pageNum, String pageSize,String userId) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum="1";
+            pageSize="10000";
+        }
+        return meetingService.appList(pageNum, pageSize, meeting,userId);
+    }
 }

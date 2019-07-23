@@ -60,4 +60,5 @@ public interface PlanDao extends CrudDao<Plan> {
      */
     List<Map<String, Object>> findPeoples(@Param("planId") String planId, @Param("type") String type);
 
+    List<Plan> applist(@Param("plan") Plan plan);
 }

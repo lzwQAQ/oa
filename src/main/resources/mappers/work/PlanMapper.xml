@@ -172,4 +172,119 @@
 		delete from T_PLAN_USER where PLAN_ID = #{planId}
 	</delete>
 
+    <select id="applist" resultType="com.kuyuner.bg.work.entity.Plan">
+
+        SELECT
+        *
+        FROM
+        (
+        SELECT DISTINCT
+        (
+        SELECT
+        group_concat(u. NAME)
+        FROM
+        T_PT_USER u
+        WHERE
+        u.id IN (
+        SELECT
+        p.user_id
+        FROM
+        T_PLAN_USER p
+        WHERE
+        p.plan_id = t.id
+        AND p.USER_TYPE = '1'
+        )
+        ) AS "chargePeople",
+        t.id AS "id",
+        t. NAME AS "name",
+        t.BEGIN_TIME AS "beginTime",
+        t.end_time AS "endTime",
+        t.content AS "content",
+        t.marks AS "marks",
+        t.state AS "state",
+        t.process AS "process",
+        (
+        SELECT
+        NAME
+        FROM
+        T_PT_USER
+        WHERE
+        id = t.creater
+        ) AS "sender",
+        t.creater AS "creater",
+        t.create_date AS "createDate",
+        t.update_date AS "updateDate",
+        t.del_flag AS "delFlag"
+        FROM
+        T_PLAN t
+        <where>
+            t.DEL_FLAG = #{plan.delFlag}
+            <if test="plan.name != null and plan.name != ''">
+                AND t.name LIKE concat('%',#{plan.name},'%')
+            </if>
+            <if test="plan.state != null and plan.state != ''">
+                AND t.state = #{plan.state}
+            </if>
+            <if test="plan.creater != null and plan.creater != ''">
+                AND t.creater = #{plan.creater}
+            </if>
+        </where>
+
+        UNION ALL
+
+        SELECT DISTINCT
+        (
+        SELECT
+        group_concat(u. NAME)
+        FROM
+        T_PT_USER u
+        WHERE
+        u.id IN (
+        SELECT
+        p.user_id
+        FROM
+        T_PLAN_USER p
+        WHERE
+        p.plan_id = t.id
+        AND p.USER_TYPE = '1'
+        )
+        ) AS "chargePeople",
+        t.id AS "id",
+        t. NAME AS "name",
+        t.BEGIN_TIME AS "beginTime",
+        t.end_time AS "endTime",
+        t.content AS "content",
+        t.marks AS "marks",
+        t.state AS "state",
+        t.process AS "process",
+        (
+        SELECT
+        NAME
+        FROM
+        T_PT_USER
+        WHERE
+        id = t.creater
+        ) AS "sender",
+        t.creater AS "creater",
+        t.create_date AS "createDate",
+        t.update_date AS "updateDate",
+        t.del_flag AS "delFlag"
+        FROM
+        T_PLAN t
+        INNER JOIN T_PLAN_USER pu ON pu.PLAN_ID = t.ID
+        <where>
+            <if test="plan.creater != null and plan.creater != ''">
+                AND pu.USER_ID = #{plan.creater}
+            </if>
+            <if test="plan.name != null and plan.name != ''">
+                AND t.name LIKE concat('%',#{plan.name},'%')
+            </if>
+            <if test="plan.state != null and plan.state != ''">
+                AND t.state = #{plan.state}
+            </if>
+        </where>
+        ) t
+        ORDER BY
+        t.updateDate DESC
+    </select>
 </mapper>

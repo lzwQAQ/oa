@@ -103,6 +103,8 @@ public class Meeting extends BaseEntity {
     @DictType("MEETING_TYPE")
     private String type;
 
+    private String sender;
+
     public Meeting(String id) {
         this.id = id;
     }
@@ -206,5 +208,13 @@ public class Meeting extends BaseEntity {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 }

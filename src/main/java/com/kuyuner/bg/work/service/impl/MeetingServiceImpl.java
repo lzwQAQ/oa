@@ -31,10 +31,15 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public PageJson findPageList(String pageNum, String pageSize, Meeting meeting,String userId) {
         meeting.setMeetingType("0");
-        meeting.setCreater(StringUtils.isBlank(userId)?UserUtils.getPrincipal().getId():UserUtils.getUserFromDB(userId).getId());
+        meeting.setCreater(StringUtils.isBlank(userId)?UserUtils.getPrincipal().getId():userId);
         Page<Meeting> page = new Page<>(pageNum, pageSize);
         page.start();
-        meetingDao.findList(meeting);
+        List<Meeting> meetings = meetingDao.findList(meeting);
+        if(StringUtils.isNotBlank(userId)){
+            meetings.forEach(m->{
+                m.setSender(UserUtils.getUserFromDB(userId).getName());
+            });
+        }
         page.end();
         return new PageJson(page);
     }
@@ -81,10 +86,31 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public PageJson findSendPageList(String pageNum, String pageSize, Meeting meeting,String userId) {
         meeting.setMeetingType("1");
-        meeting.setCreater(StringUtils.isBlank(userId)?UserUtils.getPrincipal().getId():UserUtils.getUserFromDB(userId).getId());
+        meeting.setCreater(StringUtils.isBlank(userId)?UserUtils.getPrincipal().getId():userId);
         Page<Meeting> page = new Page<>(pageNum, pageSize);
         page.start();
-        meetingDao.findList(meeting);
+        List<Meeting> meetings = meetingDao.findList(meeting);
+        if(StringUtils.isNotBlank(userId)){
+            String creatorName = UserUtils.getUserFromDB(userId).getName();
+            meetings.forEach(m->{
+                m.setSender(creatorName);
+            });
+        }
+        page.end();
+        return new PageJson(page);
+    }
+
+    @Override
+    public PageJson appList(String pageNum, String pageSize, Meeting meeting, String userId) {
+        meeting.setCreater(StringUtils.isBlank(userId)?UserUtils.getPrincipal().getId():userId);
+        Page<Meeting> page = new Page<>(pageNum, pageSize);
+        page.start();
+        List<Meeting> meetings = meetingDao.findList(meeting);
+        if(StringUtils.isNotBlank(userId)){
+            meetings.forEach(m->{
+                m.setSender(UserUtils.getUserFromDB(userId).getName());
+            });
+        }
         page.end();
         return new PageJson(page);
     }

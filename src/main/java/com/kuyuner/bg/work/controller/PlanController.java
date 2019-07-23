@@ -202,4 +202,13 @@ public class PlanController extends BaseController {
         return ResultJson.ok(users);
     }
 
+    @ResponseBody
+    @RequestMapping("applist")
+    public PageJson applist(Plan plan, String pageNum, String pageSize,String userId) {
+        if(StringUtils.isBlank(pageNum) || StringUtils.isBlank(pageSize)){
+            pageNum = "1";
+            pageSize = "10000";
+        }
+        return planService.applist(pageNum, pageSize, plan,userId);
+    }
 }

@@ -91,4 +91,6 @@ public interface PlanService {
      * @return
      */
     List<Map<String, Object>> findPeopleList(String id);
+
+    PageJson applist(String pageNum, String pageSize, Plan plan,String userId);
 }

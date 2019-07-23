@@ -64,4 +64,6 @@ public interface MeetingService {
      * @return
      */
     PageJson findSendPageList(String pageNum, String pageSize, Meeting meeting,String userId);
+
+    PageJson appList(String pageNum, String pageSize, Meeting meeting,String userId);
 }

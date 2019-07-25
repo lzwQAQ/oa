@@ -1,21 +1,34 @@
 package com.kuyuner.bg.work.controller;
 
+import com.kuyuner.bg.work.vo.MeetingVo;
 import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.common.controller.BaseController;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.bg.work.entity.Meeting;
 import com.kuyuner.bg.work.service.MeetingService;
+import com.kuyuner.common.reflect.ReflectUtils;
 import com.kuyuner.core.sys.security.UserUtils;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.WebRequest;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,10 +40,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("${kuyuner.admin-path}/meeting")
 public class MeetingController extends BaseController {
-
+    private static Logger logger = LoggerFactory.getLogger(MeetingController.class);
     @Autowired
     private MeetingService meetingService;
-
     /**
      * 显示列表页面
      *
@@ -118,12 +130,27 @@ public class MeetingController extends BaseController {
     /**
      * 新增或修改数据
      *
-     * @param meeting
      * @return
      */
     @ResponseBody
     @RequestMapping("save")
-    public ResultJson save(Meeting meeting,String userId) {
+    public ResultJson save(MeetingVo vo, String userId) {
+        Meeting meeting = new Meeting();
+        SimpleDateFormat sdf = null;
+        if(StringUtils.isNotBlank(vo.getBeginTime()) && vo.getBeginTime().length() <= 10){
+            sdf = new SimpleDateFormat("yyyy-MM-dd");
+        }else if(StringUtils.isNotBlank(vo.getBeginTime()) && vo.getBeginTime().length() > 10 && vo.getBeginTime().length() <= 16){
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        }else {
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+        BeanUtils.copyProperties(vo,meeting);
+        try {
+            meeting.setBeginTime(sdf.parse(vo.getBeginTime()));
+            meeting.setEndTime(sdf.parse(vo.getEndTime()));
+        } catch (ParseException e) {
+            logger.error("日期转换异常...beginTime={},endTime={},error={}",vo.getBeginTime(),vo.getEndTime(),e.getMessage());
+        }
         return meetingService.saveOrUpdate(meeting,userId);
     }
 
@@ -152,7 +179,7 @@ public class MeetingController extends BaseController {
         Meeting meeting = meetingService.get(id);
         Map map = new HashMap();
         map.put("meeting", meeting);
-        map.put("joinPeoples", meetingService.findJoinPeoples(meeting.getJoinPeople().split(",")));
+        map.put("joinPeoples", meetingService.findJoinPeoples(meeting.getJoinPeople()==null?null:meeting.getJoinPeople().split(",")));
         return ResultJson.ok(map);
     }
 

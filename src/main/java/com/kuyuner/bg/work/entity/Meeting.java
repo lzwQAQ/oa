@@ -30,7 +30,7 @@ public class Meeting extends BaseEntity {
      * 开始时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "")
     @NotNull(message = "开始时间不能为空")
     private Date beginTime;
 
@@ -38,7 +38,7 @@ public class Meeting extends BaseEntity {
      * 结束时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "")
     @NotNull(message = "结束时间不能为空")
     private Date endTime;
 
@@ -104,6 +104,8 @@ public class Meeting extends BaseEntity {
     private String type;
 
     private String sender;
+
+    private String meetingTypeName;
 
     public Meeting(String id) {
         this.id = id;
@@ -216,5 +218,13 @@ public class Meeting extends BaseEntity {
 
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    public String getMeetingTypeName() {
+        return meetingTypeName;
+    }
+
+    public void setMeetingTypeName(String meetingTypeName) {
+        this.meetingTypeName = meetingTypeName;
     }
 }

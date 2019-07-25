@@ -33,10 +33,31 @@
     <!--auto generated Code-->
 	<select id="get" resultType="com.kuyuner.bg.work.entity.Meeting">
 		SELECT
-			<include refid="AllColumns"/>
+            t.id AS "id",
+            t.title AS "title",
+            t.BEGIN_TIME AS "beginTime",
+            t.end_time AS "endTime",
+            t.duration AS "duration",
+            t.place AS "place",
+            t.trainer AS "trainer.id",
+            u.name AS "trainer.name",
+            t.join_people AS "joinPeople",
+            t.content AS "content",
+            t.marks AS "marks",
+            t.meeting_type AS "meetingType",
+            t.is_send_message AS "isSendMessage",
+            t.type AS "type",
+            t.creater AS "creater",
+            t.create_date AS "createDate",
+            t.update_date AS "updateDate",
+            t.del_flag AS "delFlag",
+            d.DICT_VALUE as "meetingTypeName",
+            u1.name as "sender"
 		FROM T_MEETING t
-            <include refid="AllJoins"/>
-		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+            inner join T_PT_USER u on u.id = t.trainer
+            LEFT JOIN T_PT_USER u1 on u1.id=t.creater
+            LEFT JOIN T_PT_DICT_DATA d on t.meeting_type = d.DICT_CODE
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id} and d.DICT_TYPE='MEETING_TYPE'
 	</select>
 
 	<!--auto generated Code-->

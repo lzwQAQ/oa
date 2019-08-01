@@ -9,10 +9,12 @@ import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.common.mapper.JsonMapper;
+import com.kuyuner.common.utils.GfJsonUtil;
 import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.UserService;
 
+import com.kuyuner.workflow.api.bean.TaskBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -148,7 +150,9 @@ public class PurchaseController extends BaseController {
     @RequestMapping("submit")
     public ResultJson submit(Purchase purchase, String taskResult, String goods,String userId) throws IOException {
         List<PurchaseGoods> purchaseGoods = JsonMapper.getInstance().readValue(goods, new TypeReference<List<PurchaseGoods>>() {});
-        return purchaseService.submitForm(purchase, taskResult, purchaseGoods,userId);
+        TaskBean taskBean = JsonMapper.fromJsonString(taskResult, TaskBean.class);
+        taskBean.setSequenceFlowName(SequenceFlowNameUtil.getSequenceFlowName(userId,null,userService));
+        return purchaseService.submitForm(purchase, GfJsonUtil.toJSONString(taskBean), purchaseGoods,userId);
     }
 
     /**

@@ -1,0 +1,366 @@
+域名：http://www.iliuqi.top/oa
+
+1.#获取验证码
+http://www.iliuqi.top/oa/login/captcha
+
+2.#登录
+http://www.iliuqi.top/oa/login
+request:
+{
+ 	username:"admin",	//用户名
+	password:"123456"，	//密码
+  	channel:"H5",		//渠道
+  	captcha:"JSPA",	//验证码
+}
+response: //登录异常
+{
+	"code": -1,
+	"msg": "验证码错误！",
+	"data": "",
+	"stamp": 0
+}
+response://登录成功
+{
+    "code": 0,
+    "msg": "操作成功！",
+    "data": {
+        "id": "1",
+        "creater": "1",
+        "createDate": "2018-06-09 08:03:20",
+        "updateDate": "2018-11-28 03:07:55",
+        "username": "admin",
+        "name": "超级管理员",
+        "lastLoginDate": "",
+        "loginErrorCount": "",
+        "state": "正常",
+        "photo": "",
+        "sex": "1",
+        "phone": "11111112222",
+        "email": "admin@email.com",
+        "dept": {
+            "id": "6214249586db4241a37ee3f72764098c",
+            "creater": "",
+            "createDate": "",
+            "updateDate": "",
+            "treeLevel": "",
+            "treeLeaf": "",
+            "code": "RJXS",
+            "name": "软件销售部",
+            "simpleName": "",
+            "org": {
+                "id": "6a03f4d0b20242b0815fcd21e93bcb30",
+                "creater": "",
+                "createDate": "",
+                "updateDate": "",
+                "treeLevel": "",
+                "treeLeaf": "",
+                "code": "0100101",
+                "name": "南京云立易网络科技有限公司",
+                "simpleName": "",
+                "address": "",
+                "postalCode": "",
+                "master": "",
+                "phone": "",
+                "fax": "",
+                "email": "",
+                "sort": "",
+                "leaf": true,
+                "parentId": ""
+            },
+            "master": "",
+            "phone": "",
+            "fax": "",
+            "email": "",
+            "sort": "",
+            "parentName": "",
+            "leaf": true,
+            "parentId": ""
+        },
+        "homePlace": "栖霞区",
+        "usualPlace": "栖霞区",
+        "isMarry": "1",
+        "school": "南京大学",
+        "isParty": "0",
+        "birthday": "1977-05-14",
+        "entryDate": "2015-01-07",
+        "position": "3",
+        "urgentContacts": "11111111111"
+    },
+    "stamp": 0
+}
+
+3.#发文代办
+http://www.iliuqi.top/oa/a/article/listDispatch
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		taskId: 1,			//任务ID
+		processName: "",		//流程名称
+		title: "",			//标题
+		taskName: "",			//任务节点名称
+		sender: "",			//拟稿人
+		time: ""			//申请时间
+	}]
+}
+4.#请假代办
+http://www.iliuqi.top/oa/a/article/listLeave
+request:
+
+response:
+{
+    "code": 200,
+    "errorMsg": "",
+    "data": [
+        {
+            "id": "",
+            "creater": "",
+            "createDate": "",
+            "updateDate": "",
+            "taskId": "75355a7954a74c77a3b67724126b66a9",	//任务ID
+            "processName": "请假流程",				//流程名称
+            "type": 2,						//请假类型
+            "taskName": "办公室主任",				//任务节点名称
+            "sender": "普通用户体验A",				//请假人
+            "deptName": "",					//所属部门
+            "time": 1560412041000 				//日期
+        }
+    ]
+}
+
+5.#业务申请
+http://www.iliuqi.top/oa/a/article/listBusiness
+request:
+
+response:
+{
+    "code": 200,
+    "errorMsg": "",
+    "data": [
+        {
+            "id": "",
+            "creater": "",
+            "createDate": "",
+            "updateDate": "",
+            "taskId": "6fec5277c4ee4be1a45305a310be8e1c",	//任务ID
+            "processName": "业务申请流程",			//流程名称
+            "taskName": "办公室主任",				//任务节点名称
+            "sender": "普通用户体验A",				//申请人
+            "deptName": "",					//所属部门
+            "businessName": "测试",				//业务名称
+            "time": 1560412070000				//时间
+        }
+    ]
+}
+
+6.#采购申请
+http://www.iliuqi.top/oa/a/article/listPurchase
+request:
+
+response:
+{
+    "id": "",
+    "creater": "",
+    "createDate": "",
+    "updateDate": "",
+    "taskId": "3c3cfb4ec57e4fa080a9a1d212a94f56",
+    "processName": "采购申请流程",
+    "taskName": "办公室主任",
+    "sender": "普通用户体验A",
+    "deptName": "",
+    "time": 1560412120000
+}
+7.#邮件通知
+http://www.iliuqi.top/oa/a/article/listEmail
+request:
+
+response:
+{
+    "code": 200,
+    "errorMsg": "",
+    "data": [
+        {
+            "id": "080db8b3b8da458fbbbd7ba271e524b8",
+            "creater": "06369499a7374e98b7e4ab7278d21335",
+            "createDate": 1546943349000,
+            "updateDate": 1546943349000,
+            "delFlag": "1",
+            "title": "这是我的个人调岗报告及工作汇报，请查阅！",
+            "senderName": "普通用户体验A",
+            "senderAccount": "123456@email.com",
+            "receiverName": "普通领导A",
+            "receiverAccount": "123321@email.com",
+            "copySenderName": "",
+            "copySenderAccount": "",
+            "containFile": "0",
+            "star": "",
+            "type": "5",
+            "level": "2",
+            "read": "",
+            "isSecret": "0"
+        },
+        {
+            "id": "62295b2a34fd40c7be472b87cbdf157c",
+            "creater": "06369499a7374e98b7e4ab7278d21335",
+            "createDate": 1546943298000,
+            "updateDate": 1546943298000,
+            "delFlag": "1",
+            "title": "明天下雪，大家注意做好道路除冰！出行注意安全",
+            "senderName": "普通用户体验A",
+            "senderAccount": "123456@email.com",
+            "receiverName": "普通办公室主任A",
+            "receiverAccount": "123321@email.com",
+            "copySenderName": "普通部门主任A",
+            "copySenderAccount": "123321@email.com",
+            "containFile": "0",
+            "star": "",
+            "type": "3",
+            "level": "1",
+            "read": "",
+            "isSecret": "0"
+        }
+    ]
+}
+
+8.#单位公告
+http://www.iliuqi.top/oa/a/article/announcement
+request:
+{
+ 	pageNum:"1",	//页码
+	pageSize:"10"	//一页展示数量
+}
+response:
+
+{
+    "code": 200,
+    "errorMsg": "",
+    "data": [
+        {
+            "id": "1b1b469a82254d129b3a156a89f28dc1",
+            "creater": "",
+            "createDate": "",
+            "updateDate": "",
+            "title": "坚持“一带一路”，努力带动子单位发展努力带动子单位发展努力带动子单位发展",
+            "content": "<p>哈哈哈哈哈哈哈哈</p>",
+            "status": 1,
+            "type": 2,
+            "createTime": 1546997744000,
+            "updateTime": 1546997744000
+        },
+        {
+            "id": "4d5b1b9602ed4021b9aaef24a873e754",
+            "creater": "",
+            "createDate": "",
+            "updateDate": "",
+            "title": "全面深化改革五年来成就 民众收获这些大礼包 ",
+            "content": "<p>123</p>",
+            "status": 1,
+            "type": 3,
+            "createTime": 1546996779000,
+            "updateTime": 1546996779000
+        },
+        {
+            "id": "83ca7a4c19c146aaa35d90397e3b5561",
+            "creater": "",
+            "createDate": "",
+            "updateDate": "",
+            "title": "中国民用航空期刊",
+            "content": "<p>飞机</p>",
+            "status": 1,
+            "type": 4,
+            "createTime": 1546996982000,
+            "updateTime": 1546996982000
+        },
+        {
+            "id": "8526f6d35cf24130aac557bd3358fe99",
+            "creater": "",
+            "createDate": "",
+            "updateDate": "",
+            "title": "多地调整公积金政策：提取便利了 条件放宽了条件放宽了条件放宽了条件放宽了",
+            "content": "",
+            "status": 1,
+            "type": 5,
+            "createTime": 1546997770000,
+            "updateTime": 1546997770000
+        }
+    ],
+    "total": 19,	//总数量
+    "pageSize": 10,	//一页展示数量
+    "pageNum": 1,	//第几页
+    "pages": 2		//总页数
+}
+
+9.#轮播图
+http://www.iliuqi.top/oa/a/article/rotatePicture
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "ed23260e63a0469cab8b5e00a18fbe70",
+			"creater": "",
+			"createDate": "",
+			"updateDate": "",
+			"title": "图片C",
+			"content": "files/temp/file/cfc073d3191545e6a950b83e4ad60c6a.jpg",	//图片地址（拼上域名）
+			"status": 1,
+			"type": 1,
+			"createTime": 1560406451000,
+			"updateTime": 1560406451000
+		},
+		{
+			"id": "5af8adc4b3fe4107beb77b9799c573b6",
+			"creater": "",
+			"createDate": "",
+			"updateDate": "",
+			"title": "图片A",
+			"content": "files/temp/file/19ef00fe68804c22b7deea24e895bb2f.jpg",
+			"status": 1,
+			"type": 1,
+			"createTime": 1560406419000,
+			"updateTime": 1560406419000
+		},
+		{
+			"id": "52cb805675b24d18b5443d3d9ce0dc66",
+			"creater": "",
+			"createDate": "",
+			"updateDate": "",
+			"title": "图片B",
+			"content": "files/temp/file/447f6de88b524b488ac46956e582acb8.jpg",
+			"status": 1,
+			"type": 1,
+			"createTime": 1558336543000,
+			"updateTime": 1558336543000
+		}
+	]
+}
+
+10.#公告详情
+http://www.iliuqi.top/oa/a/article/rotatePicture
+request:
+{
+ 	id:"0fa4f08751ec4463a0847de9742c5fc0"	//公告ID
+}
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": {
+		"id": "0fa4f08751ec4463a0847de9742c5fc0",
+		"creater": "",
+		"createDate": "",
+		"updateDate": "",
+		"title": "关于2018年度单位内部工作汇报总结及相关部门奖惩通告",
+		"content": "<p>test,test,<span style=\"text-decoration:underline;\">test</span>,<strong>test，<span style=\"line-height: 22.8571px; white-space: normal;\">test,test,</span><span style=\"line-height: 22.8571px; white-space: normal; text-decoration: underline;\">test</span><span style=\"line-height: 22.8571px; white-space: normal;\">,</span><span style=\"font-weight: 700; line-height: 22.8571px; white-space: normal;\">test</span><span style=\"line-height: 22.8571px; white-space: normal;\">test,test,</span><span style=\"line-height: 22.8571px; white-space: normal; text-decoration: underline;\">test</span><span style=\"line-height: 22.8571px; white-space: normal;\">,</span><span style=\"font-weight: 700; line-height: 22.8571px; white-space: normal;\">test</span><span style=\"line-height: 22.8571px; white-space: normal;\">test,test,</span><span style=\"line-height: 22.8571px; white-space: normal; text-decoration: underline;\">test</span><span style=\"line-height: 22.8571px; white-space: normal;\">,</span><span style=\"font-weight: 700; line-height: 22.8571px; white-space: normal;\">test</span><span style=\"line-height: 22.8571px; white-space: normal;\">test,test,</span><span style=\"line-height: 22.8571px; white-space: normal; text-decoration: underline;\">test</span><span style=\"line-height: 22.8571px; white-space: normal;\">,</span><span style=\"font-weight: 700; line-height: 22.8571px; white-space: normal;\">test</span></strong></p>",
+		"status": 1,
+		"type": 2,
+		"createTime": 1546997735000,
+		"updateTime": 1546997735000
+	}
+}

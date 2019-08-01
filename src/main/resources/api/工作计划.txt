@@ -1,0 +1,386 @@
+#发布工作计划列表
+http://www.iliuqi.top/oa/a/plan/sendlist
+request:
+{
+	userId:	"06369499a7374e98b7e4ab7278d21335"					//用户ID
+	name:"任务名称"								//任务名称
+	state:1									//任务状态
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "5e5982fa8a9f4277a0250ba392776036",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-07-11 14:50:03",
+			"updateDate": "2019-07-11 14:50:03",
+			"name": "test-mjdd-open",
+			"beginTime": "2019-07-11",
+			"endTime": "2019-07-12",
+			"content": "是",
+			"marks": "飒飒",
+			"state": "暂停",
+			"process": 0,
+			"chargePeople": "普通办公室主任A",
+			"sender": "普通办公室主任A"
+		},
+		{
+			"id": "2eea18f642414fa4b063f3b2ebacb5ba",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-07-11 14:47:27",
+			"updateDate": "2019-07-11 14:47:27",
+			"name": "linian",
+			"beginTime": "2019-07-11",
+			"endTime": "2019-07-12",
+			"content": "任务内容",
+			"marks": "备注",
+			"state": "进行中",
+			"process": 25,
+			"chargePeople": "普通办公室主任A,领导3",
+			"sender": "普通办公室主任A"
+		}
+	],
+	"total": 2,
+	"pageSize": 10000,
+	"pageNum": 1,
+	"pages": 1
+}
+
+1.#参与人员树形结构
+http://www.iliuqi.top/oa/a/train/usertree
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [ {
+		"isParent": "true",
+		"name": "商务管理部",
+		"pId": "282blo08f51c42fb941e2fde8d825873",
+		"id": "6214249586db42lo937ee3f72764098c",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "售前顾问部",
+		"pId": "282blo08f51c42fb941e2fde8d825873",
+		"id": "6214249586dbhy71a37ee3f72764098c",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "人力资源部",
+		"pId": "6a03f4d0b20242b0815fcd21e93bcb30",
+		"id": "99254a4b7678445996a206e42fb08691",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "管理",
+		"pId": "6a03f4d0b20242b0815fcd21e93bcb30",
+		"id": "b6028ac9002f4032950e293eb8d15475",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "总经理",
+		"pId": "282blo08f51c42fb941e2fde8d825873",
+		"id": "fc01884b84414b0caced46e3035e18ac",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "南京云立易网络科技有限公司",
+		"pId": "",
+		"id": "6a03f4d0b20242b0815fcd21e93bcb30",
+		"type": "org"
+	}, {
+		"isParent": "true",
+		"name": "南京云立易网络科技有限公司分公司",
+		"pId": "",
+		"id": "c8e3825e463b4dbbbdd3e0039e60bb6e",
+		"type": "org"
+	}],
+	"total": 48
+}
+
+#查询负责人接口
+http://www.iliuqi.top/oa/a/plan/findUsers
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "06369499a7374e98b7e4ab7278d21335",
+			"creater": "",
+			"createDate": "",
+			"updateDate": "",
+			"username": "",
+			"name": "普通办公室主任A",
+			"lastLoginDate": "",
+			"loginErrorCount": "",
+			"state": "",
+			"photo": "",
+			"sex": "",
+			"phone": "",
+			"email": "",
+			"dept": "",
+			"homePlace": "",
+			"usualPlace": "",
+			"isMarry": "",
+			"school": "",
+			"isParty": "",
+			"birthday": "",
+			"entryDate": "",
+			"position": "",
+			"urgentContacts": ""
+		},
+		{
+			"id": "1",
+			"creater": "",
+			"createDate": "",
+			"updateDate": "",
+			"username": "",
+			"name": "超级管理员",
+			"lastLoginDate": "",
+			"loginErrorCount": "",
+			"state": "",
+			"photo": "",
+			"sex": "",
+			"phone": "",
+			"email": "",
+			"dept": "",
+			"homePlace": "",
+			"usualPlace": "",
+			"isMarry": "",
+			"school": "",
+			"isParty": "",
+			"birthday": "",
+			"entryDate": "",
+			"position": "",
+			"urgentContacts": ""
+		}
+	]
+}
+
+2.#新增和修改工作内计划
+http://www.iliuqi.top/oa/a/plan/save
+request:
+{
+	userId:							//用户ID
+	id:							//计划ID，修改时传输
+	name:"任务名称"						//任务名称
+	beginTime:						//开始时间
+	endTime:						//结束时间
+	content:"任务内容"					//任务内容
+	marks:"备注"						//备注
+	state:1							//任务状态
+	process:25						//任务进度
+	joinPeople：f33cbb05dbdd437db0b6440078532212		//参与人员
+	chargePeoples:06369499a7374e98b7e4ab7278d21335,10	//负责人员
+	
+}
+response:
+{"code":200,"errorMsg":"","data":""}
+
+3.#任务类型字典
+http://www.iliuqi.top/oa/a/dictdata/getDictByType
+request:
+{
+	dictType:PLAN_STATE
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "1e33f075fef449bd8034035d1cd11b45",
+			"creater": "1",
+			"createDate": "2018-12-23 20:35:25",
+			"updateDate": "2018-12-23 20:35:25",
+			"dictCode": "1",
+			"dictValue": "进行中",
+			"dictType": "PLAN_STATE",
+			"sort": 10
+		},
+		{
+			"id": "bc94f13df6db48d59e3a36f91b471131",
+			"creater": "1",
+			"createDate": "2018-12-23 20:36:05",
+			"updateDate": "2018-12-23 20:36:05",
+			"dictCode": "3",
+			"dictValue": "停止",
+			"dictType": "PLAN_STATE",
+			"sort": 30
+		},
+		{
+			"id": "ea10e589c89d49148b74dd7e35b340ce",
+			"creater": "1",
+			"createDate": "2018-12-23 20:35:35",
+			"updateDate": "2018-12-23 20:35:35",
+			"dictCode": "2",
+			"dictValue": "暂停",
+			"dictType": "PLAN_STATE",
+			"sort": 20
+		}
+	]
+}
+
+#发布工作计划详情
+http://www.iliuqi.top/oa/a/plan/sendDetail
+request:
+{
+	id:"5e5982fa8a9f4277a0250ba392776036"						//计划ID
+}
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": {
+		"joinPeoples": [{
+				"deptName": "项目实施部",
+				"sex": "1",
+				"name": "普通办公室主任A",
+				"id": "06369499a7374e98b7e4ab7278d21335",
+				"userType": "1"							//人员类型（1：负责人，2：参与人员）
+			},
+			{
+				"deptName": "政务软件事业部",
+				"sex": "0",
+				"name": "普通财务A",
+				"id": "f33cbb05dbdd437db0b6440078532212",
+				"userType": "2"
+			},
+			{
+				"deptName": "技术总监",
+				"sex": "0",
+				"name": "普通领导A",
+				"id": "10209b40eaed49aea56f8b4ea48273f1",
+				"userType": "2"
+			}
+		],
+		"plan": {
+			"id": "5e5982fa8a9f4277a0250ba392776036",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-07-11 14:50:03",
+			"updateDate": "2019-07-11 14:50:03",
+			"name": "test-mjdd-open",
+			"beginTime": "2019-07-11",
+			"endTime": "2019-07-12",
+			"content": "是",
+			"marks": "飒飒",
+			"state": "暂停",
+			"process": 0,
+			"chargePeople": "",
+			"sender": "普通办公室主任A"
+		}
+	}
+}
+
+#.删除
+http://www.iliuqi.top/oa/a/plan/deletes
+request:
+{
+	ids:"5e5982fa8a9f4277a0250ba392776036,5e5982fa8a9f4277a0250ba392776036"		//删除ID多个用“,”隔开
+}
+response:
+{
+  "code": 200,
+  "errorMsg": "",
+  "data": ""
+}
+
+
+#.我的工作计划列表
+http://www.iliuqi.top/oa/a/plan/list
+request:
+{
+	userId:"06369499a7374e98b7e4ab7278d21335"				//userId
+	name:"任务名称"								//任务名称
+	state:1									//任务状态
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "2eea18f642414fa4b063f3b2ebacb5ba",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-07-11 14:47:27",
+			"updateDate": "2019-07-11 14:47:27",
+			"name": "linian",
+			"beginTime": "2019-07-11",
+			"endTime": "2019-07-12",
+			"content": "任务内容",
+			"marks": "备注",
+			"state": "进行中",
+			"process": 25,
+			"chargePeople": "普通办公室主任A,领导3",
+			"sender": "普通办公室主任A"
+		},
+		{
+			"id": "5596689996e14e389140bb9e83296a8e",
+			"creater": "120b8f50da2d4c3591067d77d76ee29a",
+			"createDate": "2019-06-22 18:48:01",
+			"updateDate": "2019-06-22 18:48:01",
+			"name": "qwerfd",
+			"beginTime": "2019-06-03",
+			"endTime": "2019-06-22",
+			"content": "稳定的方法",
+			"marks": "",
+			"state": "进行中",
+			"process": 0,
+			"chargePeople": "普通办公室主任A",
+			"sender": "普通用户体验A"
+		},
+		{
+			"id": "0fe4ad16e5f14351ab6601ebd5cf6d42",
+			"creater": "10209b40eaed49aea56f8b4ea48273f1",
+			"createDate": "2019-01-09 10:36:04",
+			"updateDate": "2019-01-09 10:36:04",
+			"name": "蛮荒之怒手游开发",
+			"beginTime": "2019-01-09",
+			"endTime": "2019-03-08",
+			"content": "开发游戏",
+			"marks": "",
+			"state": "进行中",
+			"process": 0,
+			"chargePeople": "普通办公室主任A",
+			"sender": "普通领导A"
+		},
+		{
+			"id": "a42099dd1c584866a82c957f924ea821",
+			"creater": "120b8f50da2d4c3591067d77d76ee29a",
+			"createDate": "2019-01-08 18:34:54",
+			"updateDate": "2019-01-08 18:34:54",
+			"name": "2019年第一季度销售额度提升",
+			"beginTime": "2019-01-08",
+			"endTime": "2019-01-31",
+			"content": "hello，this is test message!",
+			"marks": "加油呀！",
+			"state": "暂停",
+			"process": 75,
+			"chargePeople": "普通领导A",
+			"sender": "普通用户体验A"
+		},
+		{
+			"id": "315d902588204c8f849675437d2f462f",
+			"creater": "120b8f50da2d4c3591067d77d76ee29a",
+			"createDate": "2019-01-08 18:33:21",
+			"updateDate": "2019-01-08 18:33:21",
+			"name": "关于2019年拓宽业务渠道任务",
+			"beginTime": "2019-01-09",
+			"endTime": "2019-01-20",
+			"content": "hello，this is test message!",
+			"marks": "各位加油！",
+			"state": "进行中",
+			"process": 25,
+			"chargePeople": "普通领导A",
+			"sender": "普通用户体验A"
+		}
+	],
+	"total": 5,
+	"pageSize": 10000,
+	"pageNum": 1,
+	"pages": 1
+}

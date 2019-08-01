@@ -1,8 +1,11 @@
 package com.kuyuner.workflow.runtime.controller;
 
+import com.kuyuner.bg.approval.controller.SequenceFlowNameUtil;
 import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
+import com.kuyuner.core.sys.security.UserUtils;
+import com.kuyuner.core.sys.service.UserService;
 import com.kuyuner.workflow.runtime.service.CreateTaskService;
 import com.kuyuner.workflow.runtime.service.PendingTaskService;
 import com.kuyuner.workflow.util.BpmnModelUtils;
@@ -15,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 创建任务
@@ -34,6 +39,8 @@ public class CreateTaskController {
 
     @Autowired
     private RepositoryService repositoryService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("createtask")
     public String showCreateTask() {
@@ -74,10 +81,14 @@ public class CreateTaskController {
     @ApiOperation(value = "查询下一任务节点是否可以选择候选信息")
     public ResultJson isSelectNextTaskCandidateInfos(@ApiParam(value = "流程ID",required = true) String processDefinitionId,
                                                      @ApiParam(value = "",required = false) String sequenceFlowName,
-                                                     @ApiParam(value = "",required = false) String startSequenceFlowName) {
+                                                     @ApiParam(value = "",required = false) String startSequenceFlowName,String userId) {
         BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
         UserTask firstUserTask = BpmnModelUtils.getFirstUserTask(bpmnModel, startSequenceFlowName);
-        return pendingTaskService.isSelectNextTaskCandidateInfos(processDefinitionId, firstUserTask.getId(), sequenceFlowName, null);
+        String uid = UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId();
+        if(StringUtils.isNotBlank(uid)){
+            sequenceFlowName = SequenceFlowNameUtil.getSequenceFlowName(userId,sequenceFlowName,userService);
+        }
+        return pendingTaskService.isSelectNextTaskCandidateInfos(processDefinitionId, firstUserTask.getId(), sequenceFlowName, null,userId);
     }
 
 
@@ -88,8 +99,11 @@ public class CreateTaskController {
     @ResponseBody
     @RequestMapping("/findNextTaskCandidateInfos")
 //    @ApiResponse()
-    public ListJson findNextTaskCandidateInfos(@ApiParam(value = "流程ID",required = true) String processDefinitionId, String searchText, String sequenceFlowName, String startSequenceFlowName) {
-        sequenceFlowName = StringUtils.isBlank(sequenceFlowName) ? "同意":sequenceFlowName;
+    public ListJson findNextTaskCandidateInfos(@ApiParam(value = "流程ID",required = true) String processDefinitionId, String searchText, String sequenceFlowName, String startSequenceFlowName,String userId) {
+
+//        sequenceFlowName = StringUtils.isBlank(sequenceFlowName) || "null".equals(sequenceFlowName) ? "同意":sequenceFlowName;
+        sequenceFlowName = SequenceFlowNameUtil.getSequenceFlowName(userId,sequenceFlowName,userService);
         return createTaskService.findNextUserTaskCandidateInfos(processDefinitionId, searchText, startSequenceFlowName, sequenceFlowName);
     }
+
 }

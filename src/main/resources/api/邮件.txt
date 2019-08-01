@@ -1,0 +1,432 @@
+1.#图片、文件上传
+http://www.iliuqi.top/oa/a/umeditor/uploadimage
+request:
+
+response:
+{
+	"name": "d1b6fb9c6aa44b5a973de74ed0ef8be8.jpg",
+	"originalName": "8.jpg",
+	"size": 509858,
+	"state": "SUCCESS",
+	"type": ".jpg",
+	"url": "files/temp/file/d1b6fb9c6aa44b5a973de74ed0ef8be8.jpg"
+}
+2.#查询收件人
+request:
+http://www.iliuqi.top/oa/a/emailsend/receivers
+response:
+{
+    "code": 200,
+    "errorMsg": "",
+    "data": [
+        {
+            "name": "普通办公室主任A",
+            "email": "123321@email.com"
+        },
+        {
+            "name": "超级管理员",
+            "email": "admin@email.com"
+        }
+    ],
+    "total": 21
+}
+3.#获取字典信息（邮件类型）
+http://www.iliuqi.top/oa/a/dictdata/getDictByType
+request:
+{
+	dictType:"EMAIL_TYPE"
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "0cbff18646a2400b8ba27ae62599e511",
+			"creater": "1",
+			"createDate": "2018-11-15 05:50:33",
+			"updateDate": "2018-11-15 05:50:33",
+			"dictCode": "3",			//字典code邮件类型
+			"dictValue": "社交",			//邮件类型名称
+			"dictType": "EMAIL_TYPE",
+			"sort": 30
+		},
+		{
+			"id": "53d4721b5e6c48c4b4cca4e55101c435",
+			"creater": "1",
+			"createDate": "2018-11-15 05:50:23",
+			"updateDate": "2018-11-15 05:50:23",
+			"dictCode": "2",
+			"dictValue": "文档",
+			"dictType": "EMAIL_TYPE",
+			"sort": 20
+		},
+		{
+			"id": "72bb9039699b4afc8f05d35a9dc36828",
+			"creater": "1",
+			"createDate": "2018-11-29 06:58:25",
+			"updateDate": "2018-11-29 06:58:25",
+			"dictCode": "5",
+			"dictValue": "私人",
+			"dictType": "EMAIL_TYPE",
+			"sort": 50
+		},
+		{
+			"id": "84da7540a6114cf2a639bb650ed2fa60",
+			"creater": "1",
+			"createDate": "2018-11-15 05:50:08",
+			"updateDate": "2018-11-15 05:50:08",
+			"dictCode": "1",
+			"dictValue": "工作",
+			"dictType": "EMAIL_TYPE",
+			"sort": 10
+		},
+		{
+			"id": "fa0f99badf6645fea9e52b0788e86166",
+			"creater": "1",
+			"createDate": "2018-11-15 05:50:53",
+			"updateDate": "2018-11-15 05:51:14",
+			"dictCode": "4",
+			"dictValue": "网络",
+			"dictType": "EMAIL_TYPE",
+			"sort": 40
+		}
+	]
+}
+4.#邮件发送
+http://www.iliuqi.top/oa/a/emailsend/save
+request:
+{
+	"id": "d1b6fb9c6aa44b5a973de74ed0ef8be8",						//邮件ID，没有传空
+	"receivers": ["普通用户体验A;123456@email.com", "领导2;leader2@email.com"],		//收件人
+	"copys": ["普通办公室主任A;123321@email.com"],						//抄送人
+	"secrets": ["超级管理员;admin@email.com"],						//密送人
+	"title": "标题",									//标题
+	"editorValue": "<p><img src='http: //localhost:8087/files/temp/file/4b005bcdcad04f0981deb63188d755c6.jpg'/></p><p>这是邮件内容</p>",	
+	"toMessage": "1",									//是否发送短信 0不发送 1.发送
+	"draft": "1",										//是否是草稿 0不是1.是
+	"schedule": "1",									//是否定时发送0不1.是
+	"type": "",										//类型  (通过字典获取)
+	"level": "2",										//紧急等级 0普通 1.重要 2.紧急
+	"files": "[{'name':'Lantern.zip','url':'files/temp/file/6f258bb63aff4347b7b0be03ab2a112a.zip','size':21715671,'suffix':'.zip'}]", 	//附件信息内容
+	"scheduleTime": "2019-06-14 15:29:00" 							//定时时间
+}
+5.#发件箱
+http://www.iliuqi.top/oa/a/emailsend/list
+request:
+{
+	pageNum:1
+	pageSize:10
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "3bd1a3da3a4947008ec72e286b99d04b",
+			"creater": "",
+			"createDate": "2019-01-08 15:02:24",
+			"updateDate": "2019-01-08 15:02:24",
+			"title": "fbhasdhsoidhqwiohdiqw",
+			"content": "",
+			"senderName": "超级管理员",
+			"senderAccount": "admin@email.com",
+			"receiverName": "普通员工1",
+			"receiverAccount": "employee1@email.com",
+			"copySenderName": "",
+			"copySenderAccount": "",
+			"containFile": "0",
+			"star": "",
+			"level": "0",
+			"type": "工作",
+			"secretSenderName": "",
+			"secretSenderAccount": "",
+			"toMessage": "0",
+			"draft": "0",
+			"isSchedule": "0"
+		},
+		{
+			"id": "ece419f06d2b49e6957a72b6cc7f9711",
+			"creater": "",
+			"createDate": "2019-01-08 11:09:01",
+			"updateDate": "2019-01-08 11:09:01",
+			"title": "大叔大婶多",
+			"content": "",
+			"senderName": "超级管理员",
+			"senderAccount": "admin@email.com",
+			"receiverName": "超级管理员",
+			"receiverAccount": "admin@email.com",
+			"copySenderName": "",
+			"copySenderAccount": "",
+			"containFile": "0",
+			"star": "",
+			"level": "0",
+			"type": "工作",
+			"secretSenderName": "",
+			"secretSenderAccount": "",
+			"toMessage": "0",
+			"draft": "0",
+			"isSchedule": "0"
+		}
+	],
+	"total": 8,
+	"pageSize": 2,
+	"pageNum": 1,
+	"pages": 4
+}
+6.#草稿箱
+http://www.iliuqi.top/oa/a/emailsend/draft/list
+request:
+{
+	pageNum:1
+	pageSize:10
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"id": "48fe4890a8414c16ae7058565c4c25a3",
+		"creater": "",
+		"createDate": "2019-06-14 14:32:05",
+		"updateDate": "2019-06-14 14:32:05",
+		"title": "hello",
+		"content": "",
+		"senderName": "普通办公室主任A",
+		"senderAccount": "123321@email.com",
+		"receiverName": "普通办公室主任A",
+		"receiverAccount": "123321@email.com",
+		"copySenderName": "超级管理员",
+		"copySenderAccount": "admin@email.com",
+		"containFile": "1",
+		"star": "",
+		"level": "2",
+		"type": "工作",
+		"secretSenderName": "超级管理员",
+		"secretSenderAccount": "admin@email.com",
+		"toMessage": "0",
+		"draft": "1",
+		"isSchedule": "1"
+	}],
+	"total": 1,
+	"pageSize": 2,
+	"pageNum": 1,
+	"pages": 1
+}
+7.#收件箱
+http://www.iliuqi.top/oa/a/emailreceive/list
+request:
+{
+	pageNum:1
+	pageSize:10
+}
+
+response:
+
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "1095e99451534a99b31c7a050e12909d",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-06-14 14:28:17",
+			"updateDate": "2019-06-17 10:18:50",
+			"title": "家",
+			"content": "",
+			"senderName": "普通办公室主任A",
+			"senderAccount": "123321@email.com",
+			"receiverName": "普通用户体验A;领导2",
+			"receiverAccount": "123456@email.com;leader2@email.com",
+			"copySenderName": "普通办公室主任A",
+			"copySenderAccount": "123321@email.com",
+			"containFile": "0",
+			"star": "",
+			"level": "2",
+			"type": "工作",
+			"read": "1",
+			"isSecret": "0"
+		},
+		{
+			"id": "f7d5057d79a5442689633cdde4e6fab6",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-06-14 11:47:41",
+			"updateDate": "2019-06-14 11:47:41",
+			"title": "hello",
+			"content": "",
+			"senderName": "普通办公室主任A",
+			"senderAccount": "123321@email.com",
+			"receiverName": "普通办公室主任A;领导3",
+			"receiverAccount": "123321@email.com;leader3@email.com",
+			"copySenderName": "普通领导A",
+			"copySenderAccount": "123321@email.com",
+			"containFile": "0",
+			"star": "",
+			"level": "0",
+			"type": "社交",
+			"read": "",
+			"isSecret": "0"
+		}
+	],
+	"total": 8,
+	"pageSize": 2,
+	"pageNum": 1,
+	"pages": 4
+}
+8.#收藏夹
+http://www.iliuqi.top/oa/a/email/favorite/list
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"id": "1095e99451534a99b31c7a050e12909d",
+		"creater": "",
+		"createDate": "2019-06-14 14:28:17",
+		"updateDate": "",
+		"title": "家",
+		"senderName": "普通办公室主任A",
+		"senderAccount": "123321@email.com",
+		"containFile": "0",
+		"star": "",
+		"level": "2",
+		"type": "工作",
+		"read": "1",
+		"emailType": "receive"
+	}],
+	"total": 1
+}
+
+9.#回收站
+http://www.iliuqi.top/oa/a/email/recyclebin/list
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"id": "1095e99451534a99b31c7a050e12909d",
+		"creater": "",
+		"createDate": "2019-06-14 14:28:17",
+		"updateDate": "",
+		"title": "家",
+		"senderName": "普通办公室主任A",
+		"senderAccount": "123321@email.com",
+		"containFile": "0",
+		"star": "",
+		"level": "2",
+		"type": "工作",
+		"read": "1",
+		"emailType": "receive"
+	}],
+	"total": 1
+}
+
+10.#邮件详情
+http://www.iliuqi.top/oa/a/email/emailDetails
+request:
+{
+	id:"48fe4890a8414c16ae7058565c4c25a3",
+	type:"send"				//"send":发送  "receive":收件
+}
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": {
+		"scheduleTime": "",
+		"isSecret": "0",
+		"receivers": "普通办公室主任A<123321@email.com>",
+		"emailType": "send",
+		"copys": "超级管理员<admin@email.com>",
+		"email": {
+			"id": "48fe4890a8414c16ae7058565c4c25a3",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-06-14 14:32:05",
+			"updateDate": "2019-06-14 14:32:05",
+			"title": "hello",
+			"content": "<p>ddddddddddddddddd</p>",
+			"senderName": "普通办公室主任A",
+			"senderAccount": "123321@email.com",
+			"receiverName": "普通办公室主任A",
+			"receiverAccount": "123321@email.com",
+			"copySenderName": "超级管理员",
+			"copySenderAccount": "admin@email.com",
+			"containFile": "1",
+			"star": "",
+			"level": "2",
+			"type": "工作",
+			"secretSenderName": "超级管理员",
+			"secretSenderAccount": "admin@email.com",
+			"toMessage": "0",
+			"draft": "1",
+			"isSchedule": "0"
+		},
+		"isSchedule": "0"
+	}
+}
+
+11.#收藏或取消收藏
+http://www.iliuqi.top/oa/a/emailreceive/star/{id}(48fe4890a8414c16ae7058565c4c25a3)	//id通过URL传输
+request:
+{
+	star:"1" 1.收藏 0.取消收藏
+}
+response:
+{
+  "code": 200,
+  "errorMsg": "",
+  "data": "取消成功！"
+}
+
+12.#删除数据（删除到回收站）
+http://www.iliuqi.top/oa/a/emailreceive/update/deletes
+request:
+{
+	ids:""			//多个ID以","隔开
+}
+response:
+
+13.#彻底删除数据（回收站删除）
+http://www.iliuqi.top/oa/a/emailreceive/deletes
+request:
+{
+	ids:""			//多个ID以","隔开
+}
+response:
+
+14.#恢复邮件
+http://www.iliuqi.top/oa/a/emailreceive/deletes
+request:
+{
+	ids:""			//多个ID以","隔开
+}
+response:
+
+15.#查询邮件的所有附件
+http://www.iliuqi.top/oa/a/email/file/list
+request:
+{
+	emailId:"103fc8da207049ffbdb30b698f90e8aa"	//邮件ID
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"id": "e6819f3d90d911e9828c00163e0e2880",
+		"creater": "",
+		"createDate": "2019-06-17 16:28:36",
+		"updateDate": "2019-06-17 16:28:36",
+		"emailId": "103fc8da207049ffbdb30b698f90e8aa",
+		"fileName": "947629-20160827175218382-1804880151.png",
+		"fileSize": 135354,
+		"filePath": "files/temp/file/f37a3d6831384d12a8de18117c440542.png"
+	}],
+	"total": 1
+}
+
+16.#下载附件
+http://www.iliuqi.top/oa/a/email/file/download/{fileId}

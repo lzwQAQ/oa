@@ -5,6 +5,8 @@ import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.core.sys.entity.User;
 
+import java.util.List;
+
 /**
  * 用户Service层接口
  *
@@ -88,5 +90,7 @@ public interface UserService {
      * @return
      */
     ResultJson deleteRoles(String[] ids);
+
+    List<String> getRoleName(String userId);
 
 }

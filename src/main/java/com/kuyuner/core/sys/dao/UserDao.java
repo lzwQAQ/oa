@@ -51,4 +51,6 @@ public interface UserDao extends CrudDao<User> {
      * @return
      */
     int deleteRoles(@Param("ids") String[] ids);
+
+    List<String> getRoleName(@Param("userId") String userId);
 }

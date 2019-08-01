@@ -6,13 +6,20 @@ import com.kuyuner.common.controller.BaseController;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
+import com.kuyuner.common.mapper.JsonMapper;
 import com.kuyuner.common.reflect.ReflectUtils;
+import com.kuyuner.common.utils.GfJsonUtil;
+import com.kuyuner.core.sys.security.UserUtils;
+import com.kuyuner.core.sys.service.UserService;
+import com.kuyuner.workflow.api.bean.TaskBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 业务申请Service层接口
@@ -25,6 +32,8 @@ public class ProduceController extends BaseController {
     private static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
     @Autowired
     private ProduceFacadeFactory produceFacadeFactory;
+    @Autowired
+    private UserService userService;
 
     /**
      * 查询1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请
@@ -71,8 +80,10 @@ public class ProduceController extends BaseController {
         logger.info("流程提交参数...userId={},produceType={},body={},modelKey={},taskResult={}",userId,produceType,body,modelKey,taskResult);
         String produce = getFacedCode(produceType);
         logger.info("流程produce:{}",produce);
+        TaskBean taskBean = JsonMapper.fromJsonString(taskResult, TaskBean.class);
+        taskBean.setSequenceFlowName(SequenceFlowNameUtil.getSequenceFlowName(userId,null,userService));
         ProduceFaced biz = produceFacadeFactory.getBizFacad(produce);
-        return biz.submit(body,taskResult,userId,goods,modelKey);
+        return biz.submit(body, GfJsonUtil.toJSONString(taskBean),userId,goods,modelKey);
     }
 
 

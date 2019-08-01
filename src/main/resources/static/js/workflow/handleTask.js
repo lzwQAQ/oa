@@ -23,6 +23,7 @@ $(function () {
     });
 
     function beforeSubmitForm(sequenceFlowName, submitTask) {
+        debugger;
         //初始化对象属性
         taskResult.sequenceFlowName = sequenceFlowName;
         taskResult.users = [];

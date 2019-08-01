@@ -7,10 +7,13 @@ import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
+import com.kuyuner.common.mapper.JsonMapper;
+import com.kuyuner.common.utils.GfJsonUtil;
 import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.UserService;
 
+import com.kuyuner.workflow.api.bean.TaskBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -139,7 +142,9 @@ public class BusinessController extends BaseController {
     @ResponseBody
     @RequestMapping("submit")
     public ResultJson submit(Business business, String taskResult,String userId) {
-        return businessService.submitForm(business, taskResult,userId);
+        TaskBean taskBean = JsonMapper.fromJsonString(taskResult, TaskBean.class);
+        taskBean.setSequenceFlowName(SequenceFlowNameUtil.getSequenceFlowName(userId,null,userService));
+        return businessService.submitForm(business, GfJsonUtil.toJSONString(taskBean),userId);
     }
 
     /**

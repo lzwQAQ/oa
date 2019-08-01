@@ -129,7 +129,7 @@ public class CarApplyServiceImpl implements CarApplyService {
         List<Driver> list = carApplyDao.findDrivers();
         Driver driver = new Driver();
         User user = new User();
-        BeanUtils.copyProperties(UserUtils.getUserFromDB(userId), user);
+        BeanUtils.copyProperties(StringUtils.isNotBlank(userId)? UserUtils.getUserFromDB(userId) : UserUtils.getUser(), user);
         user.setName("自驾");
         driver.setUser(user);
         list.add(0, driver);

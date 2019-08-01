@@ -220,4 +220,12 @@
         </foreach>
     </delete>
 
+    <select id="getRoleName" resultType="java.lang.String">
+        SELECT
+            t1.`NAME`
+        FROM
+            `T_PT_USER_ROLE` t
+        LEFT JOIN T_PT_ROLE t1 ON t.ROLE_ID = t1.ID
+        WHERE t.USER_ID=#{userId}
+    </select>
 </mapper>

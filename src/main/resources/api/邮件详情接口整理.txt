@@ -1,0 +1,92 @@
+备注：	1.第1接口 接提供草稿箱使用，对转发和回复的接口也可调用此接口
+	2.对收件箱，发件箱，收藏夹，回收站调用
+
+1.#草稿箱详情
+http://www.iliuqi.top/oa/a/emailsend/draft/detail
+request:
+{
+	id:"62295b2a34fd40c7be472b87cbdf157c"			//邮件ID
+	type:"forward"						//类型 回复传"reply" 转发传"forward" 
+	emailType:"receive"					//邮件类型（根据数据的emailType传输）
+}
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": {
+		"sender": "普通用户体验A<123456@email.com>",
+		"receivers": "普通办公室主任A<123321@email.com>",
+		"emailSend": {
+			"id": "",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-01-08 18:28:18",
+			"updateDate": "2019-07-01 10:41:46",
+			"title": "转发：明天下雪，大家注意做好道路除冰！出行注意安全",
+			"content": "<p><span style=\"line-height: 22.8571px; white-space: normal;\">hello,this is test message.</span></p>",
+			"senderName": "普通用户体验A",
+			"senderAccount": "123456@email.com",
+			"receiverName": "普通办公室主任A",
+			"receiverAccount": "123321@email.com",
+			"copySenderName": "普通部门主任A",
+			"copySenderAccount": "123321@email.com",
+			"containFile": "0",
+			"star": "0",
+			"level": "1",
+			"type": "社交",
+			"secretSenderName": "",
+			"secretSenderAccount": "",
+			"toMessage": "",
+			"draft": "",
+			"isSchedule": ""
+		},
+		"copys": "普通部门主任A<123321@email.com>",
+		"fromId": "62295b2a34fd40c7be472b87cbdf157c"
+	}
+}
+
+
+2.#收件箱，发件箱，收藏夹，回收站详情
+http://www.iliuqi.top/oa/a/email/emailDetails
+request:
+{
+	id:"48fe4890a8414c16ae7058565c4c25a3",
+	emailType:"send"				//"send":发送  "receive":收件 （数据中包含此字段）
+}
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": {
+		"scheduleTime": "",
+		"isSecret": "0",
+		"receivers": "普通办公室主任A<123321@email.com>",
+		"emailType": "send",
+		"copys": "超级管理员<admin@email.com>",
+		"email": {
+			"id": "48fe4890a8414c16ae7058565c4c25a3",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-06-14 14:32:05",
+			"updateDate": "2019-06-14 14:32:05",
+			"title": "hello",
+			"content": "<p>ddddddddddddddddd</p>",
+			"senderName": "普通办公室主任A",
+			"senderAccount": "123321@email.com",
+			"receiverName": "普通办公室主任A",
+			"receiverAccount": "123321@email.com",
+			"copySenderName": "超级管理员",
+			"copySenderAccount": "admin@email.com",
+			"containFile": "1",
+			"star": "",
+			"level": "2",
+			"type": "工作",
+			"secretSenderName": "超级管理员",
+			"secretSenderAccount": "admin@email.com",
+			"toMessage": "0",
+			"draft": "1",
+			"isSchedule": "0"
+		},
+		"isSchedule": "0"
+	}
+}

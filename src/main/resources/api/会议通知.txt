@@ -1,0 +1,407 @@
+1.#发起会议列表
+http://www.iliuqi.top/oa/a/meeting/sendlist
+request:
+{
+	userId:""
+	title:""							//	会议主题
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"id": "6c1247f479724b8595b632ab659cc329",
+		"creater": "06369499a7374e98b7e4ab7278d21335",
+		"createDate": "2019-07-22 10:40:17",
+		"updateDate": "2019-07-22 10:40:17",
+		"title": "hello",
+		"beginTime": "2019-07-22 00:00",
+		"endTime": "2019-07-23 00:00",
+		"duration": "1天",
+		"place": "会议地点",
+		"trainer": {
+			"id": "06369499a7374e98b7e4ab7278d21335",
+			"creater": "",
+			"createDate": "",
+			"updateDate": "",
+			"username": "",
+			"name": "普通办公室主任A",
+			"lastLoginDate": "",
+			"loginErrorCount": "",
+			"state": "",
+			"photo": "",
+			"sex": "",
+			"phone": "",
+			"email": "",
+			"dept": "",
+			"homePlace": "",
+			"usualPlace": "",
+			"isMarry": "",
+			"school": "",
+			"isParty": "",
+			"birthday": "",
+			"entryDate": "",
+			"position": "",
+			"urgentContacts": ""
+		},
+		"joinPeople": "11",
+		"content": "sada",
+		"marks": "sa",
+		"meetingType": "1",
+		"isSendMessage": "0",
+		"type": "普通"
+	}, {
+		"id": "8333a0e624d243ce8c2b7b2654542e27",
+		"creater": "06369499a7374e98b7e4ab7278d21335",
+		"createDate": "2019-07-22 10:00:00",
+		"updateDate": "2019-07-22 10:00:00",
+		"title": "会议主题",
+		"beginTime": "2019-07-22 00:00",
+		"endTime": "2019-07-26 00:00",
+		"duration": "4天",
+		"place": "会议地点",
+		"trainer": {
+			"id": "06369499a7374e98b7e4ab7278d21335",
+			"creater": "",
+			"createDate": "",
+			"updateDate": "",
+			"username": "",
+			"name": "普通办公室主任A",
+			"lastLoginDate": "",
+			"loginErrorCount": "",
+			"state": "",
+			"photo": "",
+			"sex": "",
+			"phone": "",
+			"email": "",
+			"dept": "",
+			"homePlace": "",
+			"usualPlace": "",
+			"isMarry": "",
+			"school": "",
+			"isParty": "",
+			"birthday": "",
+			"entryDate": "",
+			"position": "",
+			"urgentContacts": ""
+		},
+		"joinPeople": "f33cbb05dbdd437db0b6440078532212,9,06369499a7374e98b7e4ab7278d21335,120b8f50da2d4c3591067d77d76ee29a",
+		"content": "会议内容",
+		"marks": "备注",
+		"meetingType": "1",
+		"isSendMessage": "0",
+		"type": "普通"
+	}],
+	"total": 2,
+	"pageSize": 15,
+	"pageNum": 1,
+	"pages": 1
+}
+
+2.#参与人员树形结构
+http://www.iliuqi.top/oa/a/train/usertree
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [ {
+		"isParent": "true",
+		"name": "商务管理部",
+		"pId": "282blo08f51c42fb941e2fde8d825873",
+		"id": "6214249586db42lo937ee3f72764098c",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "售前顾问部",
+		"pId": "282blo08f51c42fb941e2fde8d825873",
+		"id": "6214249586dbhy71a37ee3f72764098c",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "人力资源部",
+		"pId": "6a03f4d0b20242b0815fcd21e93bcb30",
+		"id": "99254a4b7678445996a206e42fb08691",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "管理",
+		"pId": "6a03f4d0b20242b0815fcd21e93bcb30",
+		"id": "b6028ac9002f4032950e293eb8d15475",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "总经理",
+		"pId": "282blo08f51c42fb941e2fde8d825873",
+		"id": "fc01884b84414b0caced46e3035e18ac",
+		"type": "dept"
+	}, {
+		"isParent": "true",
+		"name": "南京云立易网络科技有限公司",
+		"pId": "",
+		"id": "6a03f4d0b20242b0815fcd21e93bcb30",
+		"type": "org"
+	}, {
+		"isParent": "true",
+		"name": "南京云立易网络科技有限公司分公司",
+		"pId": "",
+		"id": "c8e3825e463b4dbbbdd3e0039e60bb6e",
+		"type": "org"
+	}],
+	"total": 48
+}
+3.#会议类型字典
+http://www.iliuqi.top/oa/a/dictdata/getDictByType
+request:
+{
+	dictType:MEETING_TYPE
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "2b72f1c1b2ab4e1fa86538a252d1a4e4",
+			"creater": "1",
+			"createDate": "2018-12-19 16:31:46",
+			"updateDate": "2018-12-21 16:14:06",
+			"dictCode": "1",
+			"dictValue": "重要",
+			"dictType": "MEETING_TYPE",
+			"sort": 20
+		},
+		{
+			"id": "331e242fed3e4424a3e142b5cb3176a3",
+			"creater": "1",
+			"createDate": "2018-12-19 16:31:27",
+			"updateDate": "2018-12-19 16:31:27",
+			"dictCode": "0",
+			"dictValue": "普通",
+			"dictType": "MEETING_TYPE",
+			"sort": 10
+		},
+		{
+			"id": "75b84a2d8e6549739343b7b8ac01fcf1",
+			"creater": "1",
+			"createDate": "2018-12-19 16:32:12",
+			"updateDate": "2018-12-19 16:32:12",
+			"dictCode": "2",
+			"dictValue": "私密",
+			"dictType": "MEETING_TYPE",
+			"sort": 30
+		}
+	]
+}
+4.#新增会议
+http://www.iliuqi.top/oa/a/meeting/save
+request:
+{
+	userId:"",
+	title:"会议主题",						//会议主题
+	beginTime:"Mon Jul 22 00:00:00 CST 2019",			//开始时间
+	endTime:"Fri Jul 26 00:00:00 CST 2019",				//结束时间
+	duration:"4天",							//会议时间
+	place:"会议地点",						//会议地点
+	joinPeople:"f33cbb05dbdd437db0b6440078532212,9",		//参与人员，多个","隔开
+	content:"会议内容",						//会议内容
+	marks:"备注",							//备注
+	isSendMessage:"0"						//是否发送短信0.不发送，1发送
+	type:"0"							//会议类型
+}
+response:
+{"code":200,"errorMsg":"","data":""}
+
+5.#详情
+http://www.iliuqi.top/oa/a/meeting/detail
+request:
+{
+	id:""								//id
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": {
+		"joinPeoples": [{
+				"id": "",
+				"creater": "",
+				"createDate": "",
+				"updateDate": "",
+				"username": "",
+				"name": "领导2",
+				"lastLoginDate": "",
+				"loginErrorCount": "",
+				"state": "",
+				"photo": "",
+				"sex": "1",
+				"phone": "",
+				"email": "",
+				"dept": {
+					"id": "",
+					"creater": "",
+					"createDate": "",
+					"updateDate": "",
+					"treeLevel": "",
+					"treeLeaf": "",
+					"code": "",
+					"name": "软件销售部",
+					"simpleName": "",
+					"org": "",
+					"master": "",
+					"phone": "",
+					"fax": "",
+					"email": "",
+					"sort": "",
+					"parentName": "",
+					"leaf": true,
+					"parentId": ""
+				},
+				"homePlace": "",
+				"usualPlace": "",
+				"isMarry": "",
+				"school": "",
+				"isParty": "",
+				"birthday": "",
+				"entryDate": "",
+				"position": "",
+				"urgentContacts": ""
+			},
+			{
+				"id": "",
+				"creater": "",
+				"createDate": "",
+				"updateDate": "",
+				"username": "",
+				"name": "普通财务A",
+				"lastLoginDate": "",
+				"loginErrorCount": "",
+				"state": "",
+				"photo": "",
+				"sex": "0",
+				"phone": "",
+				"email": "",
+				"dept": {
+					"id": "",
+					"creater": "",
+					"createDate": "",
+					"updateDate": "",
+					"treeLevel": "",
+					"treeLeaf": "",
+					"code": "",
+					"name": "政务软件事业部",
+					"simpleName": "",
+					"org": "",
+					"master": "",
+					"phone": "",
+					"fax": "",
+					"email": "",
+					"sort": "",
+					"parentName": "",
+					"leaf": true,
+					"parentId": ""
+				},
+				"homePlace": "",
+				"usualPlace": "",
+				"isMarry": "",
+				"school": "",
+				"isParty": "",
+				"birthday": "",
+				"entryDate": "",
+				"position": "",
+				"urgentContacts": ""
+			}
+		],
+		"meeting": {
+			"id": "8333a0e624d243ce8c2b7b2654542e27",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-07-22 10:00:00",
+			"updateDate": "2019-07-22 10:00:00",
+			"title": "会议主题",
+			"beginTime": "2019-07-22 00:00",
+			"endTime": "2019-07-26 00:00",
+			"duration": "4天",
+			"place": "会议地点",
+			"trainer": {
+				"id": "06369499a7374e98b7e4ab7278d21335",
+				"creater": "",
+				"createDate": "",
+				"updateDate": "",
+				"username": "",
+				"name": "普通办公室主任A"
+			},
+			"joinPeople": "f33cbb05dbdd437db0b6440078532212,9,06369499a7374e98b7e4ab7278d21335,120b8f50da2d4c3591067d77d76ee29a",
+			"content": "会议内容",
+			"marks": "备注",
+			"meetingType": "1",
+			"isSendMessage": "0",
+			"type": "普通"
+		}
+	}
+}
+6.#删除
+http://www.iliuqi.top/oa/a/meeting/deletes
+request:
+{
+	ids:''								//多个用","隔开
+}
+response:
+{"code":200,"errorMsg":"","data":""}
+7.#我的会议列表
+http://www.iliuqi.top/oa/a/meeting/list
+request:
+{
+	userId:
+	title:""							//会议主题
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"id": "b70ac4565cfd471db14ea87be80602fd",
+		"creater": "06369499a7374e98b7e4ab7278d21335",
+		"createDate": "2019-01-08 18:37:48",
+		"updateDate": "2019-01-08 18:37:48",
+		"title": "2019开年季度会议",
+		"beginTime": "2019-01-08 00:00",
+		"endTime": "2019-01-19 00:00",
+		"duration": "11天",
+		"place": "东台新曹农场",
+		"trainer": {
+			"id": "120b8f50da2d4c3591067d77d76ee29a",
+			"creater": "",
+			"createDate": "",
+			"updateDate": "",
+			"username": "",
+			"name": "普通用户体验A",
+			"lastLoginDate": "",
+			"loginErrorCount": "",
+			"state": "",
+			"photo": "",
+			"sex": "",
+			"phone": "",
+			"email": "",
+			"dept": "",
+			"homePlace": "",
+			"usualPlace": "",
+			"isMarry": "",
+			"school": "",
+			"isParty": "",
+			"birthday": "",
+			"entryDate": "",
+			"position": "",
+			"urgentContacts": ""
+		},
+		"joinPeople": "06369499a7374e98b7e4ab7278d21335,120b8f50da2d4c3591067d77d76ee29a",
+		"content": "斗地主、掼蛋！",
+		"marks": "加油！",
+		"meetingType": "0",
+		"isSendMessage": "0",
+		"type": "重要"
+	}],
+	"total": 3,
+	"pageSize": 15,
+	"pageNum": 1,
+	"pages": 1
+}

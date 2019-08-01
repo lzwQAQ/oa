@@ -6,10 +6,13 @@ import com.kuyuner.common.controller.BaseController;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
+import com.kuyuner.common.mapper.JsonMapper;
+import com.kuyuner.common.utils.GfJsonUtil;
 import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.UserService;
 
+import com.kuyuner.workflow.api.bean.TaskBean;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 请假Service层接口
@@ -160,7 +165,9 @@ public class LeaveController extends BaseController {
     @ResponseBody
     @RequestMapping("submit")
     public ResultJson submit(Leave leave, String taskResult,String userId) {
-        return leaveService.submitForm(leave, taskResult,userId);
+        TaskBean taskBean = JsonMapper.fromJsonString(taskResult, TaskBean.class);
+        taskBean.setSequenceFlowName(SequenceFlowNameUtil.getSequenceFlowName(userId,null,userService));
+        return leaveService.submitForm(leave, GfJsonUtil.toJSONString(taskBean),userId);
     }
 
     /**
@@ -177,5 +184,7 @@ public class LeaveController extends BaseController {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
         return leaveService.approvalForm(id, approvalResult, taskResult,userId);
     }
+
+
 
 }

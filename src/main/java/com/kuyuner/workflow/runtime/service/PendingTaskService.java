@@ -50,6 +50,6 @@ public interface PendingTaskService {
      * @param processInstanceId 可选参数，可为空
      * @return
      */
-    ResultJson isSelectNextTaskCandidateInfos(String processDefinitionId, String taskKey, String sequenceFlowName, String processInstanceId);
+    ResultJson isSelectNextTaskCandidateInfos(String processDefinitionId, String taskKey, String sequenceFlowName, String processInstanceId,String userId);
 
 }

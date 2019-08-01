@@ -1,0 +1,522 @@
+
+注：	produceType字段区分流程  1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请 7.自定义申请
+	modelKey必传qingjia（请假）、renshidiaodu（人事调度）、yewushenqing（业务申请）、caigou（采购）、caiwushenqing（财务申请）、shouwen（收文）、yongche（用车）、fawen（发文）、aaaa（自定义））
+
+1.#获取任务流程以及任务详情信息
+/**
+     * 详情
+     * 必传: produceType、type（historic为历史 pendding:审核）、userId
+     * 在首次发起流程进入页面时调用：传参（userId，produceType，type，modelKey，startSequenceFlowName）  modelKey必传 任务类型（qingjia、renshidiaodu、yewushenqing、caigou、caiwushenqing、shouwen、yongche、fawen、aaaa）startSequenceFlowName可以不传
+     * 在审批进入页面的时候调用：传参（userId，produceType，type，businessId（列表中的ID），taskId）
+     * 采购申请特殊处理 满足上面的情况下，在发起和审批过程中需要传参firstTask在第一次发起申请的时候穿"true"，在代办的时候传“false”
+     * @return
+     */
+http://www.iliuqi.top/oa/a/procedure/detail
+request:
+{
+	userId:				//用户ID
+	produceType:1			//
+	modelKey:"qingjia",		//任务类型（必传qingjia、renshidiaodu、yewushenqing、caigou、caiwushenqing、shouwen、yongche、fawen）
+	startSequenceFlowName:null	//（非必传）
+	
+}
+注：返回信息中work是流程信息，data是数据详情，采购特殊处理，分为基本信息purchase，和商品信息goodsList
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": {
+		"data": {
+			"id": "0707d1a3ffa343a9aba84b8c8fafb040",
+			"creater": "06369499a7374e98b7e4ab7278d21335",
+			"createDate": "2019-07-10 10:40:36",
+			"updateDate": "2019-07-10 19:19:21",
+			"title": "标题",
+			"content": "阿达",
+			"modelId": "7ebd9c7b8fc5405bba803811cbc1b082",
+			"taskName": "办公室主任",
+			"approvalResult": "<span class=\"people_name\">普通办公室主任A</span>的处理意见：</br>t；<span class=\"audit_result\">不通过</span></br><span class=\"people_name\">普通办公室主任A</span>的处理意见：</br>无；<span class=\"audit_result\">通过</span></br>",
+			"senderId": "06369499a7374e98b7e4ab7278d21335",
+			"senderName": "普通办公室主任A",
+			"senderDeptName": "项目实施部"
+		},
+		"work": {
+			"formPath": "simpleworkflow/form?businessId=0707d1a3ffa343a9aba84b8c8fafb040&taskId=37f79fc81c964c7ea181163cdb851322&modelKey=aaaa&taskName=%E5%8A%9E%E5%85%AC%E5%AE%A4%E4%B8%BB%E4%BB%BB&type=pending",
+			"processDefinitionId": "aaaa:3:50eb2059b6e14d999db8cb9200a4c0f6",
+			"taskKey": "sid-74B68B06-69E5-4F16-975B-D530F8AF7969",
+			"businessId": "0707d1a3ffa343a9aba84b8c8fafb040",
+			"taskName": "办公室主任",
+			"processDefinitionName": "自定义流程测试",
+			"modelKey": "aaaa"
+		}
+	}
+}
+
+2.#查询下一任务节点是否可以选择候选信息(提交流程时调用)
+http://www.iliuqi.top/oa/a/createtask/isSelectNextTaskCandidateInfos
+request:
+{
+	processDefinitionId: "qingjia:1:4236511f4498439093eccf30ebd15ce3"	//流程ID
+	sequenceFlowName:""							//（非必传）
+	startSequenceFlowName:""						//（非必传）
+	userId:									//用户ID
+}
+response:
+{
+	"code":200,
+	"errorMsg":"",
+	"data":"true"			//是否需要指定下一步处理人
+}
+3.#查询下一任务节点的候选信息
+http://www.iliuqi.top/oa/a/createtask/findNextTaskCandidateInfos
+request:
+{
+	processDefinitionId: "qingjia:1:4236511f4498439093eccf30ebd15ce3"	//流程ID
+	sequenceFlowName:""							//（非必传）
+	startSequenceFlowName:""						//（非必传）
+	userId:									//用户ID
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"deptName": "软件销售部",
+		"orgName": "南京云立易网络科技有限公司",
+		"orgCode": "0100101",
+		"name": "办公室主任1",
+		"id": "11",
+		"deptCode": "RJXS",
+		"username": "offheader1"
+	}, {
+		"deptName": "软件销售部",
+		"orgName": "南京云立易网络科技有限公司",
+		"orgCode": "0100101",
+		"name": "办公室主任2",
+		"id": "12",
+		"deptCode": "RJXS",
+		"username": "offheader2"
+	}, {
+		"deptName": "软件销售部",
+		"orgName": "南京云立易网络科技有限公司",
+		"orgCode": "0100101",
+		"name": "办公室主任3",
+		"id": "13",
+		"deptCode": "RJXS",
+		"username": "offheader3"
+	}, {
+		"deptName": "软件销售部",
+		"orgName": "南京云立易网络科技有限公司",
+		"orgCode": "0100101",
+		"name": "测试账户",
+		"id": "559cc56f205245a7b238f4cd6a491b18",
+		"deptCode": "RJXS",
+		"username": "test"
+	}, {
+		"deptName": "项目实施部",
+		"orgName": "南京云立易网络科技有限公司",
+		"orgCode": "0100101",
+		"name": "普通办公室主任A",
+		"id": "06369499a7374e98b7e4ab7278d21335",
+		"deptCode": "XMSS",
+		"username": "普通办公室主任A"
+	}],
+	"total": 5
+}
+
+4.#请假类型字典
+http://www.iliuqi.top/oa/dictdata/getDictByType
+request:
+{
+	dictType:LEAVE_TYPE
+}
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+			"id": "3ab437acbce54cb1a396f812126c344c",
+			"creater": "1",
+			"createDate": "2018-11-27 03:07:24",
+			"updateDate": "2018-11-27 03:09:09",
+			"dictCode": "2",
+			"dictValue": "病假",
+			"dictType": "LEAVE_TYPE",
+			"sort": 20
+		},
+		{
+			"id": "640f2a67c60948979e5cef8e7d0daea4",
+			"creater": "1",
+			"createDate": "2018-11-27 03:06:45",
+			"updateDate": "2018-11-27 03:06:45",
+			"dictCode": "1",
+			"dictValue": "事假",
+			"dictType": "LEAVE_TYPE",
+			"sort": 10
+		},
+		{
+			"id": "687de85233914b6eadbda9de864157c9",
+			"creater": "1",
+			"createDate": "2018-11-27 03:07:57",
+			"updateDate": "2018-11-27 03:09:48",
+			"dictCode": "5",
+			"dictValue": "产假",
+			"dictType": "LEAVE_TYPE",
+			"sort": 50
+		},
+		{
+			"id": "74218f44f05944c592e3b2abb3687ebd",
+			"creater": "1",
+			"createDate": "2018-11-27 03:07:47",
+			"updateDate": "2018-11-27 03:09:41",
+			"dictCode": "4",
+			"dictValue": "婚假",
+			"dictType": "LEAVE_TYPE",
+			"sort": 40
+		},
+		{
+			"id": "b99d04c70869438c880df5f711a25927",
+			"creater": "1",
+			"createDate": "2018-11-27 03:07:34",
+			"updateDate": "2018-11-27 03:09:20",
+			"dictCode": "3",
+			"dictValue": "年假",
+			"dictType": "LEAVE_TYPE",
+			"sort": 30
+		},
+		{
+			"id": "cf10fd3f70274805a592a1b847a3df96",
+			"creater": "1",
+			"createDate": "2018-11-27 03:08:05",
+			"updateDate": "2018-11-27 03:09:57",
+			"dictCode": "6",
+			"dictValue": "陪产假",
+			"dictType": "LEAVE_TYPE",
+			"sort": 60
+		},
+		{
+			"id": "fdbe1ae7301e40699c96300d9a83cc65",
+			"creater": "1",
+			"createDate": "2018-11-27 03:08:17",
+			"updateDate": "2018-11-27 03:10:04",
+			"dictCode": "7",
+			"dictValue": "丧假",
+			"dictType": "LEAVE_TYPE",
+			"sort": 70
+		}
+	]
+}
+4.#请假申请提交
+http://www.iliuqi.top/oa/a/procedure/submit
+request：
+{
+	produceType:1
+	body:"{"type":1,"reason":"这是请假理由","startTime":"2019-07-09","endTime":"2019-07-14","leaveDay":5.5}" 	//请假对象字符串 	type:请假类型 		
+	userId:				//用户		taskResult:"{"startSequenceFlowName":"","sequenceFlowName":null,"processDefinitionId":"qingjia:1:4236511f4498439093eccf30ebd15ce3","users":  ["559cc56f205245a7b238f4cd6a491b18"],"taskId":""}"			//流程对象字符串
+}
+response:
+{
+  "code": 200,
+  "errorMsg": "",
+  "data": ""
+}
+
+
+5.#获取负责人
+http://www.iliuqi.top/oa/a/business/userlist
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"name": "普通办公室主任A",
+		"id": "06369499a7374e98b7e4ab7278d21335"
+	}, {
+		"name": "超级管理员",
+		"id": "1"
+	}],
+	"total": 21
+}
+6.#获取协作部门
+http://www.iliuqi.top/oa/a/business/deptlist
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"name": "项目管理部",
+		"id": "248c5a118812091eaf7ccd158b99ca12"
+	}, {
+		"name": "技术总监",
+		"id": "248c5a1188124d5eaf7ccd15809dca12"
+	}],
+	"total": 25
+}
+
+7.#采购申请提交
+http://www.iliuqi.top/oa/a/procedure/submit
+request：
+{
+	produceType:2,
+	body:"{"name":"业务名称","reason":"采购事由","totalPrice":"商品总价格"}" 	//业务对象字符串	
+	userId:""				//用户
+	taskResult:"{"startSequenceFlowName":"","sequenceFlowName":null,"processDefinitionId":"yewushenqing:2:5f5c2ba7d2f04d3bbcaf817bdc5f32e3","users":[],"taskId":""}"				//流程对象字符串
+}
+
+response:
+{
+  "code": 200,
+  "errorMsg": "",
+  "data": ""
+}
+
+8.#采购申请提交
+http://www.iliuqi.top/oa/a/procedure/submit
+request：
+{
+	produceType:4,
+	body:"{"businessName":"业务名称","collaborationDept":"协作部门ID","header":"负责人 ID","startTims":"2019-07-09","endTime":"2019-07-14","needPlace":"是否需要场地0.否1.是","explains":"情况说明","funds":222}" 	//业务对象字符串	
+	userId:""				//用户		taskResult:"{"startSequenceFlowName":"","sequenceFlowName":null,"processDefinitionId":"caigou:3:ec973582c16f478283ce8cf2998f749c","users":[],"taskId":""}"					//流程对象字符串
+	goods:"[{"name":"物品1","model":"111","price":"22","num":"1","unit":"个","totalPrice":"22.00"},{"name":"物品2","model":"222","price":"110","num":"1","unit":"个","totalPrice":"110.00"}]"	//商品对象集合字符串
+}
+
+response:
+{
+  "code": 200,
+  "errorMsg": "",
+  "data": ""
+}
+
+9.#获取车辆信息
+http://www.iliuqi.top/oa/a/carapply/findcars
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"id": "a59ed70cd0534dfaad070a8d8f69f70f",
+		"creater": "",
+		"createDate": "",
+		"updateDate": "",
+		"carNo": "苏A78890",
+		"color": "黑色",
+		"brand": "宝马5系",
+		"seatNum": "6"
+	}, {
+		"id": "bc94f13df6db48d59e3a36f91b471131",
+		"creater": "",
+		"createDate": "",
+		"updateDate": "",
+		"carNo": "苏A10001",
+		"color": "红色",
+		"brand": "宝马Z系",
+		"seatNum": "6"
+	}],
+	"total": 2
+}
+10.#获取驾驶员信息
+http://www.iliuqi.top/oa/a/carapply/finddrivers
+request:
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": [{
+		"id": "",
+		"creater": "",
+		"createDate": "",
+		"updateDate": "",
+		"user": {
+			"id": "06369499a7374e98b7e4ab7278d21335",
+			"creater": "1",
+			"createDate": "2019-01-08 18:12:53",
+			"updateDate": "2019-01-08 18:12:53",
+			"username": "普通办公室主任A",
+			"name": "自驾",
+			"lastLoginDate": "",
+			"loginErrorCount": "",
+			"state": "正常",
+			"photo": "",
+			"sex": "1",
+			"phone": "18021521091",
+			"email": "123321@email.com",
+			"dept": {
+				"id": "6214249586db4241a37ee3f99964098c",
+				"creater": "",
+				"createDate": "",
+				"updateDate": "",
+				"treeLevel": "",
+				"treeLeaf": "",
+				"code": "XMSS",
+				"name": "项目实施部",
+				"simpleName": "",
+				"org": {
+					"id": "6a03f4d0b20242b0815fcd21e93bcb30",
+					"creater": "",
+					"createDate": "",
+					"updateDate": "",
+					"treeLevel": "",
+					"treeLeaf": "",
+					"code": "0100101",
+					"name": "南京云立易网络科技有限公司",
+					"simpleName": "",
+					"address": "",
+					"postalCode": "",
+					"master": "",
+					"phone": "",
+					"fax": "",
+					"email": "",
+					"sort": "",
+					"leaf": true,
+					"parentId": ""
+				},
+				"master": "",
+				"phone": "",
+				"fax": "",
+				"email": "",
+				"sort": "",
+				"parentName": "",
+				"leaf": true,
+				"parentId": ""
+			},
+			"homePlace": "",
+			"usualPlace": "",
+			"isMarry": "",
+			"school": "",
+			"isParty": "",
+			"birthday": "",
+			"entryDate": "",
+			"position": "",
+			"urgentContacts": ""
+		},
+		"drivingYear": ""
+	}, {
+		"id": "",
+		"creater": "",
+		"createDate": "",
+		"updateDate": "",
+		"user": {
+			"id": "5",
+			"creater": "",
+			"createDate": "",
+			"updateDate": "",
+			"username": "",
+			"name": "普通员工1",
+			"lastLoginDate": "",
+			"loginErrorCount": "",
+			"state": "",
+			"photo": "",
+			"sex": "",
+			"phone": "11111112222",
+			"email": "",
+			"dept": "",
+			"homePlace": "",
+			"usualPlace": "",
+			"isMarry": "",
+			"school": "",
+			"isParty": "",
+			"birthday": "",
+			"entryDate": "",
+			"position": "",
+			"urgentContacts": ""
+		},
+		"drivingYear": 12
+	}],
+	"total": 2
+}
+
+11.#用车申请提交
+http://www.iliuqi.top/oa/a/procedure/submit
+request：
+{
+	produceType:5,
+	body:"{"endTime":"2019-07-11 00:00","startTime":"2019-07-10 00:00","reason":"申请事由","driver":{"id":"用车人ID"},"car":{"id":"车辆ID"}}" 	//业务对象字符串	
+	userId:""				//用户		taskResult:"{"startSequenceFlowName":"","sequenceFlowName":null,"processDefinitionId":"yongche:2:3053b2bf9e4849c7848f48c452fbc835","users":[],"taskId":""}"				//流程对象字符串
+}
+
+response:
+{
+  "code": 200,
+  "errorMsg": "",
+  "data": ""
+}
+
+
+
+12.#财务申请提交
+http://www.iliuqi.top/oa/a/procedure/submit
+request：
+{
+	produceType:6,
+	body:"{"business":"业务名称","money":1111,"purpose":"资金用途"}" 	//业务对象字符串	
+	userId:""				//用户		taskResult:"{"startSequenceFlowName":"","sequenceFlowName":null,"processDefinitionId":"caiwushenqing:1:7f34e1ef896946dd917ddae16f17b73d","users":[],"taskId":""}"				//流程对象字符串
+}
+
+response:
+{
+  "code": 200,
+  "errorMsg": "",
+  "data": ""
+}
+
+
+
+13.#自定义申请提交
+http://www.iliuqi.top/oa/a/leave/submit
+request：
+{
+	modelKey:"aaaa",													//自定义流程key
+	produceType:7,
+	body:"{"content":"申请内容","title":"标题"}" 									//业务对象字符串	
+	userId:""													//用户	taskResult:"{"startSequenceFlowName":"","sequenceFlowName":"提交下一步","processDefinitionId":"aaaa:3:50eb2059b6e14d999db8cb9200a4c0f6","users":[],"taskId":""}"				//流程对象字符串
+}
+
+response:
+{
+  "code": 200,
+  "errorMsg": "",
+  "data": ""
+}
+
+
+
+14.#获得下一环节可选的顺序流名称（审批结果）
+request:
+{
+	taskId:""			//待办任务列表中的taskId（非必传,没有不用传）
+	modelKey:"aaaa"			//流程key（必传）
+	startSequenceFlowName:""	//不知道干啥的（非必传）
+}
+
+response:
+{
+	"code": 200,
+	"errorMsg": "",
+	"data": ["提交下一步"]
+}
+
+
+16.审核请假流程（申请的时候需要调用一下2接口）其他接口一样，根据produceType区别
+http://www.iliuqi.top/oa/a/procedure/approval
+request：
+{
+	userId:"",								//用户ID
+	produceType:1,								//类型1.请假
+	businessId:"0bd440bad8b04b9fb16fbfa306ff3c17",				//业务ID从15接口返回数据取
+	approvalResult:"审批意见"taskResult:"{"taskId":"287245a99e254195a8bce1153830b3a1","processDefinitionId":"aaaa:3:50eb2059b6e14d999db8cb9200a4c0f6","sequenceFlowName":"同意","users":[]}"
+}
+response:
+{"code":200,"errorMsg":"","data":""}
+
+
+
+
+
+

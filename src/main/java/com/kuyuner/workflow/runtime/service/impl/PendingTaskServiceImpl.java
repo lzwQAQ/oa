@@ -91,7 +91,7 @@ public class PendingTaskServiceImpl implements PendingTaskService {
 
     @Override
     public ResultJson isSelectNextTaskCandidateInfos(String processDefinitionId, String taskKey,
-                                                     String sequenceFlowName, String processInstanceId) {
+                                                     String sequenceFlowName, String processInstanceId,String userId) {
 
         //检查是否为会签
         if (StringUtils.isNotBlank(processInstanceId)) {

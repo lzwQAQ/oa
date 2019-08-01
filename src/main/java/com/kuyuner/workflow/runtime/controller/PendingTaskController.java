@@ -66,10 +66,10 @@ public class PendingTaskController {
      */
     @ResponseBody
     @RequestMapping("/isSelectNextTaskCandidateInfos")
-    public ResultJson isSelectNextTaskCandidateInfos(String taskId, String sequenceFlowName) {
+    public ResultJson isSelectNextTaskCandidateInfos(String taskId, String sequenceFlowName,String userId) {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         return pendingTaskService.isSelectNextTaskCandidateInfos(task.getProcessDefinitionId(), task.getTaskDefinitionKey(),
-                sequenceFlowName, task.getProcessInstanceId());
+                sequenceFlowName, task.getProcessInstanceId(),userId);
     }
 
     /**

@@ -28,11 +28,14 @@ $(function () {
         taskResult.sequenceFlowName = sequenceFlowName;
         taskResult.users = [];
         taskResult.taskId = '';
-
+        debugger;
+        alert(sequenceFlowName);
         $.post(Util.getPath() + "/createtask/isSelectNextTaskCandidateInfos", {
             sequenceFlowName: taskResult.sequenceFlowName,
             processDefinitionId: taskResult.processDefinitionId
         }, function (res) {
+            debugger;
+            alert(sequenceFlowName);
             if (res.code === 200) {
                 var value = res.data;
                 if (value === "true") {

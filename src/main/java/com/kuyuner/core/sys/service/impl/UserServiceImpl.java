@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * 用户Service层实现
  *
@@ -95,6 +97,11 @@ public class UserServiceImpl implements UserService {
     public ResultJson deleteRoles(String[] ids) {
         userDao.deleteRoles(ids);
         return ResultJson.ok();
+    }
+
+    @Override
+    public List<String> getRoleName(String userId){
+        return userDao.getRoleName(userId);
     }
 
 }

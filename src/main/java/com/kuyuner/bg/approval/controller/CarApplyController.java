@@ -9,17 +9,25 @@ import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.common.mapper.JsonMapper;
 import com.kuyuner.common.utils.GfJsonUtil;
+import com.kuyuner.core.sys.entity.Menu;
 import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.UserService;
 
+import com.kuyuner.shiro.UsernamePasswordToken;
 import com.kuyuner.workflow.api.bean.TaskBean;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 车辆申请Controller层
@@ -35,6 +43,8 @@ public class CarApplyController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    private String officeManager = "办公室主任";
 
     /**
      * 显示待办
@@ -75,19 +85,38 @@ public class CarApplyController extends BaseController {
      */
     @RequestMapping("form")
     public String showCarApplyForm(String businessId, String businessLogId, String type, ModelMap modelMap) {
+        String str = null;
+        int tag = 0;
+        if (StringUtils.isNotBlank(UserUtils.getPrincipal().getId())) {
+            List<String> list = userService.getRoleName(UserUtils.getPrincipal().getId());
+            if (CollectionUtils.isNotEmpty(list) && list.contains(officeManager)) {
+                str = officeManager;
+            }
+        }
+        if (officeManager.equals(str)) {
+            tag = 1;
+        } else if ("historic".equals(type) || "pending".equals(type)) {
+            tag = 2;
+        }
         if ("historic".equals(type)) {
             modelMap.addAttribute("carApply", carApplyService.getLog(businessLogId));
         } else {
             if (StringUtils.isNotBlank(businessId)) {
-                modelMap.addAttribute("carApply", carApplyService.get(businessId));
+                CarApply carApply = carApplyService.get(businessId);
+                if (carApply.getSenderId().equals(UserUtils.getPrincipal().getId()) && !officeManager.equals(str)) {
+                    tag = 3;
+                }
+                modelMap.addAttribute("carApply", carApply);
             } else {
                 User user = userService.get(UserUtils.getPrincipal().getId());
                 CarApply carApply = new CarApply();
                 carApply.setSenderName(user.getName());
                 carApply.setSenderDeptName(user.getDept() != null ? user.getDept().getName() : "");
+
                 modelMap.addAttribute("carApply", carApply);
             }
         }
+        modelMap.addAttribute("tag", tag);
         return "approval/carApply/taskForm";
     }
 
@@ -152,25 +181,25 @@ public class CarApplyController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("submit")
-    public ResultJson submit(CarApply carApply, String taskResult,String userId) {
+    public ResultJson submit(CarApply carApply, String taskResult, String userId) {
         TaskBean taskBean = JsonMapper.fromJsonString(taskResult, TaskBean.class);
-        taskBean.setSequenceFlowName(SequenceFlowNameUtil.getSequenceFlowName(userId,null,userService));
-        return carApplyService.submitForm(carApply, GfJsonUtil.toJSONString(taskBean),userId);
+        taskBean.setSequenceFlowName(SequenceFlowNameUtil.getSequenceFlowName(userId, null, userService));
+        return carApplyService.submitForm(carApply, GfJsonUtil.toJSONString(taskBean), userId);
     }
 
     /**
      * 审批
      *
-     * @param id
+     * @param carApply
      * @param approvalResult
      * @param taskResult
      * @return
      */
     @ResponseBody
     @RequestMapping("approval")
-    public ResultJson approval(String id, String approvalResult, String taskResult,String userId) {
+    public ResultJson approval(CarApply carApply, String approvalResult, String taskResult, String userId) {
         approvalResult = StringUtils.isBlank(approvalResult) ? "无" : approvalResult;
-        return carApplyService.approvalForm(id, approvalResult, taskResult,userId);
+        return carApplyService.approvalForm(carApply, approvalResult, taskResult, userId);
     }
 
     /**
@@ -195,4 +224,36 @@ public class CarApplyController extends BaseController {
         return carApplyService.findCars();
     }
 
+    /**
+     * APP客户端加载用户权限标识
+     *
+     * @param userId
+     * @param businessId
+     * @param type
+     * @return
+     */
+    @RequestMapping("checkTag")
+    @ResponseBody
+    public ResultJson checkTag(String userId, String businessId, String type) {
+        String str = null;
+        int tag = 0;
+        if (StringUtils.isNotBlank(userId)) {
+            List<String> list = userService.getRoleName(userId);
+            if (CollectionUtils.isNotEmpty(list) && list.contains(officeManager)) {
+                str = officeManager;
+            }
+        }
+        if (officeManager.equals(str)) {
+            tag = 1;
+        } else if ("1".equals(type) || "2".equals(type)) {
+            tag = 2;
+        }
+        if (StringUtils.isNotBlank(businessId)) {
+            CarApply carApply = carApplyService.get(businessId);
+            if (carApply.getSenderId().equals(userId) && !officeManager.equals(str)) {
+                tag = 3;
+            }
+        }
+        return ResultJson.ok(tag);
+    }
 }

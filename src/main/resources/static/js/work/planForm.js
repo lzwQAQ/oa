@@ -88,7 +88,7 @@ $(function () {
     $.post(Util.getPath() + "/train/usertree", function (res) {
         if (res.code === 200) {
             $.each(res.data, function (i, v) {
-                if (v.type === "user") {
+                if (v.type === "3") {
                     v.icon = Util.getRootPath() + "/static/images/user.png";
                 }
             });
@@ -130,10 +130,12 @@ $(function () {
             }, "json");
 
             function calculateJoinpeoples(treeObj) {
+
                 var nodes = treeObj.getCheckedNodes(true);
+
                 var selectUsers = [];
                 $.each(nodes, function (i, v) {
-                    if (v.type === 'user') {
+                    if (v.type === '3') {
                         selectUsers.push(v.id);
                     }
                 });

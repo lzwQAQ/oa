@@ -145,6 +145,13 @@ public class ArticleController extends BaseController {
         return articleService.getDispatch(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
     }
 
+    @ApiOperation(value = "用车申请",notes = "用车申请")
+    @ResponseBody
+    @RequestMapping("/listCar")
+    public ResultJson listCar(String userId) {
+        return articleService.getCar(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
+    }
+
     /**
      * 请假
      * @return
@@ -154,6 +161,17 @@ public class ArticleController extends BaseController {
     @RequestMapping("/listLeave")
     public ResultJson listLeave(String userId) {
         return articleService.getLeave(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
+    }
+
+    /**
+     * 公务接待
+     * @return
+     */
+    @ApiOperation(value = "公务接待申请",notes = "公务接待申请")
+    @ResponseBody
+    @RequestMapping("/listReception")
+    public ResultJson listReception(String userId) {
+        return articleService.getReception(UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId());
     }
 
     /**

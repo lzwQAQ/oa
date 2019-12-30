@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.article.dao.CarHomeDao">
+
+	<sql id="AllColumns">
+		r.ID AS "taskId",
+		r.PRO_DEF_NAME AS "processName",
+		c.car_no AS "carNo",
+		r.NAME AS "taskName",
+		u.NAME AS "sender",
+		t.CREATE_DATE AS "time"
+	</sql>
+	<!--auto generated Code-->
+	<sql id="AllJoins">
+	</sql>
+
+	<select id="findData" parameterType="java.lang.String"  resultType="com.kuyuner.bg.article.entity.CarHome">
+		SELECT
+		<include refid="AllColumns"/>
+		FROM
+		V_WF_RU_TASK r
+		INNER JOIN T_AP_CAR t ON t.id = r.business_id
+		LEFT JOIN T_CAR c ON c.id = t.car_id
+		INNER JOIN T_PT_USER u ON u.id = t.sender_id
+		WHERE
+		( r.ASSIGNEE = #{userId} OR ( r.ASSIGNEE IS NULL AND r.USER_ID = #{userId} ) )
+		ORDER BY
+		t.CREATE_DATE DESC
+	</select>
+
+	<select id="dataCount"  parameterType="java.lang.String"  resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM
+		V_WF_RU_TASK r
+		INNER JOIN T_AP_CAR t ON t.id = r.business_id
+		INNER JOIN T_PT_USER u ON u.id = t.sender_id
+		WHERE
+		( r.ASSIGNEE = #{userId} OR ( r.ASSIGNEE IS NULL AND r.USER_ID = #{userId} ) )
+	</select>
+</mapper>

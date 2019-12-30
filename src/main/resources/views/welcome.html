@@ -93,17 +93,17 @@
     <div class="panel-wrapper_static">
         <div class="panel panel-primary panel-todo">
             <div class="panel-heading head-tabs item5">
-                <span data-id="todo1" class="head-tab active">发文待办<span class="listDispatch dot-num"></span></span>
+                <span data-id="todo1" class="head-tab active">用车待办<span class="listCar dot-num"></span></span>
                 <span data-id="todo2" class="head-tab">请假待办<span class="listLeave dot-num"></span></span>
-                <span data-id="todo3" class="head-tab">业务待办<span class="listBusiness dot-num"></span></span>
+                <span data-id="todo3" class="head-tab">公务待办<span class="listReception dot-num"></span></span>
                 <span data-id="todo4" class="head-tab">采购待办<span class="listPurchase dot-num"></span></span>
                 <span data-id="todo5" class="head-tab">邮件通知<span class="listEmail dot-num"></span></span>
                 <!--<span data-id="todo6" class="head-tab">收文通知<span class="list dot-num"></span></span>-->
             </div>
             <div id="todo1" class="panel-body active">
                 <table class="table-todo table" onclick="navToTODO(0)">
-                    <thead><th>标题</th><th>拟稿人</th><th class="td-time">日期</th></thead>
-                    <tbody id="listDispatch">
+                    <thead><th>申请车辆</th><th>申请人</th><th class="td-time">日期</th></thead>
+                    <tbody id="listCar">
                     </tbody>
                 </table>
             </div>
@@ -116,8 +116,8 @@
             </div>
             <div id="todo3" class="panel-body">
                 <table class="table-todo table" onclick="navToTODO(2)">
-                    <thead><th>业务名</th><th>申请人</th><th class="td-time">日期</th></thead>
-                    <tbody id="listBusiness">
+                    <thead><th>饭店名称</th><th>申请人</th><th class="td-time">日期</th></thead>
+                    <tbody id="listReception">
                     </tbody>
                 </table>
             </div>
@@ -191,9 +191,10 @@
     Util._rootpath = rootUrl.substring(0,rootUrl.length-1);
     var LEAVE_TYPE = [[${dictHolder.getValues('LEAVE_TYPE')}]];
     var getLeaveType = function(value){
-        return LEAVE_TYPE.find(function (v) {
+        var dic = LEAVE_TYPE.find(function (v) {
             return v.dictCode == value
-        }).dictValue
+        });
+        return dic?dic.dictValue:'未知'
     };
     var EMAIL_TYPE = [[${dictHolder.getValues('EMAIL_TYPE')}]];
     var getEmailType = function(value){
@@ -286,10 +287,13 @@
     }
 
     var renderTODO = {
-        listDispatch: function (key, data) {
+        listCar: function (key, data) {
             var str = '', $ul = $('#'+key);
             data.forEach(function (v) {
-                str += '<tr><td>'+v.title+'</td><td>'+v.sender+'</td><td>'+getDate(v.time, true)+'</td></tr>'
+                if (v.carNo === ""){
+                    v.carNo = "暂无"
+                }
+                str += '<tr><td>'+v.carNo+'</td><td>'+v.sender+'</td><td>'+getDate(v.time, true)+'</td></tr>'
             });
             renderTODOCommon($ul, str)
         },
@@ -300,10 +304,10 @@
             });
             renderTODOCommon($ul, str)
         },
-        listBusiness: function (key, data) {
+        listReception: function (key, data) {
             var str = '', $ul = $('#'+key);
             data.forEach(function (v) {
-                str += '<tr><td>'+v.businessName+'</td><td>'+v.sender+'</td><td>'+getDate(v.time, true)+'</td></tr>'
+                str += '<tr><td>'+v.hotelName+'</td><td>'+v.sender+'</td><td>'+getDate(v.time, true)+'</td></tr>'
             });
             renderTODOCommon($ul, str)
         },
@@ -324,7 +328,7 @@
     };
 
     function getTodos(){
-        var urls = ['listDispatch', 'listLeave', 'listBusiness', 'listPurchase', 'listEmail'];
+        var urls = ['listCar', 'listLeave', 'listReception', 'listPurchase', 'listEmail'];
         urls.forEach(function (value) {
             $.post(Util.getPath() + '/article/' + value,
                 {
@@ -379,9 +383,9 @@
     }
 
     var urlTODO = [
-        [adminPath+'/releasedocument/pending', '待办-发文'],
+        [adminPath+'/carapply/pending', '待办-用车'],
         [adminPath+'/leave/pending', '待办-请假'],
-        [adminPath+'/business/pending', '待办-业务'],
+        [adminPath+'/reception/pending', '待办-公务'],
         [adminPath+'/purchase/pending', '待办-采购'],
         [adminPath+'/emailreceive/receive', '收件箱']
     ];

@@ -49,4 +49,20 @@ public interface CrudDao<T extends BaseEntity> {
      * @return
      */
     T get(T t);
+
+    /**
+     * 查询姓名是否重复
+     * @param id
+     * @param name
+     * @return
+     */
+    int checkName(@Param("id") String id, @Param("name") String name);
+
+    /**
+     * 查询手机号码是否重复
+     * @param id
+     * @param phone
+     * @return
+     */
+    int checkPhone(@Param("id") String id, @Param("phone") String phone);
 }

@@ -47,6 +47,11 @@ public class BusinessHistoricListView extends BaseEntity {
 
     private String status="审批中";
 
+    /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
     public String getProcessInstanceId() {
         return processInstanceId;
     }
@@ -109,5 +114,13 @@ public class BusinessHistoricListView extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
     }
 }

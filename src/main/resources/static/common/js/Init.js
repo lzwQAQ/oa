@@ -440,7 +440,10 @@
         sessionStorageSupport: function () {
             //判断浏览器是否支持html5本地存储
             return (('sessionStorage' in window) && window['sessionStorage'] !== null)
-        }
+        },
+        strTrim: function (str) {
+        return str.replace(/(^\s*)|(\s*$)/g, "");
+    }
     };
 })(window);
 
@@ -686,10 +689,10 @@
         return this.optional(element) || (tel.test(value));
     }, "只能输入英文字母和数字");
 
-    $.validator.addMethod("phone", function (value, element) {
+   /* $.validator.addMethod("phone", function (value, element) {
         var tel = /^1\d{10}$/;
         return this.optional(element) || (tel.test(value));
-    }, "请输入正确的手机号");
+    }, "请输入正确的手机号");*/
 
 })(jQuery);
 

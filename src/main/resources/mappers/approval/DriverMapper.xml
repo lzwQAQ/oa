@@ -5,10 +5,9 @@
     <!--auto generated Code-->
     <sql id="AllColumns">
 		t.id AS "id",
-		t.user_id AS "user.id",
-		u.name as "user.name",
-		u.sex as "user.sex",
-		u.phone as "user.phone",
+		t.name as "name",
+		t.sex as "sex",
+		t.phone as "phone",
 		t.driving_year AS "drivingYear",
 		t.creater AS "creater",
 		t.create_date AS "createDate",
@@ -17,17 +16,11 @@
 	</sql>
 
     <!--auto generated Code-->
-	<sql id="AllJoins">
-		inner join T_PT_USER u on u.id = t.user_id
-	</sql>
-
-
-    <!--auto generated Code-->
 	<select id="get" resultType="com.kuyuner.bg.approval.entity.Driver">
 		SELECT
 			<include refid="AllColumns"/>
 		FROM T_DRIVER t
-            <include refid="AllJoins"/>
+
 		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
 	</select>
 
@@ -36,20 +29,17 @@
 		SELECT
 			<include refid="AllColumns"/>
 		FROM T_DRIVER t
-		    <include refid="AllJoins"/>
 		<where>
 			t.DEL_FLAG = #{delFlag}
             <if test="id != null and id != ''">
                 AND t.id = #{id}
             </if>
-            <if test="user != null">
-				<if test="user.name != null and user.name != ''">
-					AND u.name LIKE concat('%',#{user.name},'%')
-				</if>
-				<if test="user.phone != null and user.phone != ''">
-					AND u.phone LIKE concat('%',#{user.phone},'%')
-				</if>
-            </if>
+			<if test="name != null and name != ''">
+				AND t.name LIKE concat('%',#{name},'%')
+			</if>
+			<if test="phone != null and phone != ''">
+				AND t.phone LIKE concat('%',#{phone},'%')
+			</if>
             <if test="drivingYear != null and drivingYear != ''">
                 AND t.driving_year = #{drivingYear}
             </if>
@@ -60,12 +50,40 @@
 		order by t.update_date desc
 	</select>
 
+	<select id="checkName" resultType="java.lang.Integer">
+		SELECT count(1) FROM T_DRIVER t
+		<where>
+			t.DEL_FLAG = 1
+			<if test="id != null and id != ''">
+				AND t.id <![CDATA[ <> ]]> #{id}
+			</if>
+			<if test="name != null and name != ''">
+				AND t.name = #{name}
+			</if>
+		</where>
+	</select>
+
+	<select id="checkPhone" resultType="java.lang.Integer">
+		SELECT count(1) FROM T_DRIVER t
+		<where>
+			t.DEL_FLAG = 1
+			<if test="id != null and id != ''">
+				AND t.id <![CDATA[ <> ]]> #{id}
+			</if>
+			<if test="phone != null and phone != ''">
+				AND t.phone = #{phone}
+			</if>
+		</where>
+	</select>
+
 	<!--auto generated Code-->
 	<insert id="insert">
 		INSERT INTO T_DRIVER
 		<trim prefix="(" suffix=")" suffixOverrides=",">
         	<if test="id != null"> id, </if>
-        	<if test="user.id != null"> user_id, </if>
+        	<if test="name != null"> name, </if>
+			<if test="phone != null"> phone, </if>
+			<if test="sex != null"> sex, </if>
         	<if test="drivingYear != null"> driving_year, </if>
         	creater,
             create_date,
@@ -75,7 +93,9 @@
 		VALUES
 		<trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null"> #{id}, </if>
-            <if test="user.id != null"> #{user.id}, </if>
+            <if test="name != null"> #{name}, </if>
+			<if test="phone != null"> #{phone}, </if>
+			<if test="sex != null"> #{sex}, </if>
             <if test="drivingYear != null"> #{drivingYear}, </if>
         	#{creater},
             SYSDATE(),
@@ -89,7 +109,9 @@
 		UPDATE T_DRIVER
 		<set>
             <if test="id != null"> id = #{id}, </if>
-            <if test="user.id != null"> user_id = #{user.id}, </if>
+            <if test="name != null"> name = #{name}, </if>
+			<if test="phone != null"> phone = #{phone}, </if>
+			<if test="sex != null"> sex = #{sex}, </if>
             <if test="drivingYear != null"> driving_year = #{drivingYear}, </if>
             <if test="creater != null"> creater = #{creater}, </if>
             update_date = SYSDATE()
@@ -99,7 +121,7 @@
 
 	<!--auto generated Code-->
     <delete id="deletes">
-        DELETE FROM T_DRIVER where id in
+        UPDATE T_DRIVER SET DEL_FLAG = 0 where id in
         <foreach collection="ids" item="id" separator="," open="(" close=")">
             #{id}
         </foreach>

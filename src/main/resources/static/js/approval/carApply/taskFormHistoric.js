@@ -7,9 +7,9 @@ $(function () {
     $.post(Util.getPath() + "/carapply/finddrivers", function (res) {
         if (res.code === 200) {
             $.each(res.data, function (i, v) {
-                $("#driver_select").append('<option value="' + v.user.id + '">' + v.user.name + '</option>');
+                $("#driver_select").append('<option value="' + v.id + '">' + v.name + '</option>');
             });
-            $("#driver_select").find('option[value="' + $("#driverId").val() + '"]').attr("selected", true).trigger("change");
+            $("#driver_select").val($("#driverId").val()).attr("selected", true).trigger("change");
         }
     });
     $.post(Util.getPath() + "/carapply/findcars", function (res) {

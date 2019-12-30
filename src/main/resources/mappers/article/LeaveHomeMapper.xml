@@ -3,14 +3,14 @@
 <mapper namespace="com.kuyuner.bg.article.dao.LeaveHomeDao">
 
 	<sql id="AllColumns">
-		r.ID AS "taskId", -- 任务ID
-		r.PRO_DEF_NAME AS "processName", -- 流程名称
-		t.type AS "type", -- 请假类型
+		r.ID AS "taskId",
+		r.PRO_DEF_NAME AS "processName",
+		t.type AS "type",
 		dict.DICT_VALUE as "typeName",
-		r.NAME AS "taskName", -- 任务名称
-		u.NAME AS "sender", -- 请假人
-		dept.name AS "detpName", -- 所属部门
-		t.CREATE_DATE AS "time" -- 日期
+		r.NAME AS "taskName",
+		u.NAME AS "sender",
+		dept.name AS "detpName",
+		t.CREATE_DATE AS "time"
 	</sql>
 	<!--auto generated Code-->
 	<sql id="AllJoins">

@@ -52,6 +52,11 @@ public class PurchasePendingListView extends BaseEntity {
     private String approvalResult;
     private String totalPrice;
 
+    /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
     private List<PurchaseGoods> goods;
 
     public String getTaskId() {
@@ -148,5 +153,13 @@ public class PurchasePendingListView extends BaseEntity {
 
     public void setGoods(List<PurchaseGoods> goods) {
         this.goods = goods;
+    }
+
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
     }
 }

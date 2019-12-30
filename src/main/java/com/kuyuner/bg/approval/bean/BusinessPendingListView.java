@@ -63,6 +63,11 @@ public class BusinessPendingListView extends BaseEntity {
 
     private String sendDeptName;
 
+    /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
     public String getTaskId() {
         return taskId;
     }
@@ -181,5 +186,13 @@ public class BusinessPendingListView extends BaseEntity {
 
     public void setSendDeptName(String sendDeptName) {
         this.sendDeptName = sendDeptName;
+    }
+
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
     }
 }

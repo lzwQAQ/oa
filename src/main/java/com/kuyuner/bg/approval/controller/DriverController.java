@@ -7,8 +7,6 @@ import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
-import com.kuyuner.core.sys.entity.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -52,7 +50,6 @@ public class DriverController extends BaseController {
         } else {
             modelMap.addAttribute("driver", new Driver());
         }
-        modelMap.addAttribute("users", driverService.findAllUsers());
         return "approval/driverForm";
     }
 
@@ -80,11 +77,9 @@ public class DriverController extends BaseController {
     @ResponseBody
     @RequestMapping("list")
     public PageJson list(String name, String phone, String pageNum, String pageSize) {
-        User user = new User();
-        user.setName(name);
-        user.setPhone(phone);
         Driver driver = new Driver();
-        driver.setUser(user);
+        driver.setName(name);
+        driver.setPhone(phone);
         return driverService.findPageList(pageNum, pageSize, driver);
     }
 
@@ -98,6 +93,28 @@ public class DriverController extends BaseController {
     @RequestMapping("save")
     public ResultJson save(Driver driver) {
         return driverService.saveOrUpdate(driver);
+    }
+
+    /**
+     * 数据验证
+     *
+     * @param id
+     * @param id
+     * @param data
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("check/{type}/value")
+    public ResultJson checkName(@PathVariable(name = "type", required = false) int type, String id, String data) {
+        boolean exist = false;
+        if (type == 1) {
+            exist = driverService.checkName(id, data);
+        }
+        if (type == 2) {
+            exist = driverService.checkPhone(id, data);
+        }
+        return exist ? ResultJson.failed() : ResultJson.ok();
+
     }
 
     /**

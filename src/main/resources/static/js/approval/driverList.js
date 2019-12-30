@@ -6,19 +6,19 @@ $(function () {
         multiselect: true,
         colModel: [{
             label: '姓名',
-            name: 'user.name',
+            name: 'name',
             formatter: function (value, options, row) {
                 return '<a href="javascript:void(0)" class="edit-item" data-id="' + row.id + '">' + value + '</a>';
             }
         }, {
             label: '性别',
-            name: 'user.sex',
+            name: 'sex',
             formatter: function (value, options, row) {
                 return "1" === value ? "男" : "女";
             }
         }, {
             label: '手机号',
-            name: 'user.phone'
+            name: 'phone'
         }, {
             label: '驾龄',
             name: 'drivingYear'

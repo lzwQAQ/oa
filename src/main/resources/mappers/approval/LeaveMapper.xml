@@ -133,7 +133,8 @@
             t.task_name as "taskName",
             u.name as "sender",
             t.LEAVE_DAY as "leaveDay",
-            t.CREATE_DATE as "time"
+            t.CREATE_DATE as "time",
+            h.`APPROVAL_OPINION` as "approvalOpinion"
         from V_WF_HI_TASK h
         inner join T_AP_LEAVE t on t.id = h.business_id
         inner join T_PT_USER u on u.id = t.sender_id
@@ -158,7 +159,8 @@
             u.name as "sender",
             t.task_name as "taskName",
             t.LEAVE_DAY as "leaveDay",
-            t.CREATE_DATE as "time"
+            t.CREATE_DATE as "time",
+            h.`APPROVAL_OPINION` as "approvalOpinion"
         from V_WF_HI_TASK h
         inner join T_AP_LEAVE t on t.id = h.business_id
         inner join T_PT_USER u on u.id = t.sender_id

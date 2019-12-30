@@ -24,9 +24,12 @@ $(function () {
             name: 'taskName'
         }, {
             label: '审批状态',
-            name: 'taskName',
+            name: 'approvalOpinion',
             formatter: function (value, options, row) {
-                return '结束' === value ? '通过' : ("发起请假" === value ? '不通过' : '审批中');
+                if('结束' === row.taskName){
+                    value = value === "不同意"?"不通过":"通过"
+                }
+                return '结束' === row.taskName ? value : ("发起采购" === row.taskName ? '不通过' : '审批中');
             }
         }, {
             label: '申请时间',

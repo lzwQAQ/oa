@@ -166,7 +166,8 @@
             t.CREATE_DATE as "time",
             t.task_name as "taskName",
             t.business_name AS "businessName",
-            t.header AS "header"
+            t.header AS "header",
+            h.`APPROVAL_OPINION` as "approvalOpinion"
         from V_WF_HI_TASK h
         inner join T_AP_BUSINESS t on t.id = h.business_id
         inner join T_PT_USER u on u.id = t.sender_id
@@ -191,7 +192,8 @@
             t.task_name as "taskName",
             u.name as "sender",
             t.business_name AS "businessName",
-            t.header AS "header"
+            t.header AS "header",
+            h.`APPROVAL_OPINION` as "approvalOpinion"
         from V_WF_HI_TASK h
         inner join T_AP_BUSINESS t on t.id = h.business_id
         inner join T_PT_USER u on u.id = t.sender_id

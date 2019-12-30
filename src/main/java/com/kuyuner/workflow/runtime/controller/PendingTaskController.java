@@ -1,8 +1,11 @@
 package com.kuyuner.workflow.runtime.controller;
 
+import com.kuyuner.bg.approval.controller.SequenceFlowNameUtil;
 import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
+import com.kuyuner.core.sys.security.UserUtils;
+import com.kuyuner.core.sys.service.UserService;
 import com.kuyuner.workflow.runtime.service.PendingTaskService;
 import com.kuyuner.workflow.util.BpmnModelUtils;
 
@@ -29,6 +32,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("${kuyuner.admin-path}/pendingtask")
 public class PendingTaskController {
 
+    @Autowired
+    private UserService userService;
     @Autowired
     private PendingTaskService pendingTaskService;
     @Autowired
@@ -68,6 +73,10 @@ public class PendingTaskController {
     @RequestMapping("/isSelectNextTaskCandidateInfos")
     public ResultJson isSelectNextTaskCandidateInfos(String taskId, String sequenceFlowName,String userId) {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        String uid = UserUtils.getPrincipal() == null ? userId : UserUtils.getPrincipal().getId();
+        if(StringUtils.isNotBlank(uid) && StringUtils.isBlank(sequenceFlowName)){
+            sequenceFlowName = SequenceFlowNameUtil.getSequenceFlowName(userId,sequenceFlowName,userService);
+        }
         return pendingTaskService.isSelectNextTaskCandidateInfos(task.getProcessDefinitionId(), task.getTaskDefinitionKey(),
                 sequenceFlowName, task.getProcessInstanceId(),userId);
     }

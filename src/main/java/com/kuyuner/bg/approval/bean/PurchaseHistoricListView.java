@@ -32,6 +32,11 @@ public class PurchaseHistoricListView extends BaseEntity {
     private String name;
 
     /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
+    /**
      * 申请时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -83,5 +88,13 @@ public class PurchaseHistoricListView extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
     }
 }

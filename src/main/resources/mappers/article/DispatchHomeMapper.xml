@@ -3,12 +3,12 @@
 <mapper namespace="com.kuyuner.bg.article.dao.DispatchHomeDao">
 
 	<sql id="AllColumns">
-		r.ID AS "taskId", -- 任务ID
-		r.PRO_DEF_NAME AS "processName", -- 流程名称
-		t.title AS "title", -- 标题
-		r.NAME AS "taskName", -- 任务名称
-		u.NAME AS "sender", -- 拟稿人
-		t.CREATE_DATE AS "time"  -- 申请时间
+		r.ID AS "taskId",
+		r.PRO_DEF_NAME AS "processName",
+		t.title AS "title",
+		r.NAME AS "taskName",
+		u.NAME AS "sender",
+		t.CREATE_DATE AS "time"
 	</sql>
 	<!--auto generated Code-->
 	<sql id="AllJoins">

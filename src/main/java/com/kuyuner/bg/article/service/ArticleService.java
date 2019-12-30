@@ -25,9 +25,13 @@ public interface ArticleService {
 
 	ResultJson getDispatch(String userId);
 
+	ResultJson getCar(String userId);
+
 	ResultJson getLeave(String userId);
 
 	ResultJson getBusiness(String userId);
+
+	ResultJson getReception(String userId);
 
 	ResultJson getPurchase(String userId);
 

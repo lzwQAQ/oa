@@ -30,6 +30,8 @@ public class CarApplyHistoricListView extends BaseEntity {
      */
     private String driver;
 
+    private String phone;
+
     /**
      * 当前环节
      */
@@ -45,6 +47,23 @@ public class CarApplyHistoricListView extends BaseEntity {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
+
+    /**
+     * 人数
+     */
+    private Integer people;
+
+    /**
+     * 地点
+     */
+    private String address;
+
+    /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
+
 
     public String getProcessInstanceId() {
         return processInstanceId;
@@ -100,5 +119,37 @@ public class CarApplyHistoricListView extends BaseEntity {
 
     public void setDriver(String driver) {
         this.driver = driver;
+    }
+
+    public Integer getPeople() {
+        return people;
+    }
+
+    public void setPeople(Integer people) {
+        this.people = people;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

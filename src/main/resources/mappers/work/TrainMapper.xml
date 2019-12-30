@@ -80,41 +80,11 @@
 	</select>
 
     <select id="findUserTree" resultType="java.util.Map">
-        SELECT
-            "3" AS type,
-            id AS "id",
-            NAME AS "name",
-            dept_id AS "pId",
-            'user' AS "type",
-            'false' AS "isParent"
-        FROM
-            T_PT_USER
+        SELECT "3" AS type, id AS "id", NAME AS "name", dept_id AS "pId", 'user' AS "type", 'false' AS "isParent" FROM T_PT_USER
         UNION
-            SELECT
-                "2" AS type,
-                id AS "id",
-                NAME AS "name",
-                CASE
-            WHEN PARENT_ID IS NULL
-            OR PARENT_ID = '' THEN
-                ORG_ID
-            ELSE
-                PARENT_ID
-            END AS "pId",
-            'dept' AS "type",
-            'true' AS "isParent"
-        FROM
-            T_PT_DEPT
+        SELECT "2" AS type, id AS "id", NAME AS "name", CASE WHEN PARENT_ID IS NULL OR PARENT_ID = '' THEN ORG_ID ELSE PARENT_ID END AS "pId", 'dept' AS "type", 'true' AS "isParent" FROM T_PT_DEPT
         UNION
-            SELECT
-                "1" AS type,
-                id AS "id",
-                NAME AS "name",
-                PARENT_ID AS "pId",
-                'org' AS "type",
-                'true' AS "isParent"
-            FROM
-                T_PT_ORG
+        SELECT "1" AS type, id AS "id", NAME AS "name", PARENT_ID AS "pId", 'org' AS "type", 'true' AS "isParent" FROM T_PT_ORG
     </select>
 
     <select id="findJoinPeoples" resultType="com.kuyuner.core.sys.entity.User">

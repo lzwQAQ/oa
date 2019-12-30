@@ -78,7 +78,7 @@ public class User extends BaseEntity {
     /**
      * 手机号
      */
-    @Length(max = 11, message = "手机号长度不能大于255")
+    @Length(max = 50, message = "手机号长度不能大于50")
     private String phone;
 
     /**

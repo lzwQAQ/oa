@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kuyuner.bg.approval.dao.OfficialReceptionDao">
+
+    <!--auto generated Code-->
+    <sql id="AllColumns">
+		t.id AS "id",
+		t.start_time AS "startTime",
+		t.end_time AS "endTime",
+		t.reason AS "reason",
+		t.task_name AS "taskName",
+		t.approval_result AS "approvalResult",
+		t.SENDER_ID AS "senderId",
+		t.`GUEST` AS "guest",
+        t.`ACCOMPANY` AS "accompany",
+        t.`MEAL_STANDARDS` AS "mealStandards",
+        t.`HOTEL_NAME` AS "hotelName",
+        d.name as "senderDeptName",
+        u.name as "senderName",
+		t.creater AS "creater",
+		t.create_date AS "createDate",
+		t.update_date AS "updateDate",
+		t.del_flag AS "delFlag"
+	</sql>
+
+    <!--auto generated Code-->
+	<sql id="AllJoins">
+        LEFT join T_PT_USER u on u.id = t.SENDER_ID
+        left join T_PT_DEPT d on d.id = u.dept_id
+	</sql>
+
+
+    <!--auto generated Code-->
+	<select id="get" resultType="com.kuyuner.bg.approval.entity.OfficialReception">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_RECEPTION t
+            <include refid="AllJoins"/>
+		WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+	</select>
+
+	<!--auto generated Code-->
+	<select id="findList" resultType="com.kuyuner.bg.approval.entity.OfficialReception">
+		SELECT
+			<include refid="AllColumns"/>
+		FROM T_AP_RECEPTION t
+		    <include refid="AllJoins"/>
+		<where>
+			t.DEL_FLAG = #{delFlag}
+            <if test="id != null and id != ''">
+                AND t.id = #{id}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                AND t.start_time = #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND t.end_time = #{endTime}
+            </if>
+            <if test="reason != null and reason != ''">
+                AND t.reason = #{reason}
+            </if>
+            <if test="taskName != null and taskName != ''">
+                AND t.task_name = #{taskName}
+            </if>
+            <if test="approvalResult != null and approvalResult != ''">
+                AND t.approval_result = #{approvalResult}
+            </if>
+            <if test="senderId != null and senderId != ''">
+                AND t.sender_id = #{senderId}
+            </if>
+            <if test="creater != null and creater != ''">
+                AND t.creater = #{creater}
+            </if>
+		</where>
+		order by t.update_date desc
+	</select>
+
+    <select id="getLog" resultType="com.kuyuner.bg.approval.entity.OfficialReception">
+        SELECT
+          t.id AS "id",
+          t.start_time AS "startTime",
+          t.end_time AS "endTime",
+          t.reason AS "reason",
+          t.approval_result AS "approvalResult",
+          t.SENDER_ID AS "senderId",
+          d.name AS "senderDeptName",
+          u.name AS "senderName",
+          t.creater AS "creater",
+          t.create_date AS "createDate",
+          t.update_date AS "updateDate",
+          t.del_flag AS "delFlag",
+          t.`GUEST` AS "guest",
+          t.`ACCOMPANY` AS "accompany",
+          t.`MEAL_STANDARDS` AS "mealStandards",
+          t.`HOTEL_NAME` AS "hotelName"
+        FROM
+          T_AP_RECEPTION_LOG t
+          LEFT JOIN T_PT_USER u ON u.id = t.SENDER_ID
+          LEFT JOIN T_PT_DEPT d ON d.id = u.dept_id
+        WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
+    </select>
+
+    <select id="findPendingList" resultType="com.kuyuner.bg.approval.bean.OfficialReceptionPendingListView">
+        select
+        t.id as "id",
+        r.ID as "taskId",
+        r.PRO_DEF_NAME as "processName",
+        r.NAME as "taskName",
+        u.name as "sender",
+        t.CREATE_DATE as "time",
+        t.`GUEST` AS "guest",
+        t.`ACCOMPANY` AS "accompany",
+        t.`MEAL_STANDARDS` AS "mealStandards",
+        t.`HOTEL_NAME` AS "hotelName",
+        t.`START_TIME` AS "startTime",
+        t.`END_TIME` AS "endTime"
+        from V_WF_RU_TASK r
+        inner join T_AP_RECEPTION t on t.id = r.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            (r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
+            <if test="officialReception.hotelName != null">
+                AND t.HOTEL_NAME LIKE concat('%',#{officialReception.hotelName},'%')
+            </if>
+        </where>
+        order by t.CREATE_DATE desc
+    </select>
+
+
+    <select id="findHistoricList" resultType="com.kuyuner.bg.approval.bean.OfficialReceptionHistoricListView">
+        select
+        t.id as "id",
+        h.PROC_NAME as "processName",
+        h.PROC_INST_ID as "processInstanceId",
+        t.task_name as "taskName",
+        u.name as "sender",
+        t.CREATE_DATE as "time",
+        t.`GUEST` AS "guest",
+        t.`ACCOMPANY` AS "accompany",
+        t.`MEAL_STANDARDS` AS "mealStandards",
+        t.`HOTEL_NAME` AS "hotelName",
+        t.`START_TIME` AS "startTime",
+        t.`END_TIME` AS "endTime",
+        h.`APPROVAL_OPINION` as "approvalOpinion"
+        from V_WF_HI_TASK h
+        inner join T_AP_RECEPTION t on t.id = h.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            (h.ASSIGNEE = #{userId} and h.START_USER_ID <![CDATA[ <> ]]> #{userId})
+            <if test="officialReception.hotelName != null">
+                AND t.HOTEL_NAME LIKE concat('%',#{officialReception.hotelName},'%')
+            </if>
+            <if test="officialReception.senderName != null and officialReception.senderName != ''">
+                AND u.name LIKE concat('%',#{officialReception.senderName},'%')
+            </if>
+        </where>
+        order by t.CREATE_DATE desc
+    </select>
+
+    <select id="findSendList" resultType="com.kuyuner.bg.approval.bean.OfficialReceptionPendingListView">
+        select DISTINCT
+        t.id as "id",
+        h.PROC_NAME as "processName",
+        h.PROC_INST_ID as "processInstanceId",
+        u.name as "sender",
+        t.task_name as "taskName",
+        t.CREATE_DATE as "time",
+        t.`GUEST` AS "guest",
+        t.`ACCOMPANY` AS "accompany",
+        t.`MEAL_STANDARDS` AS "mealStandards",
+        t.`HOTEL_NAME` AS "hotelName",
+        t.`START_TIME` AS "startTime",
+        t.`END_TIME` AS "endTime",
+        h.`APPROVAL_OPINION` as "approvalOpinion"
+        from V_WF_HI_TASK h
+        inner join T_AP_RECEPTION t on t.id = h.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            h.START_USER_ID = #{userId}
+            <if test="officialReception.hotelName != null">
+                AND t.HOTEL_NAME LIKE concat('%',#{officialReception.hotelName},'%')
+            </if>
+        </where>
+        order by t.CREATE_DATE desc
+    </select>
+
+    <select id="getApprovalResult" resultType="java.lang.String">
+        SELECT APPROVAL_RESULT FROM T_AP_RECEPTION WHERE ID = #{id}
+    </select>
+
+    <!--auto generated Code-->
+	<insert id="insert">
+		INSERT INTO T_AP_RECEPTION
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+        	<if test="id != null"> id, </if>
+        	<if test="guest !=null"> guest, </if>
+        	<if test="accompany!=null"> accompany, </if>
+            <if test="mealStandards != null"> meal_standards, </if>
+            <if test="hotelName != null"> hotel_name, </if>
+        	<if test="startTime != null"> start_time, </if>
+            <if test="endTime != null"> end_time, </if>
+        	<if test="reason != null"> reason, </if>
+        	<if test="taskName != null"> task_name, </if>
+        	<if test="approvalResult != null"> approval_result, </if>
+        	<if test="senderId != null"> sender_id, </if>
+        	creater,
+            create_date,
+            update_date,
+        	<if test="delFlag != null"> del_flag, </if>
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="guest != null"> #{guest}, </if>
+            <if test="accompany != null"> #{accompany}, </if>
+            <if test="mealStandards != null"> #{mealStandards}, </if>
+            <if test="hotelName != null"> #{hotelName}, </if>
+            <if test="startTime != null"> #{startTime}, </if>
+            <if test="endTime != null"> #{endTime}, </if>
+            <if test="reason != null"> #{reason}, </if>
+            <if test="taskName != null"> #{taskName}, </if>
+            <if test="approvalResult != null"> #{approvalResult}, </if>
+            <if test="senderId != null"> #{senderId}, </if>
+        	#{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+		</trim>
+	</insert>
+
+    <insert id="insertLog">
+        INSERT INTO T_AP_RECEPTION_LOG
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> id, </if>
+            <if test="guest !=null"> guest, </if>
+            <if test="accompany!=null"> accompany, </if>
+            <if test="mealStandards != null"> meal_standards, </if>
+            <if test="hotelName != null"> hotel_name, </if>
+            <if test="startTime != null"> start_time, </if>
+            <if test="endTime != null"> end_time, </if>
+            <if test="reason != null"> reason, </if>
+            <if test="approvalResult != null"> approval_result, </if>
+            <if test="senderId != null"> sender_id, </if>
+            creater,
+            create_date,
+            update_date,
+            <if test="delFlag != null"> del_flag, </if>
+        </trim>
+        VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id}, </if>
+            <if test="guest != null"> #{guest}, </if>
+            <if test="accompany != null"> #{accompany}, </if>
+            <if test="mealStandards != null"> #{mealStandards}, </if>
+            <if test="hotelName != null"> #{hotelName}, </if>
+            <if test="startTime != null"> #{startTime}, </if>
+            <if test="endTime != null"> #{endTime}, </if>
+            <if test="reason != null"> #{reason}, </if>
+            <if test="approvalResult != null"> #{approvalResult}, </if>
+            <if test="senderId != null"> #{senderId}, </if>
+            #{creater},
+            SYSDATE(),
+            SYSDATE(),
+            <if test="delFlag != null"> #{delFlag}, </if>
+        </trim>
+    </insert>
+
+    <!--auto generated Code-->
+	<update id="update">
+		UPDATE T_AP_RECEPTION
+		<set>
+            <if test="id != null"> id = #{id}, </if>
+            <if test="guest != null"> guest = #{guest}, </if>
+            <if test="accompany != null"> accompany = #{accompany}, </if>
+            <if test="mealStandards != null"> meal_standards = #{mealStandards}, </if>
+            <if test="hotelName != null"> hotel_name = #{hotelName}, </if>
+            <if test="startTime != null"> start_time = #{startTime}, </if>
+            <if test="endTime != null"> end_time = #{endTime}, </if>
+            <if test="reason != null"> reason = #{reason}, </if>
+            <if test="taskName != null"> task_name = #{taskName}, </if>
+            <if test="approvalResult != null"> approval_result = #{approvalResult}, </if>
+            <if test="senderId != null"> sender_id = #{senderId}, </if>
+            <if test="creater != null"> creater = #{creater}, </if>
+            update_date = SYSDATE(),
+		</set>
+		WHERE ID = #{id}
+	</update>
+
+	<!--auto generated Code-->
+    <delete id="deletes">
+        DELETE FROM T_AP_RECEPTION where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findPendingDetail" resultType="com.kuyuner.bg.approval.bean.OfficialReceptionPendingListView">
+        select
+        r.ID as "taskId",
+        r.PRO_DEF_NAME as "processName",
+        t.user_id as "driverId",
+        r.NAME as "taskName",
+        u.name as "sender",
+        t.START_TIME as "startTime",
+        t.END_TIME as "endTime",
+        t.REASON as "reason",
+        t.APPROVAL_RESULT as "approvalResult",
+        t.CREATE_DATE as "time",
+        t.`GUEST` AS "guest",
+        t.`ACCOMPANY` AS "accompany",
+        t.`MEAL_STANDARDS` AS "mealStandards",
+        t.`HOTEL_NAME` AS "hotelName"
+        from V_WF_RU_TASK r
+        inner join T_AP_RECEPTION t on t.id = r.business_id
+        inner join T_PT_USER u on u.id = t.sender_id
+        <where>
+            (r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
+            <if test="taskId != null ">
+                AND r.ID = #{taskId}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -50,6 +50,11 @@ public class FinancePendingListView extends BaseEntity {
     private String purpose;
     private String approvalResult;
 
+    /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
     public String getTaskId() {
         return taskId;
     }
@@ -129,5 +134,13 @@ public class FinancePendingListView extends BaseEntity {
 
     public void setApprovalResult(String approvalResult) {
         this.approvalResult = approvalResult;
+    }
+
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
     }
 }

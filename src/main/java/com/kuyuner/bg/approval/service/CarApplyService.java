@@ -77,12 +77,12 @@ public interface CarApplyService {
     /**
      * 审批操作
      *
-     * @param id
+     * @param carApply
      * @param approvalResult
      * @param taskResult
      * @return
      */
-    ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId);
+    ResultJson approvalForm(CarApply carApply, String approvalResult, String taskResult,String userId);
 
     /**
      * 查询驾驶员

@@ -9,7 +9,6 @@ import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.common.mapper.JsonMapper;
 import com.kuyuner.common.reflect.ReflectUtils;
 import com.kuyuner.common.utils.GfJsonUtil;
-import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.UserService;
 import com.kuyuner.workflow.api.bean.TaskBean;
 import org.slf4j.Logger;
@@ -18,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 /**
  * 业务申请Service层接口
@@ -36,9 +33,9 @@ public class ProduceController extends BaseController {
     private UserService userService;
 
     /**
-     * 查询1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请
+     * 查询1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请 7.自定义申请 8.公务接待申请
      *
-     * @param produceType 1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请 7.自定义申请
+     * @param produceType 1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请 7.自定义申请 8.公务接待申请
      * @param pageNum
      * @param pageSize
      * @param dataType 1.代办数据 2.申请历史 3.审批历史
@@ -67,9 +64,9 @@ public class ProduceController extends BaseController {
     }
 
     /**
-     * 查询1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请
+     * 查询1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请 7.自定义申请 8.公务接待申请
      *
-     * @param produceType 1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请 7.自定义申请
+     * @param produceType 1.请假申请 2.业务申请 3.人事调度 4.采购申请 5.用车申请 6.财务申请 7.自定义申请 8.公务接待申请
      * @param pageNum
      * @param pageSize
      * @return
@@ -106,7 +103,7 @@ public class ProduceController extends BaseController {
     /**
      * 详情
      * 必传: produceType、type（historic为历史 pendding:审核）、userId
-     * 在首次发起流程进入页面时调用：传参（userId，produceType，type，modelKey，startSequenceFlowName）  modelKey必传 任务类型（qingjia、renshidiaodu、yewushenqing、caigou、caiwushenqing、shouwen、yongche、fawen、aaaa）startSequenceFlowName可以不传
+     * 在首次发起流程进入页面时调用：传参（userId，produceType，type，modelKey，startSequenceFlowName）  modelKey必传 任务类型（qingjia、renshidiaodu、yewushenqing、caigou、caiwushenqing、shouwen、yongche、fawen、aaaa、officialreception）startSequenceFlowName可以不传
      * 在审批进入页面的时候调用：传参（userId，produceType，type，businessId（列表中的ID），taskId）
      * 采购申请特殊处理 满足上面的情况下，在发起和审批过程中需要传参firstTask在第一次发起申请的时候穿"true"，在代办的时候传“false”
      * @return
@@ -144,6 +141,9 @@ public class ProduceController extends BaseController {
                 break;
             case "7":
                 produce = "simple";
+                break;
+            case "8":
+                produce = "officialReception";
                 break;
             default:
                 break;

@@ -51,4 +51,20 @@ public interface DriverService {
      * @return
      */
     ListJson findAllUsers();
+
+    /**
+     * 查询姓名是否重复
+     * @param id
+     * @param name
+     * @return
+     */
+    boolean checkName(String id, String name);
+
+    /**
+     * 查询手机号码是否重复
+     * @param id
+     * @param phone
+     * @return
+     */
+    boolean checkPhone(String id, String phone);
 }

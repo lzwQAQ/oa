@@ -62,6 +62,11 @@ public class LeavePendingListView extends BaseEntity {
 
     private String leaveType;
 
+    /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
     public String getTaskId() {
         return taskId;
     }
@@ -156,5 +161,13 @@ public class LeavePendingListView extends BaseEntity {
 
     public void setLeaveType(String leaveType) {
         this.leaveType = leaveType;
+    }
+
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
     }
 }

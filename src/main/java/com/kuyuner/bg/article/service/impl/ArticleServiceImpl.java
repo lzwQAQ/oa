@@ -30,9 +30,13 @@ public class ArticleServiceImpl implements ArticleService {
 	@Autowired
 	private DispatchHomeDao dispatchHomeDao;
 	@Autowired
+	private CarHomeDao carHomeDao;
+	@Autowired
 	private LeaveHomeDao leaveDao;
 	@Autowired
 	private BusinessHomeDao businessDao;
+	@Autowired
+	private ReceptionHomeDao receptionHomeDao;
 	@Autowired
 	private PurchaseHomeDao purchaseHomeDao;
 	@Autowired
@@ -109,6 +113,17 @@ public class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
+	public ResultJson getCar(String userId) {
+		List<CarHome> list = null;
+		try {
+			list = carHomeDao.findData(userId);
+		} catch (Exception e) {
+			logger.error("首页用车异常" + e.getMessage());
+		}
+		return ResultJson.ok(list);
+	}
+
+	@Override
 	public ResultJson getLeave(String userId) {
 		List<LeaveHome> list = null;
 		try {
@@ -126,6 +141,17 @@ public class ArticleServiceImpl implements ArticleService {
 			list = businessDao.findData(userId);
 		} catch (Exception e) {
 			logger.error("首页请假异常" + e.getMessage());
+		}
+		return ResultJson.ok(list);
+	}
+
+	@Override
+	public ResultJson getReception(String userId) {
+		List<ReceptionHome> list = null;
+		try {
+			list = receptionHomeDao.findData(userId);
+		} catch (Exception e) {
+			logger.error("首页公务异常" + e.getMessage());
 		}
 		return ResultJson.ok(list);
 	}

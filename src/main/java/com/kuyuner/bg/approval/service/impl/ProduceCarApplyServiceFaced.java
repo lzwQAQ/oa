@@ -5,11 +5,9 @@ import com.kuyuner.bg.approval.bean.CarApplyPendingListView;
 import com.kuyuner.bg.approval.dao.CarApplyDao;
 import com.kuyuner.bg.approval.entity.Car;
 import com.kuyuner.bg.approval.entity.CarApply;
-import com.kuyuner.bg.approval.entity.Driver;
 import com.kuyuner.bg.approval.service.CarApplyService;
 import com.kuyuner.bg.approval.service.ProduceFaced;
 import com.kuyuner.bg.msg.util.HtmlRegexpUtil;
-import com.kuyuner.common.controller.ListJson;
 import com.kuyuner.common.controller.PageJson;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.idgen.IdGenerate;
@@ -20,21 +18,12 @@ import com.kuyuner.common.utils.GfJsonUtil;
 import com.kuyuner.core.sys.entity.User;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.UserService;
-import com.kuyuner.workflow.api.bean.BusinessKey;
 import com.kuyuner.workflow.api.bean.TaskBean;
-import com.kuyuner.workflow.api.bean.TaskInfo;
-import com.kuyuner.workflow.api.service.WorkFlowService;
-import com.kuyuner.workflow.runtime.service.PendingTaskService;
 import com.kuyuner.workflow.runtime.service.TaskService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -90,7 +79,7 @@ public class ProduceCarApplyServiceFaced implements ProduceFaced {
         carApply.setSenderName(senderName);
         Car car = new Car();
         car.setCarNo(businessName);
-        carApply.setCar(car);;
+        carApply.setCar(car);
         carApplyDao.findSendList(carApply,UserUtils.getPrincipal() == null?userId:UserUtils.getPrincipal().getId());
         page.end();
         return new PageJson(page);
@@ -117,8 +106,6 @@ public class ProduceCarApplyServiceFaced implements ProduceFaced {
             carApplyDao.update(carApply);
             carApply = carApplyDao.get(new CarApply(carApply.getId()));
         }
-
-
         carApplyService._submitForm(carApply, taskResult,userId);
 
         return ResultJson.ok();
@@ -130,6 +117,14 @@ public class ProduceCarApplyServiceFaced implements ProduceFaced {
         carApply.setId(id);
         String approvalResultContent = carApplyDao.getApprovalResult(carApply.getId());
         TaskBean taskBean = JsonMapper.fromJsonString(taskResult, TaskBean.class);
+       if (!"不同意".equals(taskBean.getSequenceFlowName())){
+           Map<String,String> item = JsonMapper.fromJsonString(taskResult, HashMap.class);
+           carApply.setCar(new Car(item.get("carId")));
+           carApply.setDriver(new User(item.get("driverId")));
+       }else {
+           carApply.setCar(new Car(""));
+           carApply.setDriver(new User(""));
+       }
         String str = "<span class=\"people_name\">%s</span>的处理意见：</br>%s；<span class=\"audit_result\">%s</span></br>";
         User user = userService.get(userId);
         carApply.setApprovalResult((approvalResultContent == null ? "" : approvalResultContent) + String.format(str, user.getName(), approvalResult, taskBean.getSequenceFlowName()));

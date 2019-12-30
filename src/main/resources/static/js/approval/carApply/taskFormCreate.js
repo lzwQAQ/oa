@@ -65,6 +65,7 @@ $(function () {
     });
 
     $("#btnSubmit").click(function () {
+
         if ($("#form").valid()) {
             parent.beforeSubmitForm($("#auditResult").val(), function (taskResult) {
                 $("#form").ajaxSubmit({
@@ -90,30 +91,30 @@ $(function () {
     });
 
     var drivers, cars;
+    $("#car_select").change(function () {
+        var $this = $(this);
+        $("#brand").val("");
+        $("#seatNum").val("");
+        $.each(cars, function (i, v) {
+            if ($this.val() === v.id) {
+                $("#brand").val(v.brand);
+                $("#seatNum").val(v.seatNum);
+            }
+        });
+    });
     $("#driver_select").change(function () {
         var $this = $(this);
         $("#phone").val("");
         $.each(drivers, function (i, v) {
-            if ($this.val() === v.user.id) {
-                $("#phone").val(v.user.phone);
-            }
-        });
-    });
-    $("#car_select").change(function () {
-        var $this = $(this);
-        $("#carNo").val("");
-        $("#seatNum").val("");
-        $.each(cars, function (i, v) {
             if ($this.val() === v.id) {
-                $("#carNo").val(v.brand);
-                $("#seatNum").val(v.seatNum);
+                $("#phone").val(v.phone);
             }
         });
     });
     $.post(Util.getPath() + "/carapply/finddrivers", function (res) {
         if (res.code === 200) {
             $.each(drivers = res.data, function (i, v) {
-                $("#driver_select").append('<option value="' + v.user.id + '">' + v.user.name + '</option>');
+                $("#driver_select").append('<option value="' + v.id + '">' + v.name + '</option>');
             });
             $("#driver_select").find('option[value="' + $("#driverId").val() + '"]').attr("selected", true).trigger("change");
         }

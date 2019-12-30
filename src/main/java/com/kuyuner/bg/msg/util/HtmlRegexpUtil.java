@@ -1,4 +1,6 @@
 package com.kuyuner.bg.msg.util;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class HtmlRegexpUtil {
@@ -94,6 +96,9 @@ public class HtmlRegexpUtil {
      * @return String
      */
     public static String filterHtml(String str) {
+        if (StringUtils.isEmpty(str)){
+            return "";
+        }
         Pattern pattern = Pattern.compile(regxpForHtml);
         Matcher matcher = pattern.matcher(str);
         StringBuffer sb = new StringBuffer();

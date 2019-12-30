@@ -16,17 +16,41 @@ $(function () {
             width: 120,
             fixed: true,
             formatter: function (value, options, row) {
+                if (value ===""){
+                    value = "暂无"
+                }
                 return '<a href="javascript:void(0)" class="edit-item" data-id="' + row.taskId + '">' + value + '</a>';
             }
+        },{
+           label: '人数',
+           name: 'people'
         }, {
+            label: '地点',
+            name: 'address'
+        },{
             label: '品牌型号',
-            name: 'car.brand'
+            name: 'car.brand',
+            formatter: function (value, options, row) {
+                return "" === value ? '暂无' : value;
+            }
         }, {
             label: '座位数',
-            name: 'car.seatNum'
-        }, {
+            name: 'car.seatNum',
+            formatter: function (value, options, row) {
+                return "" === value ? '暂无' : value;
+            }
+        },  {
             label: '驾驶员',
-            name: 'driver'
+            name: 'driver',
+            formatter: function (value, options, row) {
+                return "" === value ? '暂无' : value;
+            }
+        }, {
+            label: '联系电话',
+            name: 'phone',
+            formatter: function (value, options, row) {
+                return "" === value ? '暂无' : value;
+            }
         },{
             label: '所属流程',
             name: 'processName'

@@ -42,6 +42,11 @@ public class AdjustmentPendingListView extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
 
+    /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
     public String getTaskId() {
         return taskId;
     }
@@ -90,4 +95,11 @@ public class AdjustmentPendingListView extends BaseEntity {
         this.time = time;
     }
 
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
+    }
 }

@@ -2,7 +2,6 @@ package com.kuyuner.bg.approval.entity;
 
 import com.kuyuner.common.persistence.BaseEntity;
 import com.kuyuner.core.sys.entity.User;
-
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
@@ -26,6 +25,20 @@ public class CarApply extends BaseEntity {
     @NotNull(message = "驾驶员不能为空")
     @Length(max = 32, message = "驾驶员长度不能大于32")
     private User driver;
+
+    /**
+     * 用车人数
+     */
+    @NotNull(message = "用车人数不能为空")
+    @Length(max = 4, message = "用车人数长度不能大于4")
+    private Integer people;
+
+    /**
+     * 用车地点
+     */
+    @NotNull(message = "用车地点不能为空")
+    @Length(max = 200, message = "用车地点长度不能大于200")
+    private String address;
 
     /**
      * 用车时间
@@ -162,5 +175,19 @@ public class CarApply extends BaseEntity {
         this.senderId = senderId;
     }
 
+    public Integer getPeople() {
+        return people;
+    }
 
+    public void setPeople(Integer people) {
+        this.people = people;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

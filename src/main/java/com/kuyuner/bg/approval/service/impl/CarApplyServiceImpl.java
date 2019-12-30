@@ -3,6 +3,7 @@ package com.kuyuner.bg.approval.service.impl;
 import com.kuyuner.bg.approval.bean.CarApplyHistoricListView;
 import com.kuyuner.bg.approval.bean.CarApplyPendingListView;
 import com.kuyuner.bg.approval.dao.CarApplyDao;
+import com.kuyuner.bg.approval.entity.Car;
 import com.kuyuner.bg.approval.entity.CarApply;
 import com.kuyuner.bg.approval.entity.Driver;
 import com.kuyuner.bg.approval.service.CarApplyService;
@@ -109,13 +110,15 @@ public class CarApplyServiceImpl implements CarApplyService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResultJson approvalForm(String id, String approvalResult, String taskResult,String userId) {
-        CarApply carApply = new CarApply();
-        carApply.setId(id);
+    public ResultJson approvalForm(CarApply carApply, String approvalResult, String taskResult,String userId) {
         String approvalResultContent = carApplyDao.getApprovalResult(carApply.getId());
         TaskBean taskBean = JsonMapper.fromJsonString(taskResult, TaskBean.class);
         String str = "<span class=\"people_name\">%s</span>的处理意见：</br>%s；<span class=\"audit_result\">%s</span></br>";
         carApply.setApprovalResult((approvalResultContent == null ? "" : approvalResultContent) + String.format(str, UserUtils.getPrincipal().getName(), approvalResult, taskBean.getSequenceFlowName()));
+        if ("不同意".equals(taskBean.getSequenceFlowName())){
+            carApply.setCar(new Car(""));
+            carApply.setDriver(new User(""));
+        }
         carApplyDao.update(carApply);
 
         carApply = carApplyDao.get(new CarApply(carApply.getId()));
@@ -127,12 +130,12 @@ public class CarApplyServiceImpl implements CarApplyService {
     @Override
     public ListJson findDrivers(String userId) {
         List<Driver> list = carApplyDao.findDrivers();
-        Driver driver = new Driver();
+       /* Driver driver = new Driver();
         User user = new User();
         BeanUtils.copyProperties(StringUtils.isNotBlank(userId)? UserUtils.getUserFromDB(userId) : UserUtils.getUser(), user);
         user.setName("自驾");
         driver.setUser(user);
-        list.add(0, driver);
+        list.add(0, driver);*/
         return new ListJson(list);
     }
 

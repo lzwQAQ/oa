@@ -35,6 +35,11 @@ public class AdjustmentHistoricListView extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date time;
 
+    /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
     public String getProcessInstanceId() {
         return processInstanceId;
     }
@@ -73,5 +78,13 @@ public class AdjustmentHistoricListView extends BaseEntity {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
     }
 }

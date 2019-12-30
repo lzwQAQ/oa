@@ -16,6 +16,11 @@ public class CarApplyPendingListView extends BaseEntity {
     private String taskId;
 
     /**
+     * 流程实例ID
+     */
+    private String processInstanceId;
+
+    /**
      * 流程名称
      */
     private String processName;
@@ -55,6 +60,37 @@ public class CarApplyPendingListView extends BaseEntity {
     private String sendDeptName;
 
     private String phone;
+
+    /**
+     * 人数
+     */
+    private Integer people;
+
+    /**
+     * 地点
+     */
+    private String address;
+
+    /**
+     * 审批意见
+     */
+    private String approvalOpinion;
+
+    public Integer getPeople() {
+        return people;
+    }
+
+    public void setPeople(Integer people) {
+        this.people = people;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getTaskId() {
         return taskId;
@@ -150,5 +186,21 @@ public class CarApplyPendingListView extends BaseEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
+
+    public String getApprovalOpinion() {
+        return approvalOpinion;
+    }
+
+    public void setApprovalOpinion(String approvalOpinion) {
+        this.approvalOpinion = approvalOpinion;
     }
 }

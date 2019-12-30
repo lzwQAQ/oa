@@ -5,16 +5,12 @@ import com.kuyuner.common.controller.BaseController;
 import com.kuyuner.common.controller.ResultJson;
 import com.kuyuner.common.lang.StringUtils;
 import com.kuyuner.core.sys.entity.Menu;
-import com.kuyuner.core.sys.entity.User;
-import com.kuyuner.core.sys.model.ResultModel;
 import com.kuyuner.core.sys.security.UserUtils;
 import com.kuyuner.core.sys.service.MenuService;
 import com.kuyuner.core.sys.service.UserService;
-
 import com.kuyuner.shiro.UsernamePasswordToken;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Administrator
@@ -78,10 +73,7 @@ public class LoginController extends BaseController {
         }catch (AuthenticationException e){
             return ResultJson.failed("用户名或密码错误");
         }
-
-        if (UserUtils.getSession().getAttribute(UserUtils.USER_FLAG) == null) {
-            UserUtils.getSession().setAttribute(UserUtils.USER_FLAG,userService.get(UserUtils.getPrincipal().getId()) );
-        }
+        UserUtils.getSession().setAttribute(UserUtils.USER_FLAG,userService.get(UserUtils.getPrincipal().getId()) );
         List<Menu> menus = (List<Menu>) UserUtils.getSession().getAttribute("menus");
         if (menus == null) {
             menus = menuService.findAllListBySort(UserUtils.getPrincipal().getId());

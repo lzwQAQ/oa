@@ -9,15 +9,17 @@
         c.car_no AS "car.carNo",
         c.seat_num AS "car.seatNum",
         c.brand AS "car.brand",
-		u.id AS "driver.id",
-		u.name AS "driver.name",
-		u.phone AS "driver.phone",
+		dr.id AS "driver.id",
+		dr.name AS "driver.name",
+		dr.phone AS "driver.phone",
 		t.start_time AS "startTime",
 		t.end_time AS "endTime",
 		t.reason AS "reason",
 		t.task_name AS "taskName",
 		t.approval_result AS "approvalResult",
 		t.SENDER_ID AS "senderId",
+		t.`ADDRESS` AS "address",
+		t.`PEOPLE` AS "people",
         d.name as "senderDeptName",
         u.name as "senderName",
 		t.creater AS "creater",
@@ -28,8 +30,9 @@
 
     <!--auto generated Code-->
 	<sql id="AllJoins">
-        inner join T_CAR c on c.id = t.car_id
-        inner join T_PT_USER u on u.id = t.user_id
+        LEFT join T_PT_USER u on u.id = t.SENDER_ID
+        LEFT JOIN T_DRIVER dr ON dr.id = t.`USER_ID`
+        LEFT join T_CAR c on c.id = t.car_id
         left join T_PT_DEPT d on d.id = u.dept_id
 	</sql>
 
@@ -87,29 +90,33 @@
 
     <select id="getLog" resultType="com.kuyuner.bg.approval.entity.CarApply">
         SELECT
-            t.id AS "id",
-            c.id AS "car.id",
-            c.car_no AS "car.carNo",
-            c.seat_num AS "car.seatNum",
-            c.brand AS "car.brand",
-            u.id AS "driver.id",
-            u.name AS "driver.name",
-            u.phone AS "driver.phone",
-            t.start_time AS "startTime",
-            t.end_time AS "endTime",
-            t.reason AS "reason",
-            t.approval_result AS "approvalResult",
-            t.SENDER_ID AS "senderId",
-            d.name as "senderDeptName",
-            u.name as "senderName",
-            t.creater AS "creater",
-            t.create_date AS "createDate",
-            t.update_date AS "updateDate",
-            t.del_flag AS "delFlag"
-        FROM T_AP_CAR_LOG t
-        inner join T_CAR c on c.id = t.car_id
-        inner join T_PT_USER u on u.id = t.user_id
-        left join T_PT_DEPT d on d.id = u.dept_id
+          t.id AS "id",
+          c.id AS "car.id",
+          c.car_no AS "car.carNo",
+          c.seat_num AS "car.seatNum",
+          c.brand AS "car.brand",
+          dr.id AS "driver.id",
+          dr.name AS "driver.name",
+          dr.phone AS "driver.phone",
+          t.start_time AS "startTime",
+          t.end_time AS "endTime",
+          t.reason AS "reason",
+          t.approval_result AS "approvalResult",
+          t.SENDER_ID AS "senderId",
+          d.name AS "senderDeptName",
+          u.name AS "senderName",
+          t.creater AS "creater",
+          t.create_date AS "createDate",
+          t.update_date AS "updateDate",
+          t.del_flag AS "delFlag",
+          t.`PEOPLE` AS "people",
+          t.`ADDRESS` AS "address"
+        FROM
+          T_AP_CAR_LOG t
+          LEFT JOIN T_CAR c ON c.id = t.car_id
+          LEFT JOIN T_PT_USER u ON u.id = t.SENDER_ID
+          LEFT JOIN T_DRIVER dr ON dr.id = t.`USER_ID`
+          LEFT JOIN T_PT_DEPT d ON d.id = u.dept_id
         WHERE t.DEL_FLAG = #{delFlag} and t.ID = #{id}
     </select>
 
@@ -122,14 +129,17 @@
         c.car_no AS "car.carNo",
         c.seat_num AS "car.seatNum",
         c.brand AS "car.brand",
-        (select name from T_PT_USER where id = t.user_id) as 'driver',
+        (select name from T_DRIVER where id = t.user_id) as 'driver',
+        (select PHONE from T_DRIVER where id = t.user_id) as 'phone',
         r.NAME as "taskName",
         u.name as "sender",
-        t.CREATE_DATE as "time"
+        t.CREATE_DATE as "time",
+        t.`PEOPLE` AS "people",
+        t.`ADDRESS` AS "address"
         from V_WF_RU_TASK r
         inner join T_AP_CAR t on t.id = r.business_id
+        LEFT join T_CAR c on c.id = t.car_id
         inner join T_PT_USER u on u.id = t.sender_id
-        inner join T_CAR c on c.id = t.car_id
         <where>
             (r.ASSIGNEE = #{userId} or (r.ASSIGNEE is null and r.USER_ID = #{userId}))
             <if test="carApply.car != null and carApply.car.carNo != '' and carApply.car.carNo != null">
@@ -138,6 +148,7 @@
         </where>
         order by t.CREATE_DATE desc
     </select>
+
 
     <select id="findHistoricList" resultType="com.kuyuner.bg.approval.bean.CarApplyHistoricListView">
         select
@@ -148,14 +159,18 @@
         c.car_no AS "car.carNo",
         c.seat_num AS "car.seatNum",
         c.brand AS "car.brand",
-        (select name from T_PT_USER where id = t.user_id) as 'driver',
+        (select name from T_DRIVER where id = t.user_id) as 'driver',
+        (select PHONE from T_DRIVER where id = t.user_id) as 'phone',
         t.task_name as "taskName",
         u.name as "sender",
-        t.CREATE_DATE as "time"
+        t.CREATE_DATE as "time",
+        t.`PEOPLE` AS "people",
+        t.`ADDRESS` AS "address",
+        h.`APPROVAL_OPINION` as "approvalOpinion"
         from V_WF_HI_TASK h
         inner join T_AP_CAR t on t.id = h.business_id
+        LEFT join T_CAR c on c.id = t.car_id
         inner join T_PT_USER u on u.id = t.sender_id
-        inner join T_CAR c on c.id = t.car_id
         <where>
             (h.ASSIGNEE = #{userId} and h.START_USER_ID <![CDATA[ <> ]]> #{userId})
             <if test="carApply.car != null and carApply.car.carNo != '' and carApply.car.carNo != null">
@@ -178,12 +193,16 @@
         c.car_no AS "car.carNo",
         c.seat_num AS "car.seatNum",
         c.brand AS "car.brand",
-        (select name from T_PT_USER where id = t.user_id) as 'driver',
+        (select name from T_DRIVER where id = t.user_id) as 'driver',
+        (select PHONE from T_DRIVER where id = t.user_id) as 'phone',
         t.task_name as "taskName",
-        t.CREATE_DATE as "time"
+        t.CREATE_DATE as "time",
+        t.`PEOPLE` AS "people",
+        t.`ADDRESS` AS "address",
+        h.`APPROVAL_OPINION` as "approvalOpinion"
         from V_WF_HI_TASK h
         inner join T_AP_CAR t on t.id = h.business_id
-        inner join T_CAR c on c.id = t.car_id
+        LEFT join T_CAR c on c.id = t.car_id
         inner join T_PT_USER u on u.id = t.sender_id
         <where>
             h.START_USER_ID = #{userId}
@@ -200,12 +219,11 @@
 
     <select id="findDrivers" resultType="com.kuyuner.bg.approval.entity.Driver">
         select
-          u.id as 'user.id',
-          u.name as 'user.name',
-          u.phone as 'user.phone',
+          t.id as 'id',
+          t.name as 'name',
+          t.phone as 'phone',
           t.DRIVING_YEAR as 'drivingYear'
         from T_DRIVER t
-        inner join T_PT_USER u on u.id = t.user_id
         where t.del_flag = '1'
     </select>
 
@@ -224,8 +242,10 @@
 		INSERT INTO T_AP_CAR
 		<trim prefix="(" suffix=")" suffixOverrides=",">
         	<if test="id != null"> id, </if>
-        	<if test="car.id != null"> car_id, </if>
-        	<if test="driver.id != null"> user_id, </if>
+        	<if test="car !=null and car.id != null"> car_id, </if>
+            <if test="driver!=null and driver.id != null"> user_id, </if>
+            <if test="people != null"> people, </if>
+            <if test="address != null"> address, </if>
         	<if test="startTime != null"> start_time, </if>
         	<if test="endTime != null"> end_time, </if>
         	<if test="reason != null"> reason, </if>
@@ -240,8 +260,10 @@
 		VALUES
 		<trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null"> #{id}, </if>
-            <if test="car.id != null"> #{car.id}, </if>
-            <if test="driver.id != null"> #{driver.id}, </if>
+            <if test="car !=null and car.id != null"> #{car.id}, </if>
+            <if test="driver!=null and driver.id != null"> #{driver.id}, </if>
+            <if test="people != null"> #{people}, </if>
+            <if test="address != null"> #{address}, </if>
             <if test="startTime != null"> #{startTime}, </if>
             <if test="endTime != null"> #{endTime}, </if>
             <if test="reason != null"> #{reason}, </if>
@@ -259,8 +281,10 @@
         INSERT INTO T_AP_CAR_LOG
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null"> id, </if>
-            <if test="car.id != null"> car_id, </if>
-            <if test="driver.id != null"> user_id, </if>
+            <if test="car !=null and car.id != null"> car_id, </if>
+            <if test="driver!=null and driver.id != null"> user_id, </if>
+            <if test="people != null"> people, </if>
+            <if test="address != null"> address, </if>
             <if test="startTime != null"> start_time, </if>
             <if test="endTime != null"> end_time, </if>
             <if test="reason != null"> reason, </if>
@@ -274,8 +298,10 @@
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null"> #{id}, </if>
-            <if test="car.id != null"> #{car.id}, </if>
-            <if test="driver.id != null"> #{driver.id}, </if>
+            <if test="car !=null and car.id != null"> #{car.id}, </if>
+            <if test="driver!=null and driver.id != null"> #{driver.id}, </if>
+            <if test="people != null"> #{people}, </if>
+            <if test="address != null"> #{address}, </if>
             <if test="startTime != null"> #{startTime}, </if>
             <if test="endTime != null"> #{endTime}, </if>
             <if test="reason != null"> #{reason}, </if>
@@ -295,6 +321,8 @@
             <if test="id != null"> id = #{id}, </if>
             <if test="car != null and car.id != null"> car_id = #{car.id}, </if>
             <if test="driver != null and driver.id != null"> user_id = #{driver.id}, </if>
+            <if test="people != null"> people = #{people}, </if>
+            <if test="address != null"> address = #{address}, </if>
             <if test="startTime != null"> start_time = #{startTime}, </if>
             <if test="endTime != null"> end_time = #{endTime}, </if>
             <if test="reason != null"> reason = #{reason}, </if>
@@ -323,8 +351,8 @@
         c.car_no AS "car.carNo",
         c.seat_num AS "car.seatNum",
         c.brand AS "car.brand",
-        (select name from T_PT_USER where id = t.user_id) as 'driver',
-        (select PHONE from T_PT_USER where id = t.user_id) as 'phone',
+        (select name from T_DRIVER where id = t.user_id) as 'driver',
+        (select PHONE from T_DRIVER where id = t.user_id) as 'phone',
         t.user_id as "driverId",
         r.NAME as "taskName",
         u.name as "sender",

@@ -1,6 +1,22 @@
 $(function () {
 
+    var throttle = {
+        isCheckPhone: true,
+        isCheckName: true,
+        isExistPhone: true
+    };
+
+    var oldValue = {
+        phone: '',
+        name: ''
+    };
+
     $("#form .select2").select2();
+
+    $("input").iCheck({
+        checkboxClass: 'icheckbox_minimal-green',
+        radioClass: 'iradio_minimal-green'
+    });
 
     $("#form").validate();
 
@@ -37,7 +53,7 @@ $(function () {
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                         parent.reloadGrid();
                     } else {
-                        Util.msgError("操作失败！");
+                        Util.msgError(res.errorMsg);
                     }
                 }
             });
@@ -48,6 +64,64 @@ $(function () {
 
     $("#btnCancel").click(function () {
         parent.layer.close(parent.layer.getFrameIndex(window.name));
+    });
+
+    $("#name").focus(function (e) {
+        var $this = $(e.currentTarget);
+        $this.attr("orgin", $this.attr("placeholder"));
+    });
+
+    $("#name").blur(function (e) {
+        var $this = $(e.currentTarget);
+        var id = Util.strTrim($("#id").val());
+        var name = Util.strTrim($this.val());
+        $this.attr("placeholder", $this.attr("orgin"));
+        if (oldValue.name != name) {
+            throttle.isCheckName = true;
+            oldValue.name = name;
+        } else {
+            throttle.isCheckName = false;
+            oldValue.name = name;
+        }
+        if (throttle.isCheckName){
+            $.post(Util.getPath() + "/driver/check/1/value", {
+                id: id,
+                data: name
+            }, function (res) {
+                if (res.code != 200) {
+                    Util.msgError('驾驶员姓名已存在，请重新输入！');
+                }
+            });
+        }
+    });
+
+    $("#phone").focus(function (e) {
+        var $this = $(e.currentTarget);
+        $this.attr("orgin", $this.attr("placeholder"));
+    });
+
+    $("#phone").blur(function (e) {
+        var $this = $(e.currentTarget);
+        var id = Util.strTrim($("#id").val());
+        var phone = Util.strTrim($this.val());
+        $this.attr("placeholder", $this.attr("orgin"));
+        if (oldValue.phone != phone) {
+            throttle.isCheckPhone = true;
+            oldValue.phone = phone;
+        } else {
+            throttle.isCheckPhone = false;
+            oldValue.phone = phone;
+        }
+        if (throttle.isCheckPhone){
+            $.post(Util.getPath() + "/driver/check/2/value", {
+                id: id,
+                data: phone
+            }, function (res) {
+                if (res.code != 200) {
+                    Util.msgError('手机号码已存在，请重新输入！');
+                }
+            });
+        }
     });
 
 

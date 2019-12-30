@@ -48,6 +48,12 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public ResultJson saveOrUpdate(Driver driver) {
         int count;
+        if(checkName(driver.getId(), driver.getName())){
+            return ResultJson.failed("驾驶员姓名已存在，请重新输入！");
+        }
+        if(checkPhone(driver.getId(), driver.getPhone())){
+            return ResultJson.failed("手机号码已存在，请重新输入！");
+        }
         if (StringUtils.isBlank(driver.getId())) {
             driver.setId(IdGenerate.uuid());
             driver.setCreater(UserUtils.getPrincipal().getId());
@@ -68,6 +74,16 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public ListJson findAllUsers() {
         return new ListJson(userDao.findList(new User()));
+    }
+
+    @Override
+    public boolean checkName(String id, String name) {
+        return driverDao.checkName(id, name) > 0;
+    }
+
+    @Override
+    public boolean checkPhone(String id, String phone) {
+        return driverDao.checkPhone(id, phone) > 0;
     }
 
 }

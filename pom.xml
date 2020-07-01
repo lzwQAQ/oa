@@ -37,7 +37,7 @@
         <pinyin4j.version>2.5.0</pinyin4j.version>
         <!--poi不是最新的 最新的是3.17-->
         <poi.version>3.15</poi.version>
-        <quartz.version>2.3.0</quartz.version>
+        <quartz.version>2.3.2</quartz.version>
         <ruedigermoeller-fst.version>2.56</ruedigermoeller-fst.version>
         <shiro.version>1.4.0</shiro.version>
         <thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>

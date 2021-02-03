@@ -21,7 +21,7 @@
 
         <activation.version>1.1.1</activation.version>
         <activiti.version>5.20.0</activiti.version>
-        <ant.version>1.9.7</ant.version>
+        <ant.version>1.10.9</ant.version>
         <blade-patchca.version>1.0.5</blade-patchca.version>
         <commons-fileupload.version>1.3.3</commons-fileupload.version>
         <commons-lang3.version>3.6</commons-lang3.version>
